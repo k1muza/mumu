@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subject World · Learning Universe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="lu.css">
+</head>
+<body>
+<div id="world" class="min-h-screen">
+  <div class="max-w-[1120px] mx-auto px-7 pt-5 pb-12">
+    <!-- header -->
+    <div class="flex items-center justify-between gap-4">
+      <a href="index.html" aria-label="Back to Universe" class="flex items-center gap-2.5"><img src="universe/ui/back_button_small.png" alt="" class="w-[52px] h-[56px] object-contain"><span class="font-baloo font-extrabold text-[16px]" id="backAccent">Universe</span></a>
+      <img id="plaque" src="" alt="" class="h-[76px] object-contain" style="filter:drop-shadow(0 6px 10px rgba(60,40,90,.18))">
+      <div class="flex items-center gap-1.5 bg-white rounded-full pl-1.5 pr-4 py-1.5" style="border:2px solid rgba(0,0,0,.06);box-shadow:0 5px 14px rgba(60,40,90,.12)"><img src="universe/rewards/star_gold.png" alt="stars" class="w-[28px] h-[28px] object-contain"><span class="font-baloo font-extrabold text-[17px]" style="color:#F59E0B" id="starCount">34</span></div>
+    </div>
+
+    <!-- hero -->
+    <div class="flex items-center gap-6 bg-white rounded-[28px] px-6 py-5 mt-4 flex-wrap" style="box-shadow:0 12px 30px rgba(60,40,90,.12);border:1px solid rgba(0,0,0,.04)">
+      <img id="badgeIcon" src="" alt="" class="w-[104px] h-[104px] object-contain flex-none lu-bob">
+      <div class="flex-1 min-w-[240px]">
+        <div class="font-baloo font-extrabold text-[26px] leading-tight" style="color:#3b2a63" id="worldName">World</div>
+        <div class="font-bold text-[15px] mt-0.5 mb-3" id="verbs">verbs</div>
+        <div class="flex items-center gap-3">
+          <div class="flex-1 rounded-full h-4 overflow-hidden" style="background:#EEE7F5;box-shadow:inset 0 2px 4px rgba(0,0,0,.08)"><div id="progBar" class="h-full" style="width:0%"></div></div>
+          <span class="font-baloo font-extrabold text-[15px] whitespace-nowrap" style="color:#3b2a63" id="badgeCount">0 of 5 badges</span>
+        </div>
+      </div>
+      <div class="flex-none flex items-center gap-2.5 rounded-[20px] pl-3 pr-4 py-3 max-w-[260px]" id="dragonChip">
+        <img src="universe/dragon/dragon_point.png" alt="Aki" class="w-[58px] h-[64px] object-contain" style="transform:scaleX(-1)">
+        <span class="font-extrabold text-[13.5px] leading-snug" id="dragonLine">...</span>
+      </div>
+    </div>
+
+    <div class="font-baloo font-extrabold text-[19px] mt-6 mb-3 ml-1" style="color:#3b2a63">Badges — tap to play a lesson</div>
+    <div id="badges" class="grid gap-4" style="grid-template-columns:repeat(auto-fill,minmax(330px,1fr))"></div>
+  </div>
+</div>
+
+<script src="lu.js"></script>
+<script>
+(function () {
+  const S = LU.load();
+  const subId = LU.qs('subject') || 'english';
+  const s = LU.sub(subId);
+  document.getElementById('world').style.background = s.bg;
+  document.getElementById('backAccent').style.color = s.accent;
+  document.getElementById('plaque').src = s.plaque;
+  document.getElementById('badgeIcon').src = s.badge;
+  document.getElementById('worldName').textContent = s.name;
+  const verbs = document.getElementById('verbs'); verbs.textContent = s.verbs; verbs.style.color = s.accent;
+  document.getElementById('starCount').textContent = S.stars;
+  document.getElementById('dragonLine').textContent = s.dragon;
+  document.getElementById('dragonLine').style.color = s.accent;
+  document.getElementById('dragonChip').style.background = s.chip;
+
+  const dc = LU.doneCount(S, subId); const tot = s.badges.length;
+  const bar = document.getElementById('progBar'); bar.style.width = Math.round(dc / tot * 100) + '%'; bar.style.background = s.accent;
+  document.getElementById('badgeCount').textContent = dc + ' of ' + tot + ' badges';
+
+  const recId = LU.recommendedBadge(S, subId).id;
+  document.getElementById('badges').innerHTML = s.badges.map(b => {
+    const done = LU.isDone(S, subId, b.id); const isRec = b.id === recId && !done;
+    const filled = done ? b.skills.length : (isRec ? 1 : 0);
+    const dots = b.skills.map((_, i) => `<span class="rounded-full" style="width:10px;height:10px;background:${i < filled ? s.accent : '#DFD6EC'}"></span>`).join('');
+    const icon = done ? 'shield_gold' : (isRec ? 'shield_silver' : 'shield_bronze');
+    const iconCls = done ? 'lu-shimmer' : (isRec ? '' : '');
+    const iconFilter = (!done && !isRec) ? 'filter:grayscale(.3) opacity(.72)' : '';
+    const stateLabel = done ? 'Earned' : (isRec ? 'Recommended' : 'Not started');
+    const stateColor = done ? '#3c8f26' : (isRec ? s.accent : '#a99ac8');
+    const btnLabel = done ? 'Practice' : (isRec ? 'Continue' : 'Start');
+    const btnBg = done ? '#7dd15a' : s.accent;
+    return `<a href="lesson.html?subject=${subId}&badge=${b.id}" class="flex items-center gap-3.5 bg-white rounded-[22px] px-4 py-4" style="border:2px solid ${isRec ? s.accent : 'rgba(0,0,0,.05)'};box-shadow:${isRec ? '0 10px 24px rgba(60,40,90,.14)' : '0 5px 14px rgba(60,40,90,.08)'}">
+      <img src="universe/rewards/${icon}.png" alt="" class="w-[60px] h-[70px] object-contain flex-none ${iconCls}" style="${iconFilter}">
+      <div class="flex-1 text-left min-w-0">
+        <div class="font-baloo font-extrabold text-[17px] leading-tight" style="color:#3b2a63">${LU.esc(b.name)}</div>
+        <div class="font-bold text-[12.5px] my-0.5 leading-snug" style="color:#8a7ab0">${b.skills.join(' · ')}</div>
+        <div class="flex items-center gap-1.5">${dots}<span class="font-extrabold text-[12px] ml-1" style="color:${stateColor}">${stateLabel}</span></div>
+      </div>
+      <span class="flex-none font-baloo font-extrabold text-[14px] text-white rounded-[14px] px-4 py-2.5" style="background:${btnBg};box-shadow:0 4px 0 rgba(0,0,0,.18)">${btnLabel}</span>
+    </a>`;
+  }).join('');
+})();
+</script>
+</body>
+</html>
