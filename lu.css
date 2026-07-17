@@ -22,4 +22,16 @@ a:hover{color:#4A2596}
 .lu-pop{animation:luPop .35s ease}
 .lu-rise{animation:luRise .4s ease}
 .lu-shimmer{animation:luShimmer 3s ease-in-out infinite}
+.lu-fa{display:block;flex:0 0 auto;line-height:1}
+.lu-control-icon{display:grid!important;place-items:center;text-align:center;line-height:1!important}
+.lu-control-icon::before{display:block;grid-area:1/1;line-height:1;transform:translateY(.5px)}
+.lu-icon-button{display:grid;place-items:center;width:50px;height:50px;border:2px solid rgba(255,255,255,.32);border-radius:50%;background:rgba(255,255,255,.14);box-shadow:0 7px 14px rgba(30,10,70,.2);backdrop-filter:blur(8px);transition:transform .16s ease,background .16s ease}
+.lu-icon-button .lu-control-icon{width:100%;height:100%}
+.lu-icon-button:hover{transform:translateY(-2px);background:rgba(255,255,255,.24)}
+.lu-nav-bar{width:max-content;margin:0 auto 20px;padding:7px!important;gap:2px;border:2px solid rgba(255,255,255,.28);border-radius:27px;background:rgba(255,255,255,.14);box-shadow:0 10px 24px rgba(30,10,70,.25);backdrop-filter:blur(10px)}
+.lu-nav-item{display:flex;flex:0 0 64px;flex-direction:column;align-items:center;justify-content:center;width:64px;min-height:62px;padding:7px 5px 6px;border:0;border-radius:19px;background:transparent;color:#e8e1ff;transition:transform .16s ease,background .16s ease,color .16s ease}
+.lu-nav-item:hover{transform:translateY(-2px);background:rgba(255,255,255,.12);color:#fff}
+.lu-nav-item.is-active{background:#fff;color:#6548bf;box-shadow:0 5px 12px rgba(30,10,70,.22)}
+.lu-nav-item .lu-fa{font-size:24px}
+.lu-nav-label{margin-top:5px;font-family:'Baloo 2','Nunito',sans-serif;font-size:11px;font-weight:800;line-height:1}
 @media (prefers-reduced-motion: reduce){*{animation:none !important}}

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson · Learning Universe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="lu.css">
+</head>
+<body>
+<div id="lesson" class="min-h-screen">
+  <div class="max-w-[860px] mx-auto px-6 pt-4 pb-10">
+    <!-- header -->
+    <div class="flex items-center justify-between gap-3">
+      <a id="exit" href="index.html" aria-label="Back to world" class="flex items-center"><img src="universe/ui/back_button_small.png" alt="" class="w-[50px] h-[54px] object-contain"></a>
+      <div class="flex-1 mx-2">
+        <div class="font-baloo font-extrabold text-[15px] leading-none mb-1.5" style="color:#3b2a63" id="badgeName">Badge</div>
+        <div id="dots" class="flex items-center gap-2"></div>
+      </div>
+      <div class="flex items-center gap-1.5 bg-white rounded-full pl-1.5 pr-4 py-1.5" style="border:2px solid rgba(0,0,0,.05);box-shadow:0 5px 14px rgba(60,40,90,.12)"><img src="universe/rewards/star_gold.png" alt="stars" class="w-[26px] h-[26px] object-contain"><span class="font-baloo font-extrabold text-[16px]" style="color:#F59E0B" id="starCount">0</span></div>
+    </div>
+
+    <!-- Aki + prompt -->
+    <div class="flex items-end gap-3 mt-5">
+      <img id="aki" src="universe/dragon/dragon_point.png" alt="Aki" class="w-[92px] h-[100px] object-contain flex-none lu-bob" style="transform:scaleX(-1)">
+      <div id="bubble" class="relative bg-white rounded-[22px] rounded-bl-[6px] px-5 py-4 flex-1" style="box-shadow:0 10px 24px rgba(60,40,90,.14);border:2px solid rgba(0,0,0,.04)">
+        <div id="prompt" class="font-baloo font-extrabold text-[21px] leading-tight" style="color:#3b2a63">Let's begin!</div>
+      </div>
+    </div>
+
+    <!-- stimulus (counting / adding visuals) -->
+    <div id="stimulus" class="mt-5"></div>
+
+    <!-- activity area -->
+    <div id="stage" class="mt-5"></div>
+
+    <!-- feedback bar -->
+    <div id="feedback" class="fixed inset-x-0 bottom-0 translate-y-full transition-transform duration-300 z-30">
+      <div class="max-w-[860px] mx-auto m-4 rounded-[24px] px-6 py-4 flex items-center gap-4" id="feedbackCard" style="box-shadow:0 -6px 30px rgba(60,40,90,.2)">
+        <img id="fbIcon" src="universe/dragon/dragon_thumbs_up.png" alt="" class="w-[56px] h-[62px] object-contain flex-none">
+        <div class="flex-1">
+          <div id="fbTitle" class="font-baloo font-extrabold text-[19px] leading-tight">Great job!</div>
+          <div id="fbMsg" class="font-bold text-[14px] leading-snug" style="color:#5c4d7d"></div>
+        </div>
+        <button id="fbNext" class="font-baloo font-extrabold text-white text-[16px] rounded-[16px] px-6 py-3 flex-none" style="background:#6C3AD6;box-shadow:0 5px 0 rgba(0,0,0,.2)">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="lu.js"></script>
+<script>
+(function () {
+  const S = LU.load();
+  const subId = LU.qs('subject') || 'english';
+  const badgeId = LU.qs('badge') || LU.recommendedBadge(S, subId).id;
+  const s = LU.sub(subId);
+  const badge = s.badges.find(b => b.id === badgeId) || s.badges[0];
+  const items = LU.buildLesson(subId, badge.id);
+
+  const root = document.getElementById('lesson');
+  root.style.background = s.bg;
+  document.getElementById('badgeName').textContent = badge.name;
+  document.getElementById('starCount').textContent = S.stars;
+  document.getElementById('exit').href = 'world.html?subject=' + subId;
+
+  const el = (id) => document.getElementById(id);
+  let idx = 0, earned = 0, answered = false;
+
+  function renderDots() {
+    el('dots').innerHTML = items.map((_, i) =>
+      `<span class="rounded-full transition-all" style="height:10px;width:${i === idx ? 26 : 10}px;background:${i < idx ? s.accent : (i === idx ? s.accent : '#DBD1EC')};opacity:${i <= idx ? 1 : .8}"></span>`).join('')
+      + `<span class="rounded-full" style="height:10px;width:10px;background:${idx >= items.length ? s.accent : '#DBD1EC'}"></span>`;
+  }
+
+  function speaker(word) {
+    return `<button class="lu-speaker inline-flex items-center gap-2 rounded-full pl-1.5 pr-4 py-1.5 font-baloo font-extrabold text-[15px]" data-word="${LU.esc(word)}" style="background:${s.chip};color:${s.accent};border:2px solid ${s.accent}33">
+      <img src="universe/ui/sound_button.png" alt="Play" class="w-[34px] h-[34px] object-contain"><span class="lu-word">Tap to hear</span></button>`;
+  }
+
+  function objRow(src, n) {
+    let out = '';
+    for (let i = 0; i < n; i++) out += `<img src="${src}" alt="" class="w-[62px] h-[62px] object-contain lu-pop" style="animation-delay:${i * 0.08}s">`;
+    return `<div class="flex flex-wrap items-center gap-3 justify-center">${out}</div>`;
+  }
+
+  function renderStimulus(a) {
+    const box = el('stimulus');
+    if (!a || !a.stimulus) { box.innerHTML = ''; return; }
+    const st = a.stimulus;
+    const star = 'universe/rewards/star_gold.png';
+    if (st.kind === 'count') {
+      box.innerHTML = `<div class="bg-white rounded-[24px] px-5 py-6" style="box-shadow:0 8px 22px rgba(60,40,90,.1);border:1px solid rgba(0,0,0,.04)">${objRow(star, st.n)}</div>`;
+    } else if (st.kind === 'add') {
+      box.innerHTML = `<div class="bg-white rounded-[24px] px-5 py-6 flex items-center justify-center gap-4 flex-wrap" style="box-shadow:0 8px 22px rgba(60,40,90,.1);border:1px solid rgba(0,0,0,.04)">
+        <div class="rounded-[18px] px-4 py-3" style="background:${s.chip}">${objRow(star, st.a)}</div>
+        <span class="font-baloo font-extrabold text-[40px]" style="color:${s.accent}">+</span>
+        <div class="rounded-[18px] px-4 py-3" style="background:${s.chip}">${objRow(star, st.b)}</div>
+      </div>`;
+    }
+  }
+
+  function tile(inner, extra) {
+    return `<button class="lu-choice group relative bg-white rounded-[22px] flex items-center justify-center transition-transform ${extra || ''}"
+      style="border:3px solid rgba(0,0,0,.06);box-shadow:0 6px 16px rgba(60,40,90,.1)">${inner}</button>`;
+  }
+
+  function renderChoice(a) {
+    const stage = el('stage');
+    let cells;
+    if (a.style === 'img') {
+      cells = a.choices.map((c, i) => tile(`<img src="${c.img}" alt="" class="w-[112px] h-[112px] object-contain m-4 lu-pop" style="animation-delay:${i * 0.06}s">`)).join('');
+    } else if (a.style === 'color') {
+      cells = a.choices.map((c, i) => tile(`<span class="block m-5 rounded-[16px] lu-pop" style="width:96px;height:96px;background:${c.color};animation-delay:${i * 0.06}s"></span>`)).join('');
+    } else {
+      const size = a.style === 'char' ? 'text-[64px]' : (a.style === 'glyph' ? 'text-[52px]' : (a.style === 'number' ? 'text-[46px]' : 'text-[30px]'));
+      const font = (a.style === 'text') ? 'font-baloo px-6' : 'font-baloo';
+      cells = a.choices.map((c, i) => tile(`<span class="${size} ${font} font-extrabold leading-none lu-pop" style="color:#3b2a63;animation-delay:${i * 0.06}s;padding:${a.style === 'text' ? '18px 22px' : '26px 30px'}">${LU.esc(c.label)}</span>`)).join('');
+    }
+    const cols = a.choices.length >= 4 ? 'grid-cols-2 sm:grid-cols-4' : (a.choices.length === 3 ? 'grid-cols-3' : 'grid-cols-2');
+    stage.innerHTML =
+      (a.audio ? `<div class="flex justify-center mb-4">${speaker(a.audioWord)}</div>` : '') +
+      `<div class="grid ${cols} gap-4 justify-items-center">${cells}</div>`;
+    [...stage.querySelectorAll('.lu-choice')].forEach((btn, i) => {
+      btn.addEventListener('click', () => pick(btn, a.choices[i], a));
+    });
+  }
+
+  function renderListen(a) {
+    const stage = el('stage');
+    stage.innerHTML = `<div class="bg-white rounded-[26px] px-6 py-7 flex flex-col items-center gap-4" style="box-shadow:0 8px 22px rgba(60,40,90,.1);border:1px solid rgba(0,0,0,.04)">
+      <img src="${a.img}" alt="" class="w-[150px] h-[150px] object-contain lu-pop">
+      ${speaker(a.word)}
+      <div class="lu-reveal font-baloo font-extrabold text-[40px] tracking-wide opacity-0 transition-opacity duration-300" style="color:${s.accent}">${LU.esc(a.word)}</div>
+      <button id="listenNext" class="font-baloo font-extrabold text-white text-[16px] rounded-[16px] px-8 py-3 mt-1" style="background:${s.accent};box-shadow:0 5px 0 rgba(0,0,0,.18)">Got it!</button>
+    </div>`;
+    el('listenNext').addEventListener('click', () => advance());
+  }
+
+  function renderBuild(a) {
+    const stage = el('stage');
+    const word = a.word;
+    const letters = LU.shuffle(word.split(''));
+    stage.innerHTML = `<div class="bg-white rounded-[26px] px-6 py-7 flex flex-col items-center gap-5" style="box-shadow:0 8px 22px rgba(60,40,90,.1);border:1px solid rgba(0,0,0,.04)">
+      <img src="${LU.OBJ(word)}" alt="" class="w-[120px] h-[120px] object-contain lu-pop">
+      <div id="slots" class="flex items-center gap-3"></div>
+      <div id="bank" class="flex items-center gap-3 flex-wrap justify-center"></div>
+    </div>`;
+    const slots = stage.querySelector('#slots');
+    const bank = stage.querySelector('#bank');
+    slots.innerHTML = word.split('').map((_, i) => `<span class="lu-slot rounded-[16px] flex items-center justify-center font-baloo font-extrabold text-[34px]" data-slot="${i}" style="width:66px;height:72px;background:${s.chip};border:3px dashed ${s.accent}66;color:#3b2a63"></span>`).join('');
+    bank.innerHTML = letters.map((ch, i) => `<button class="lu-letter rounded-[16px] font-baloo font-extrabold text-[30px]" data-ch="${ch}" data-i="${i}" style="width:64px;height:70px;background:#fff;border:3px solid ${s.accent}44;color:#3b2a63;box-shadow:0 5px 0 ${s.accent}22">${ch}</button>`).join('');
+    let filled = 0;
+    bank.querySelectorAll('.lu-letter').forEach(b => {
+      b.addEventListener('click', () => {
+        if (b.disabled) return;
+        const need = word[filled];
+        const slot = slots.querySelector(`[data-slot="${filled}"]`);
+        if (b.dataset.ch === need) {
+          slot.textContent = b.dataset.ch;
+          slot.style.background = '#fff';
+          slot.style.borderStyle = 'solid';
+          slot.style.borderColor = s.accent;
+          b.disabled = true; b.style.opacity = '.35';
+          filled++;
+          if (filled === word.length) { showFeedback(true, 'You built the word “' + word + '”! ' + word.split('').join('-')); }
+        } else {
+          b.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 260 });
+        }
+      });
+    });
+  }
+
+  function pick(btn, choice, a) {
+    if (answered) return;
+    const cells = [...el('stage').querySelectorAll('.lu-choice')];
+    if (choice.correct) {
+      answered = true;
+      btn.style.borderColor = '#3fae4a';
+      btn.style.boxShadow = '0 0 0 4px #3fae4a55,0 6px 16px rgba(60,40,90,.14)';
+      btn.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], { duration: 320 });
+      if (a.reveal) revealCorrect(a);
+      cells.forEach(c => { if (c !== btn) c.style.opacity = '.55'; });
+      showFeedback(true, a.good);
+    } else {
+      btn.style.borderColor = '#e46161';
+      btn.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-7px)' }, { transform: 'translateX(7px)' }, { transform: 'translateX(0)' }], { duration: 300 });
+      setTimeout(() => { btn.style.borderColor = 'rgba(0,0,0,.06)'; }, 700);
+      flashBad(a.bad);
+    }
+  }
+
+  function revealCorrect(a) {
+    // for predict-type: briefly emphasise the chosen correct label
+    el('aki').src = 'universe/dragon/dragon_surprised.png';
+  }
+
+  const fb = el('feedback');
+  let fbTimer = null;
+  function flashBad(msg) {
+    el('fbIcon').src = 'universe/dragon/dragon_thinking.png';
+    el('feedbackCard').style.background = '#FFF3E6';
+    el('fbTitle').textContent = 'Try again';
+    el('fbTitle').style.color = '#C25B12';
+    el('fbMsg').textContent = msg;
+    el('fbNext').style.display = 'none';
+    fb.style.transform = 'translateY(0)';
+    clearTimeout(fbTimer);
+    fbTimer = setTimeout(() => { fb.style.transform = 'translateY(100%)'; }, 1600);
+  }
+
+  function showFeedback(good, msg) {
+    answered = true;
+    el('aki').src = 'universe/dragon/dragon_thumbs_up.png';
+    el('fbIcon').src = 'universe/dragon/dragon_cheer.png';
+    el('feedbackCard').style.background = '#EAF9E4';
+    el('fbTitle').textContent = randPraise();
+    el('fbTitle').style.color = '#2E7D24';
+    el('fbMsg').textContent = msg || '';
+    el('fbNext').style.display = '';
+    el('fbNext').style.background = s.accent;
+    earned += 1;
+    fb.style.transform = 'translateY(0)';
+  }
+  const PRAISE = ['Great job!', 'You did it!', 'Brilliant!', 'Well done!', 'Superstar!', 'Yes!'];
+  function randPraise() { return PRAISE[Math.floor(Math.random() * PRAISE.length)]; }
+
+  el('fbNext').addEventListener('click', () => { fb.style.transform = 'translateY(100%)'; setTimeout(advance, 180); });
+
+  function advance() { idx++; render(); }
+
+  function render() {
+    answered = false;
+    el('feedback').style.transform = 'translateY(100%)';
+    renderDots();
+    if (idx >= items.length) return complete();
+    const a = items[idx];
+    el('aki').src = 'universe/dragon/dragon_point.png';
+    const promptText = a.t === 'listen' ? ('Listen to the word “' + a.word + '”') : (a.t === 'build' ? ('Build the word — tap the letters in order') : a.prompt);
+    el('prompt').textContent = promptText;
+    renderStimulus(a);
+    el('stimulus').style.display = (a.stimulus ? '' : 'none');
+    if (a.t === 'listen') renderListen(a);
+    else if (a.t === 'build') renderBuild(a);
+    else renderChoice(a);
+    bindSpeakers();
+  }
+
+  function bindSpeakers() {
+    document.querySelectorAll('.lu-speaker').forEach(b => {
+      if (b.dataset.bound) return; b.dataset.bound = '1';
+      b.addEventListener('click', () => {
+        const w = b.dataset.word;
+        b.querySelector('.lu-word').textContent = '“' + w + '”';
+        b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { duration: 300 });
+        const rev = document.querySelector('.lu-reveal'); if (rev) rev.style.opacity = '1';
+        if (window.speechSynthesis && S.settings && S.settings.speech) {
+          try { const u = new SpeechSynthesisUtterance(w); u.rate = .8; speechSynthesis.speak(u); } catch (e) {}
+        }
+      });
+    });
+  }
+
+  function complete() {
+    el('stimulus').innerHTML = ''; el('stimulus').style.display = 'none';
+    const wasDone = LU.isDone(S, subId, badge.id);
+    const gain = wasDone ? 6 : 15;
+    S.stars += gain;
+    S.done[subId + '/' + badge.id] = true;
+    LU.save(S);
+    el('starCount').textContent = S.stars;
+    el('aki').style.display = 'none';
+    el('bubble').style.display = 'none';
+    const rec = LU.recommendedBadge(S, subId);
+    const allDone = LU.doneCount(S, subId) >= s.badges.length;
+    el('stage').innerHTML = `<div class="text-center lu-rise">
+      <img src="universe/dragon/dragon_confetti.png" alt="" class="w-[188px] h-[200px] object-contain mx-auto lu-bob">
+      <div class="font-baloo font-extrabold text-[34px] mt-1" style="color:#3b2a63">Badge earned!</div>
+      <div class="inline-flex items-center gap-3 bg-white rounded-[22px] px-6 py-4 mt-3" style="box-shadow:0 10px 26px rgba(60,40,90,.14)">
+        <img src="universe/rewards/shield_gold.png" alt="" class="w-[64px] h-[74px] object-contain lu-shimmer">
+        <div class="text-left"><div class="font-baloo font-extrabold text-[20px]" style="color:#3b2a63">${LU.esc(badge.name)}</div>
+        <div class="font-bold text-[13.5px]" style="color:#8a7ab0">${badge.skills.join(' · ')}</div></div>
+      </div>
+      <div class="flex items-center justify-center gap-2 mt-4 font-baloo font-extrabold text-[20px]" style="color:#F59E0B">
+        <img src="universe/rewards/star_gold.png" alt="" class="w-[34px] h-[34px] object-contain">+${gain} stars</div>
+      <div class="flex items-center justify-center gap-3 mt-6 flex-wrap">
+        ${!allDone ? `<a href="lesson.html?subject=${subId}&badge=${rec.id}" class="font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5" style="background:${s.accent};box-shadow:0 6px 0 rgba(0,0,0,.2)">Next lesson →</a>` : ''}
+        <a href="world.html?subject=${subId}" class="font-baloo font-extrabold text-[17px] rounded-[18px] px-7 py-3.5" style="background:#fff;color:${s.accent};border:2px solid ${s.accent}44;box-shadow:0 5px 14px rgba(60,40,90,.1)">Back to ${LU.esc(s.name)}</a>
+        <a href="rewards.html" class="font-baloo font-extrabold text-[17px] rounded-[18px] px-7 py-3.5" style="background:#fff;color:#6C3AD6;border:2px solid rgba(108,58,214,.28);box-shadow:0 5px 14px rgba(60,40,90,.1)">See my rewards</a>
+      </div>
+      ${allDone ? `<div class="font-baloo font-extrabold text-[16px] mt-5" style="color:${s.accent}">🎉 You've earned every badge in ${LU.esc(s.name)}!</div>` : ''}
+    </div>`;
+    renderDots();
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
