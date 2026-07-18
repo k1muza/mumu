@@ -4,6 +4,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BadgeAwardCelebration from "@/components/BadgeAwardCelebration";
+import ConfettiBurst from "@/components/ConfettiBurst";
 import BadgePill from "@/components/BadgePill";
 import StarPill from "@/components/StarPill";
 import { BADGE_AWARD_STARTED_EVENT, type BadgeAwardEventDetail } from "@/lib/badgeAward";
@@ -16,6 +17,7 @@ import {
   type CompletionResult,
 } from "@/lib/progress";
 import { speech } from "@/lib/tts";
+import { DEFAULT_VOICE } from "@/lib/tts/protocol";
 import { rankArt, worldRank } from "@/lib/ranks";
 import type { Activity, ChoiceActivity, Lesson } from "@/lib/types";
 import BuildWordStage from "./BuildWordStage";
@@ -136,6 +138,12 @@ export default function LessonPlayer({
   useEffect(() => {
     if (speechEnabled) speech.preload();
   }, [speechEnabled]);
+
+  // Keep the speech singleton on the parent-chosen voice.
+  const voice = profile?.settings.voice ?? DEFAULT_VOICE;
+  useEffect(() => {
+    speech.setVoice(voice);
+  }, [voice]);
 
   const advance = useCallback(() => {
     speech.stop();
@@ -270,6 +278,7 @@ export default function LessonPlayer({
         {finished ? (
           /* completion celebration */
           <div className="text-center lu-rise mt-8">
+            <ConfettiBurst accent={subject.accent} />
             <img
               src="/universe/dragon/dragon_confetti.png"
               alt=""

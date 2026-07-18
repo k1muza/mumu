@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const AUTO_ADVANCE_SECONDS = 5;
+const AUTO_ADVANCE_SECONDS = 3;
 
 function AutoAdvanceButton({ accent, onNext }: { accent: string; onNext: () => void }) {
   const [countdown, setCountdown] = useState(AUTO_ADVANCE_SECONDS);

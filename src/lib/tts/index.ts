@@ -7,17 +7,35 @@
  * Until the model has loaded (first visit downloads ~90 MB, then it's cached),
  * speech falls back to the browser's built-in speechSynthesis.
  */
-import type { VoiceId, WorkerRequest, WorkerResponse } from "./protocol";
+import { DEFAULT_VOICE, type VoiceId, type WorkerRequest, type WorkerResponse } from "./protocol";
 
-const VOICE: VoiceId = "af_heart";
 /** Only cache short clips (words / prompts) — story audio is too big to keep. */
 const CACHEABLE_CHARS = 120;
 const CACHE_MAX = 40;
+
+/**
+ * TTS reads phonics notation like /t/ as "slash t slash", so before generating
+ * audio each /…/ phoneme is swapped for a speakable approximation. Single
+ * sounds map to how a phonics teacher voices them ("tuh", "sss"); rimes like
+ * /at/ fall through unmapped and are read as the bare chunk ("at").
+ */
+const PHONEME_SOUNDS: Record<string, string> = {
+  a: "ah", b: "buh", c: "kuh", d: "duh", e: "eh", f: "fff", g: "guh",
+  h: "hah", i: "ih", j: "juh", k: "kuh", l: "lll", m: "mmm", n: "nnn",
+  o: "aw", p: "puh", q: "kwuh", r: "rrr", s: "sss", t: "tuh", u: "uh",
+  v: "vvv", w: "wuh", x: "ks", y: "yuh", z: "zzz",
+  sh: "shh", ch: "chuh", th: "thh", ng: "ng",
+};
+
+function speakable(text: string): string {
+  return text.replace(/\/([a-z]{1,3})\//gi, (_, p: string) => PHONEME_SOUNDS[p.toLowerCase()] ?? p);
+}
 
 type Pending = { resolve: (wav: ArrayBuffer) => void; reject: (err: Error) => void };
 type StreamHandler = { onChunk: (blob: Blob) => void; onDone: () => void };
 
 class SpeechManager {
+  private voice: VoiceId = DEFAULT_VOICE;
   private worker: Worker | null = null;
   private ready = false;
   private failed = false;
@@ -45,19 +63,25 @@ class SpeechManager {
     this.ensureWorker();
   }
 
+  /** Switch the Kokoro voice; applies to the next speak/readAloud call. */
+  setVoice(voice: VoiceId) {
+    this.voice = voice;
+  }
+
   /** Text longer than this is streamed sentence-by-sentence instead. */
   private static readonly STREAM_THRESHOLD = 80;
 
   /** Speak a word or sentence as a single clip; long text streams as a story. */
   speak(text: string, opts: { speed?: number } = {}) {
     if (typeof window === "undefined" || !text.trim()) return;
+    text = speakable(text);
     if (text.length > SpeechManager.STREAM_THRESHOLD) {
       this.readAloud(text, opts);
       return;
     }
     this.stop();
     const speed = opts.speed ?? 1;
-    const key = `${VOICE}|${speed}|${text}`;
+    const key = `${this.voice}|${speed}|${text}`;
     const cached = this.cache.get(key);
     if (cached) {
       this.enqueue(cached);
@@ -89,7 +113,7 @@ class SpeechManager {
         this.nextRequest = null;
         if (next) this.speak(next.text, { speed: next.speed });
       });
-    this.send({ type: "generate", id, text, voice: VOICE, speed });
+    this.send({ type: "generate", id, text, voice: this.voice, speed });
   }
 
   /**
@@ -98,6 +122,7 @@ class SpeechManager {
    */
   readAloud(text: string, opts: { speed?: number } = {}) {
     if (typeof window === "undefined" || !text.trim()) return;
+    text = speakable(text);
     this.stop();
     if (!this.ensureWorker() || !this.ready) {
       this.speakFallback(text);
@@ -114,7 +139,7 @@ class SpeechManager {
         if (this.activeStream === id) this.activeStream = null;
       },
     });
-    this.send({ type: "stream", id, text, voice: VOICE, speed: opts.speed ?? 1 });
+    this.send({ type: "stream", id, text, voice: this.voice, speed: opts.speed ?? 1 });
   }
 
   /** Stop all playback and pending speech immediately. */

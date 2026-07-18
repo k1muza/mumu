@@ -149,6 +149,19 @@ a {
     transform: scale(1.2) rotate(12deg);
   }
 }
+@keyframes luConfettiFall {
+  0% {
+    transform: translate3d(0, -6vh, 0) rotate(0deg);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--confetti-drift, 0px), 104vh, 0) rotate(var(--confetti-spin, 540deg));
+    opacity: 0;
+  }
+}
 @keyframes luProgressFlow {
   0% {
     background-position: 0% 50%;
@@ -180,6 +193,20 @@ a {
 }
 .lu-shimmer {
   animation: luShimmer 3s ease-in-out infinite;
+}
+.lu-confetti {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 40;
+}
+.lu-confetti-piece {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: luConfettiFall 3s linear forwards;
 }
 .lu-css-twinkle {
   display: block;

@@ -205,6 +205,8 @@ export interface Settings {
   speech: boolean;
   sfx: boolean;
   autoplay: boolean;
+  /** Kokoro voice for read-aloud; absent on older profiles (falls back to the default voice). */
+  voice?: import("./tts/protocol").VoiceId;
 }
 
 export interface Profile {

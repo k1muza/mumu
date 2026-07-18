@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GrownUpGate from "@/components/GrownUpGate";
 import { useProfile, useUniverseOverview } from "@/lib/hooks";
 import { resetEverything, resetProgress, updateChildName, updateSettings } from "@/lib/progress";
 import { universeRank, worldRank } from "@/lib/ranks";
+import { speech } from "@/lib/tts";
+import { DEFAULT_VOICE, VOICE_OPTIONS, type VoiceId } from "@/lib/tts/protocol";
 import type { Settings } from "@/lib/types";
 
 const TOGGLES: { key: keyof Settings; label: string; hint: string }[] = [
@@ -66,6 +68,56 @@ function NameRow({ current }: { current: string }) {
         >
           {saved ? "Saved ✓" : "Save"}
         </button>
+      </div>
+    </div>
+  );
+}
+
+function VoiceRow({ current }: { current: VoiceId }) {
+  // Warm up Kokoro so previews use the real voice, not the device fallback.
+  useEffect(() => {
+    speech.preload();
+  }, []);
+
+  return (
+    <div className="py-4">
+      <div className="font-baloo font-extrabold text-[15px]" style={{ color: "#3b2a63" }}>
+        Reading voice
+      </div>
+      <div className="font-bold text-[12.5px]" style={{ color: "#8578a6" }}>
+        Tap a voice to hear it — used for words, questions and stories
+      </div>
+      <div className="flex flex-wrap gap-2 mt-3" role="radiogroup" aria-label="Reading voice">
+        {VOICE_OPTIONS.map((v) => {
+          const active = v.id === current;
+          return (
+            <button
+              key={v.id}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              onClick={() => {
+                speech.setVoice(v.id);
+                speech.speak(`Hi! I'm ${v.label}. Let's read together!`);
+                void updateSettings({ voice: v.id });
+              }}
+              className="font-baloo font-extrabold text-[13px] rounded-[14px] px-4 py-2 text-left"
+              style={{
+                background: active ? "#6C3AD6" : "#F4F1FA",
+                color: active ? "#fff" : "#3b2a63",
+                border: `2px solid ${active ? "#6C3AD6" : "rgba(108,58,214,.2)"}`,
+              }}
+            >
+              {v.label}
+              <span
+                className="block font-bold text-[11px]"
+                style={{ color: active ? "rgba(255,255,255,.75)" : "#8578a6" }}
+              >
+                {v.hint}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -323,6 +375,7 @@ export default function ParentPage() {
               </div>
             );
           })}
+          <VoiceRow current={profile?.settings.voice ?? DEFAULT_VOICE} />
           <DangerRow
             label="Reset all progress"
             hint="Clear badges and stars on this device — keeps name and settings"

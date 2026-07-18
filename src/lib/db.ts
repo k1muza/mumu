@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable } from "dexie";
 import { ALL_CONTENT, CONTENT_VERSION } from "@/content";
+import { DEFAULT_VOICE } from "./tts/protocol";
 import type {
   Badge,
   Lesson,
@@ -23,7 +24,7 @@ export const DEFAULT_PROFILE: Profile = {
   gems: 0,
   leaves: 0,
   level: 1,
-  settings: { speech: false, sfx: true, autoplay: true },
+  settings: { speech: true, sfx: true, autoplay: true, voice: DEFAULT_VOICE },
 };
 
 class LearningUniverseDB extends Dexie {

@@ -122,10 +122,10 @@ export default function UniversePage() {
         {overview?.subjects.map(({ subject, earned, total, continueBadge }, i) => {
           const [w, artHeight, mt] = GEO[subject.id] ?? GEO_FALLBACK;
           const progressLabel = `${subject.name}: ${earned} of ${total} badges earned`;
-          const nextLabel =
-            earned === total
-              ? "World complete!"
-              : `${earned > 0 ? "Next" : "Start"}: ${continueBadge?.badge.name ?? "Explore"}`;
+          const complete = total > 0 && earned === total;
+          const nextLabel = complete
+            ? "World complete!"
+            : `${earned > 0 ? "Next" : "Start"}: ${continueBadge?.badge.name ?? "Explore"}`;
 
           return (
             <Link
@@ -134,7 +134,7 @@ export default function UniversePage() {
               className="relative block rounded-[26px] bg-transparent lu-float focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/80"
               style={{
                 width: w,
-                height: artHeight + 108,
+                height: artHeight + 78,
                 marginTop: mt,
                 animationDuration: `${5 + i * 0.7}s`,
                 animationDelay: `${i * 0.4}s`,
@@ -164,45 +164,60 @@ export default function UniversePage() {
               />
 
               <div
-                className="absolute inset-x-1 bottom-8 z-[3] overflow-hidden rounded-[24px] border-[3px] bg-white px-3.5 pb-3 pt-3 text-center"
+                className="absolute inset-x-1 bottom-8 z-[3] rounded-[22px] border-[3px] px-3.5 pb-3 pt-2.5 text-center"
                 style={{
+                  background: `linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,0) 55%), ${subject.chip}`,
                   borderColor: `${subject.accent}55`,
                   boxShadow: "0 10px 18px rgba(20,0,50,.28)",
                 }}
               >
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 opacity-70"
-                  style={{ background: `linear-gradient(180deg, #fff 45%, ${subject.chip} 100%)` }}
-                />
-                <div className="relative">
-                  <h2
-                    className="font-baloo text-[19px] font-extrabold uppercase leading-none tracking-[0.01em]"
-                    style={{ color: subject.accent }}
+                <h2
+                  className="font-baloo text-[19px] font-extrabold leading-none"
+                  style={{ color: subject.accent }}
+                >
+                  {subject.name}
+                </h2>
+                {earned > 0 ? (
+                  <div className="mt-2 flex items-center gap-2">
+                    <WorldProgressBar
+                      value={earned}
+                      max={total}
+                      accent={subject.accent}
+                      chip={subject.chip}
+                      ariaLabel={progressLabel}
+                      className="min-w-0 flex-1"
+                    />
+                    <span
+                      className="font-baloo text-[13px] font-extrabold leading-none"
+                      style={{ color: subject.accent }}
+                    >
+                      {earned}/{total}
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    role="img"
+                    aria-label={progressLabel}
+                    className="mt-2 flex items-center justify-center gap-1"
                   >
-                    {subject.name}
-                  </h2>
-                  <WorldProgressBar
-                    value={earned}
-                    max={total}
-                    accent={subject.accent}
-                    chip={subject.chip}
-                    ariaLabel={progressLabel}
-                    className="mx-auto mt-2"
-                  />
+                    {Array.from({ length: total }, (_, socket) => (
+                      <FaIcon
+                        key={socket}
+                        name="star"
+                        className="text-[13px]"
+                        style={{ color: `${subject.accent}40` }}
+                      />
+                    ))}
+                  </div>
+                )}
+                {(subject.id === recommendedId || complete) && (
                   <p
-                    className="mt-1 font-baloo text-[14px] font-extrabold uppercase leading-none"
-                    style={{ color: subject.accent }}
-                  >
-                    {earned}/{total} badges
-                  </p>
-                  <p
-                    className="mt-1.5 truncate text-[10.5px] font-extrabold uppercase leading-none tracking-wide"
-                    style={{ color: subject.accent }}
+                    className="mt-1.5 truncate text-[12px] font-bold leading-none"
+                    style={{ color: "#7C6DA0" }}
                   >
                     {nextLabel}
                   </p>
-                </div>
+                )}
               </div>
             </Link>
           );
