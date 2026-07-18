@@ -1,0 +1,666 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-nunito);
+}
+
+body {
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  color: #3b2a63;
+  margin: 0;
+}
+
+.font-baloo {
+  font-family: var(--font-baloo), var(--font-nunito), sans-serif;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9bce4;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+@keyframes luBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+@keyframes luFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.6deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(0.6deg);
+  }
+}
+@keyframes luPop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes luRise {
+  0% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes luTwinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+@keyframes luTwinkleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px var(--twinkle-glow)) drop-shadow(0 0 6px var(--twinkle-glow));
+  }
+  50% {
+    filter: drop-shadow(0 0 5px var(--twinkle-glow)) drop-shadow(0 0 11px var(--twinkle-glow)) brightness(1.12);
+  }
+}
+@keyframes luCloudDrift {
+  from {
+    transform: translateX(-5px);
+  }
+  to {
+    transform: translateX(17px);
+  }
+}
+@keyframes luShimmer {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+@keyframes luStarCountUpdate {
+  0% {
+    opacity: 0.4;
+    transform: translateY(5px) scale(0.78);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.18);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes luBadgeReveal {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(-16deg);
+  }
+  68% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.16) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+@keyframes luBadgeSparkle {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.72) rotate(-12deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(12deg);
+  }
+}
+@keyframes luProgressFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+@keyframes luProgressMarkerPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+.lu-bob {
+  animation: luBob 3.4s ease-in-out infinite;
+}
+.lu-float {
+  animation: luFloat 6s ease-in-out infinite;
+}
+.lu-pop {
+  animation: luPop 0.35s ease;
+}
+.lu-rise {
+  animation: luRise 0.4s ease;
+}
+.lu-shimmer {
+  animation: luShimmer 3s ease-in-out infinite;
+}
+.lu-css-twinkle {
+  display: block;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+.lu-css-twinkle-shape {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--twinkle-edge);
+  animation: luTwinkleGlow 4.8s ease-in-out infinite;
+}
+.lu-css-twinkle-shape::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  clip-path: inherit;
+  background: linear-gradient(135deg, #fff 0 8%, var(--twinkle-fill) 32% 100%);
+}
+.lu-css-twinkle-shape::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 23%;
+  width: 22%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  filter: blur(0.5px);
+}
+.lu-css-twinkle-shape.is-star {
+  clip-path: polygon(50% 0%, 61% 34%, 98% 35%, 68% 56%, 79% 94%, 50% 72%, 21% 94%, 32% 56%, 2% 35%, 39% 34%);
+}
+.lu-css-twinkle-shape.is-sparkle {
+  clip-path: polygon(50% 0%, 57% 40%, 100% 50%, 57% 60%, 50% 100%, 43% 60%, 0% 50%, 43% 40%);
+}
+.lu-css-twinkle-shape.is-burst {
+  clip-path: polygon(50% 0%, 59% 31%, 85% 15%, 69% 41%, 100% 50%, 69% 59%, 85% 85%, 59% 69%, 50% 100%, 41% 69%, 15% 85%, 31% 59%, 0% 50%, 31% 41%, 15% 15%, 41% 31%);
+}
+.lu-css-twinkle-shape.is-flare {
+  clip-path: polygon(50% 0%, 57% 35%, 78% 12%, 65% 41%, 100% 34%, 69% 49%, 95% 66%, 65% 59%, 70% 100%, 52% 66%, 33% 92%, 41% 62%, 0% 72%, 35% 53%, 5% 40%, 38% 43%);
+}
+.lu-css-twinkle-shape.is-sunburst {
+  clip-path: polygon(50% 0%, 57% 31%, 70% 5%, 68% 35%, 88% 12%, 75% 39%, 100% 30%, 79% 46%, 100% 50%, 79% 55%, 100% 70%, 74% 62%, 88% 88%, 67% 66%, 70% 100%, 57% 70%, 50% 100%, 43% 70%, 30% 100%, 33% 66%, 12% 88%, 26% 62%, 0% 70%, 21% 55%, 0% 50%, 21% 45%, 0% 30%, 25% 38%, 12% 12%, 32% 35%, 30% 5%, 43% 31%);
+}
+.lu-css-cloud {
+  position: absolute;
+  aspect-ratio: 2.45 / 1;
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 11px rgba(35, 21, 91, 0.16));
+  animation: luCloudDrift 18s ease-in-out -3s infinite alternate;
+  will-change: transform;
+}
+.lu-cloud-underside {
+  fill: #68b8ec;
+}
+.lu-cloud-body {
+  fill: #eaf5ff;
+  stroke: rgba(255, 255, 255, 0.72);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.lu-cloud-shade {
+  fill: #a6d9f7;
+  opacity: 0.95;
+}
+.lu-cloud-shade-b {
+  fill: #93cff3;
+}
+.lu-cloud-shade-c,
+.lu-cloud-shade-d {
+  fill: #9fd6f6;
+}
+.lu-cloud-highlight {
+  fill: rgba(255, 255, 255, 0.72);
+}
+.lu-css-cloud.is-wide {
+  aspect-ratio: 2.75 / 1;
+  animation-duration: 24s;
+  animation-delay: -9s;
+}
+.lu-css-cloud.is-small {
+  aspect-ratio: 2.8 / 1;
+  filter: drop-shadow(0 7px 9px rgba(35, 21, 91, 0.13));
+  animation-duration: 15s;
+  animation-delay: -6s;
+}
+.lu-counter-update {
+  display: inline-block;
+  animation: luStarCountUpdate 0.42s ease-out;
+}
+.lu-world-progress {
+  position: relative;
+  height: 17px;
+  overflow: visible;
+  border: 2px solid;
+  border-radius: 999px;
+  box-shadow: inset 0 2px 4px rgba(50, 33, 92, 0.14), 0 2px 0 rgba(255, 255, 255, 0.88);
+}
+.lu-world-progress-fill {
+  position: absolute;
+  inset: 2px auto 2px 2px;
+  max-width: calc(100% - 4px);
+  border-radius: 999px;
+  background-size: 200% 100% !important;
+  transition: width 0.65s cubic-bezier(.2,.85,.25,1);
+  animation: luProgressFlow 3s linear infinite;
+}
+.lu-world-progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 1px 5px auto 5px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+}
+.lu-world-progress-milestones {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.lu-world-progress-milestones > span {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 2px;
+  transform: translateX(-1px);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 1px 0 rgba(61, 42, 104, 0.14);
+}
+.lu-world-progress-marker {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  width: 21px;
+  height: 21px;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #fff8d8;
+  box-shadow: 0 3px 8px rgba(53, 34, 91, 0.26), 0 0 0 2px currentColor;
+  font-size: 9px;
+  animation: luProgressMarkerPulse 2s ease-in-out infinite;
+}
+.lu-world-progress[data-complete] .lu-world-progress-marker {
+  background: #ffd64d;
+  color: #9a6300 !important;
+}
+.lu-counter-pill-wrap {
+  position: relative;
+  flex: none;
+}
+.lu-counter-pill {
+  min-height: 44px;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+.lu-counter-pill:hover,
+.lu-counter-pill:focus-visible,
+.lu-counter-pill[aria-expanded="true"] {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(60, 40, 90, 0.2) !important;
+}
+.lu-counter-pill:focus-visible {
+  outline: 3px solid #ffd64d;
+  outline-offset: 3px;
+}
+.lu-counter-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 60;
+  width: max-content;
+  max-width: min(230px, calc(100vw - 28px));
+  padding: 9px 13px;
+  border: 2px solid rgba(108, 58, 214, 0.14);
+  border-radius: 13px;
+  background: #fff;
+  color: #3b2a63;
+  box-shadow: 0 9px 22px rgba(60, 40, 90, 0.2);
+  font-family: var(--font-baloo), var(--font-nunito), sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+  pointer-events: none;
+  animation: luRise 0.18s ease-out;
+}
+.lu-counter-tooltip::before {
+  content: "";
+  position: absolute;
+  right: 18px;
+  bottom: 100%;
+  border-right: 7px solid transparent;
+  border-bottom: 8px solid #fff;
+  border-left: 7px solid transparent;
+}
+
+.lu-badge-award-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  overflow: hidden;
+}
+.lu-badge-award-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(43, 27, 91, 0.68);
+  backdrop-filter: blur(7px);
+  transition: opacity 0.3s ease;
+}
+.lu-badge-award-badge {
+  position: fixed;
+  left: 50%;
+  top: 43%;
+  z-index: 2;
+  display: grid;
+  width: 180px;
+  height: 180px;
+  place-items: center;
+  border: 4px solid;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 22px 60px rgba(24, 8, 62, 0.42), inset 0 0 0 7px rgba(255, 255, 255, 0.8);
+  transform: translate(-50%, -50%);
+  animation: luBadgeReveal 0.72s cubic-bezier(.2,.9,.25,1) both;
+}
+.lu-badge-award-badge img {
+  position: relative;
+  z-index: 2;
+  width: 142px;
+  height: 142px;
+  object-fit: contain;
+  filter: drop-shadow(0 9px 13px rgba(45, 24, 84, 0.3));
+}
+.lu-badge-award-glow {
+  position: absolute;
+  inset: -25px;
+  border-radius: 50%;
+  filter: blur(24px);
+  opacity: 0.75;
+}
+.lu-badge-award-copy {
+  position: fixed;
+  top: calc(43% + 112px);
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  min-width: 260px;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+  text-align: center;
+  text-shadow: 0 3px 12px rgba(28, 10, 70, 0.35);
+  transition: opacity 0.24s ease, transform 0.24s ease;
+  animation: luRise 0.45s 0.25s ease both;
+}
+.lu-badge-award-copy span {
+  border-radius: 999px;
+  background: #fff;
+  padding: 5px 14px;
+  font-family: var(--font-baloo), var(--font-nunito), sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.lu-badge-award-copy strong {
+  margin-top: 8px;
+  color: #fff;
+  font-family: var(--font-baloo), var(--font-nunito), sans-serif;
+  font-size: clamp(29px, 5vw, 44px);
+  font-weight: 800;
+  line-height: 1;
+}
+.lu-badge-award-copy small {
+  margin-top: 6px;
+  color: #e9e2ff;
+  font-size: 14px;
+  font-weight: 800;
+}
+.lu-badge-award-sparkles {
+  position: fixed;
+  top: 43%;
+  left: 50%;
+  z-index: 3;
+  width: 280px;
+  height: 250px;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.lu-badge-award-sparkles span {
+  position: absolute;
+  color: #ffd64d;
+  font-size: 27px;
+  text-shadow: 0 3px 8px rgba(57, 31, 104, 0.28);
+  animation: luBadgeSparkle 0.8s ease-in-out infinite;
+}
+.lu-badge-award-sparkles span:nth-child(1) { left: 2%; top: 18%; animation-delay: .05s; }
+.lu-badge-award-sparkles span:nth-child(2) { right: 0; top: 22%; animation-delay: .22s; }
+.lu-badge-award-sparkles span:nth-child(3) { left: 13%; bottom: 8%; animation-delay: .4s; }
+.lu-badge-award-sparkles span:nth-child(4) { right: 12%; bottom: 2%; animation-delay: .12s; }
+.lu-badge-award-sparkles span:nth-child(5) { left: 42%; top: -10%; animation-delay: .32s; }
+.lu-badge-award-sparkles span:nth-child(6) { right: 32%; bottom: -12%; animation-delay: .5s; }
+.lu-badge-award-overlay[data-flying] .lu-badge-award-backdrop,
+.lu-badge-award-overlay[data-flying] .lu-badge-award-copy,
+.lu-badge-award-overlay[data-flying] .lu-badge-award-sparkles {
+  opacity: 0;
+}
+.lu-badge-award-overlay[data-flying] .lu-badge-award-copy {
+  transform: translate(-50%, -8px);
+}
+.lu-fa {
+  display: block;
+  flex: 0 0 auto;
+  line-height: 1;
+}
+.lu-control-icon {
+  display: grid !important;
+  place-items: center;
+  text-align: center;
+  line-height: 1 !important;
+}
+.lu-control-icon::before {
+  display: block;
+  grid-area: 1 / 1;
+  line-height: 1;
+  transform: translateY(0.5px);
+}
+.lu-icon-button {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 7px 14px rgba(30, 10, 70, 0.2);
+  backdrop-filter: blur(8px);
+  transition: transform 0.16s ease, background 0.16s ease;
+}
+.lu-icon-button:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.24);
+}
+.lu-icon-button .lu-control-icon {
+  width: 100%;
+  height: 100%;
+}
+.lu-nav-bar {
+  width: max-content;
+  margin: 0 auto 20px;
+  padding: 7px !important;
+  gap: 2px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 27px;
+  background: linear-gradient(180deg, rgba(79, 56, 169, 0.88), rgba(55, 39, 132, 0.92));
+  box-shadow: 0 10px 24px rgba(30, 10, 70, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px) saturate(130%);
+}
+.lu-nav-item {
+  display: flex;
+  flex: 0 0 64px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  min-height: 62px;
+  padding: 7px 5px 6px;
+  border: 0;
+  border-radius: 19px;
+  background: transparent;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(27, 14, 75, 0.72);
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+.lu-nav-item:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+.lu-nav-item.is-active {
+  background: #fff;
+  color: #6548bf;
+  box-shadow: 0 5px 12px rgba(30, 10, 70, 0.22);
+  text-shadow: none;
+}
+.lu-nav-item .lu-fa {
+  font-size: 24px;
+  filter: drop-shadow(0 1px 2px rgba(27, 14, 75, 0.55));
+}
+.lu-nav-item.is-active .lu-fa {
+  filter: none;
+}
+.lu-nav-label {
+  margin-top: 5px;
+  font-family: var(--font-baloo), var(--font-nunito), sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.lu-fullscreen-control {
+  position: fixed;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 130;
+}
+.lu-fullscreen-button {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  background: rgba(55, 39, 132, 0.88);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(30, 10, 70, 0.28);
+  backdrop-filter: blur(12px);
+  font-family: var(--font-baloo), var(--font-nunito), sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  transition: opacity 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+.lu-fullscreen-button:hover,
+.lu-fullscreen-button:focus-visible {
+  transform: translateY(-2px);
+  background: rgba(70, 51, 152, 0.98);
+}
+.lu-fullscreen-button:focus-visible {
+  outline: 3px solid #ffd64d;
+  outline-offset: 3px;
+}
+.lu-fullscreen-button .lu-fa {
+  font-size: 17px;
+}
+.lu-fullscreen-control[data-active] .lu-fullscreen-button {
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  opacity: 0.34;
+}
+.lu-fullscreen-control[data-active] .lu-fullscreen-button:hover,
+.lu-fullscreen-control[data-active] .lu-fullscreen-button:focus-visible {
+  opacity: 1;
+}
+.lu-fullscreen-control[data-active] .lu-fullscreen-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .lu-fullscreen-button {
+    width: 46px;
+    padding: 0;
+  }
+  .lu-fullscreen-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+}

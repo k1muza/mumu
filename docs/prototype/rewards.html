@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Rewards · Learning Universe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="lu.css">
+</head>
+<body>
+<div class="relative min-h-screen overflow-hidden" style="background:radial-gradient(120% 90% at 50% 0%,#7b5ce0 0%,#5f45bd 42%,#463398 100%)">
+  <div id="stars" class="absolute inset-0 pointer-events-none"></div>
+
+  <div class="relative z-10 max-w-[1060px] mx-auto px-7 pt-5 pb-14">
+    <!-- header -->
+    <div class="flex items-center justify-between gap-3">
+      <a href="index.html" aria-label="Back" class="flex items-center gap-2"><img src="universe/ui/back_button_small.png" alt="" class="w-[50px] h-[54px] object-contain"><span class="font-baloo font-extrabold text-[15px] text-white">Universe</span></a>
+      <img src="universe/dragon/dragon_holding_star.png" alt="Aki" class="w-[80px] h-[86px] object-contain lu-bob" style="filter:drop-shadow(0 8px 12px rgba(0,0,0,.3))">
+      <a href="parent.html" aria-label="Profile"><img src="universe/ui/profile_avatar.png" alt="" class="w-[46px] h-[46px] object-contain"></a>
+    </div>
+
+    <div class="text-center mt-1">
+      <h1 class="font-baloo font-extrabold text-white text-[36px] leading-none" style="text-shadow:0 4px 10px rgba(0,0,0,.25)">My Treasure</h1>
+      <p class="font-bold text-[15px] mt-1" style="color:#e0d5ff" id="sub">Look at everything you've collected, Zane!</p>
+      <div class="inline-flex items-center gap-2 rounded-full px-5 py-1.5 mt-2.5" style="background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.32)">
+        <span class="font-baloo font-extrabold text-[15px] text-white" id="uRankName">🌟 Explorer</span>
+        <span class="font-bold text-[12px]" style="color:#cfc0f5" id="uRankMeta">Universe rank 1 of 5</span>
+      </div>
+    </div>
+
+    <!-- counters -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 mt-6">
+      <div class="bg-white/95 rounded-[22px] px-4 py-4 flex items-center gap-3" style="box-shadow:0 10px 24px rgba(20,0,60,.25)"><img src="universe/rewards/star_gold.png" alt="" class="w-[46px] h-[46px] object-contain"><div><div class="font-baloo font-extrabold text-[26px] leading-none" style="color:#F59E0B" id="cStars">0</div><div class="font-bold text-[12.5px]" style="color:#8a7ab0">Stars</div></div></div>
+      <div class="bg-white/95 rounded-[22px] px-4 py-4 flex items-center gap-3" style="box-shadow:0 10px 24px rgba(20,0,60,.25)"><img src="universe/rewards/gem_purple.png" alt="" class="w-[46px] h-[46px] object-contain"><div><div class="font-baloo font-extrabold text-[26px] leading-none" style="color:#7A3FD0" id="cGems">0</div><div class="font-bold text-[12.5px]" style="color:#8a7ab0">Gems</div></div></div>
+      <div class="bg-white/95 rounded-[22px] px-4 py-4 flex items-center gap-3" style="box-shadow:0 10px 24px rgba(20,0,60,.25)"><img src="universe/rewards/gem_green.png" alt="" class="w-[46px] h-[46px] object-contain"><div><div class="font-baloo font-extrabold text-[26px] leading-none" style="color:#3E9A34" id="cLeaves">0</div><div class="font-bold text-[12.5px]" style="color:#8a7ab0">Leaves</div></div></div>
+      <div class="bg-white/95 rounded-[22px] px-4 py-4 flex items-center gap-3" style="box-shadow:0 10px 24px rgba(20,0,60,.25)"><img src="universe/rewards/level_badge.png" alt="" class="w-[48px] h-[52px] object-contain"><div><div class="font-baloo font-extrabold text-[26px] leading-none" style="color:#6C3AD6" id="cLevel">0</div><div class="font-bold text-[12.5px]" style="color:#8a7ab0">Level</div></div></div>
+    </div>
+
+    <!-- subject medals -->
+    <div class="flex items-center justify-between mt-8 mb-3">
+      <h2 class="font-baloo font-extrabold text-white text-[22px]">World Badges</h2>
+      <span class="font-baloo font-extrabold text-[14px] rounded-full px-4 py-1.5" style="background:rgba(255,255,255,.16);color:#fff;border:2px solid rgba(255,255,255,.3)" id="totBadges">0 / 25 earned</span>
+    </div>
+    <div id="subjects" class="grid gap-4" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))"></div>
+
+    <!-- world ranks -->
+    <h2 class="font-baloo font-extrabold text-white text-[22px] mt-9 mb-3">World Ranks</h2>
+    <div id="ranks" class="grid gap-4" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))"></div>
+
+    <!-- achievements -->
+    <h2 class="font-baloo font-extrabold text-white text-[22px] mt-9 mb-3">Special Achievements</h2>
+    <div id="achievements" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+  </div>
+</div>
+
+<script src="lu.js"></script>
+<script>
+(function () {
+  const S = LU.load();
+  const $ = (id) => document.getElementById(id);
+  $('sub').textContent = "Look at everything you've collected, " + S.child + '!';
+  $('cStars').textContent = S.stars;
+  $('cGems').textContent = S.gems;
+  $('cLeaves').textContent = S.leaves;
+  $('cLevel').textContent = S.level;
+
+  // twinkles
+  const srcs = ['sparkle_gold', 'sparkle_blue', 'sparkle_purple', 'star_gold_small'].map(n => 'universe/decorative/' + n + '.png');
+  const pos = [[8, 12, 24], [14, 84, 20], [26, 40, 16], [40, 8, 22], [58, 90, 26], [70, 20, 18], [82, 60, 22], [30, 68, 14], [50, 32, 18], [66, 48, 16]];
+  $('stars').innerHTML = pos.map((p, i) => `<div style="position:absolute;top:${p[0]}%;left:${p[1]}%;width:${p[2]}px;height:${p[2]}px;background:url(${srcs[i % srcs.length]}) center/contain no-repeat;animation:luTwinkle ${2.6 + (i % 3) * .7}s ease-in-out ${i * .35}s infinite"></div>`).join('');
+
+  let totalEarned = 0, totalBadges = 0;
+  $('subjects').innerHTML = LU.SUBJECTS.map(s => {
+    const dc = LU.doneCount(S, s.id); const tot = s.badges.length;
+    totalEarned += dc; totalBadges += tot;
+    const medal = dc >= tot ? 'medal_gold' : (dc >= 3 ? 'medal_silver' : (dc >= 1 ? 'medal_bronze' : 'medal_bronze'));
+    const badgeDots = s.badges.map(b => {
+      const done = LU.isDone(S, s.id, b.id);
+      return `<span title="${LU.esc(b.name)}" class="rounded-full" style="width:13px;height:13px;background:${done ? s.accent : '#E4DCF0'};box-shadow:${done ? '0 0 0 2px ' + s.accent + '33' : 'none'}"></span>`;
+    }).join('');
+    const dim = dc === 0 ? 'filter:grayscale(.5) opacity(.7)' : '';
+    return `<a href="world.html?subject=${s.id}" class="bg-white rounded-[24px] px-5 py-5 flex items-center gap-4" style="box-shadow:0 10px 24px rgba(20,0,60,.22);border-top:5px solid ${s.accent}">
+      <img src="universe/rewards/${medal}.png" alt="" class="w-[62px] h-[70px] object-contain flex-none ${dc >= tot ? 'lu-shimmer' : ''}" style="${dim}">
+      <div class="flex-1 min-w-0">
+        <div class="font-baloo font-extrabold text-[18px] leading-tight" style="color:#3b2a63">${LU.esc(s.name)}</div>
+        <div class="font-bold text-[13px] mb-2" style="color:${s.accent}">${dc} of ${tot} badges earned</div>
+        <div class="flex items-center gap-1.5">${badgeDots}</div>
+      </div>
+    </a>`;
+  }).join('');
+  $('totBadges').textContent = totalEarned + ' / ' + totalBadges + ' earned';
+
+  // universe rank
+  const uRk = LU.universeRank(S);
+  $('uRankName').textContent = '🌟 ' + uRk.name;
+  $('uRankMeta').textContent = uRk.next ? `Universe rank ${uRk.tier} of ${uRk.total} · ${uRk.toNext} badge${uRk.toNext > 1 ? 's' : ''} to ${uRk.next}` : `Universe rank ${uRk.tier} of ${uRk.total} — the very top!`;
+
+  // world rank ladders
+  $('ranks').innerHTML = LU.SUBJECTS.map(s => {
+    const rk = LU.rank(S, s.id);
+    const rows = rk.names.map((n, i) => {
+      const reached = i < rk.tier;            // tiers already earned (1-based tier)
+      const current = i === rk.tier - 1;
+      const need = rk.thresholds[i];
+      const mark = reached ? '✓' : '';
+      return `<div class="flex items-center gap-2.5 py-[5px] rounded-[12px] ${current ? 'px-2 -mx-2' : ''}" style="${current ? 'background:' + s.chip : ''}">
+        <span class="rounded-full flex-none inline-flex items-center justify-center" style="width:20px;height:20px;background:${reached ? s.accent : '#E4DCF0'};color:#fff;font-size:12px;font-weight:900">${mark}</span>
+        <span class="flex-1 font-baloo font-extrabold text-[14px]" style="color:${reached ? '#3b2a63' : '#a99ac8'}">${LU.esc(n)}${current ? ' <span style="font-size:11px;color:' + s.accent + '">← you</span>' : ''}</span>
+        <span class="font-bold text-[11.5px]" style="color:#b3a5cf">${need === 0 ? 'start' : need + ' badge' + (need > 1 ? 's' : '')}</span>
+      </div>`;
+    }).join('');
+    return `<div class="bg-white rounded-[24px] px-5 py-4" style="box-shadow:0 10px 24px rgba(20,0,60,.22);border-top:5px solid ${s.accent}">
+      <div class="font-baloo font-extrabold text-[17px] mb-1.5" style="color:#3b2a63">${LU.esc(s.name)}</div>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  // achievements — derived from progress
+  const worldsStarted = LU.SUBJECTS.filter(s => LU.doneCount(S, s.id) > 0).length;
+  const worldsMastered = LU.SUBJECTS.filter(s => LU.doneCount(S, s.id) >= s.badges.length).length;
+  const ach = [
+    { img: 'treasure_chest.png', name: 'First Badge', unlocked: totalEarned >= 1, hint: 'Earn your first badge' },
+    { img: 'crystal_cluster.png', name: 'Explorer', unlocked: worldsStarted >= 3, hint: 'Play in 3 worlds' },
+    { img: 'star_radiant.png', name: 'Star Collector', unlocked: S.stars >= 30, hint: 'Collect 30 stars' },
+    { img: 'shield_winged_crystal.png', name: 'World Master', unlocked: worldsMastered >= 1, hint: 'Finish a whole world' },
+  ];
+  $('achievements').innerHTML = ach.map(a => `<div class="bg-white rounded-[22px] px-4 py-5 text-center" style="box-shadow:0 10px 24px rgba(20,0,60,.2)">
+    <img src="universe/rewards/${a.img}" alt="" class="w-[68px] h-[68px] object-contain mx-auto ${a.unlocked ? 'lu-bob' : ''}" style="${a.unlocked ? '' : 'filter:grayscale(1) opacity(.4)'}">
+    <div class="font-baloo font-extrabold text-[15px] mt-2" style="color:#3b2a63">${a.name}</div>
+    <div class="font-bold text-[11.5px] mt-0.5" style="color:${a.unlocked ? '#3c8f26' : '#a99ac8'}">${a.unlocked ? 'Unlocked!' : a.hint}</div>
+  </div>`).join('');
+})();
+</script>
+</body>
+</html>

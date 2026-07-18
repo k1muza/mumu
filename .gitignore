@@ -31,5 +31,24 @@ pnpm-debug.log*
 *.tmp
 *.temp
 
-# Dependencies installed at the repository root
-/node_modules/
+# Dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Production
+/build
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story Reader · Learning Universe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="lu.css">
+</head>
+<body>
+<div id="page" class="min-h-screen" style="background:linear-gradient(180deg,#E7F6F8 0%,#F6FCFC 60%)">
+  <div class="max-w-[1200px] mx-auto px-7 pt-5 pb-14">
+    <!-- header -->
+    <div class="flex items-center justify-between gap-4">
+      <a id="back" href="world.html?subject=english" class="flex items-center gap-2.5"><img src="universe/ui/back_button_small.png" alt="" class="w-[52px] h-[56px] object-contain"><span id="backLabel" class="font-baloo font-extrabold text-[16px]" style="color:#1F97A6">English World</span></a>
+      <div class="flex items-center gap-2.5">
+        <img src="universe/dragon/dragon_reading_book.png" alt="Aki" class="w-[62px] h-[68px] object-contain lu-bob" style="filter:drop-shadow(0 6px 10px rgba(60,40,90,.18))">
+        <div>
+          <div class="font-baloo font-extrabold text-[11px] tracking-[.16em] uppercase" style="color:#1F97A6">Story Reader</div>
+          <div id="headTitle" class="font-baloo font-extrabold text-[22px] leading-none" style="color:#25455e">Story Library</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 bg-white rounded-full pl-1.5 pr-4 py-1.5" style="border:2px solid rgba(0,0,0,.05);box-shadow:0 5px 14px rgba(60,40,90,.12)"><img src="universe/rewards/star_gold.png" alt="stars" class="w-[26px] h-[26px] object-contain"><span class="font-baloo font-extrabold text-[16px]" style="color:#F59E0B" id="starCount">0</span></div>
+    </div>
+
+    <div id="app" class="mt-6"></div>
+  </div>
+</div>
+
+<script src="image-slot.js"></script>
+<script src="lu.js"></script>
+<script>
+(function () {
+  const S = LU.load();
+  document.getElementById('starCount').textContent = S.stars;
+
+  const ART = 'Warm children\u2019s picture-book illustration, soft painterly storybook style, gentle natural light, friendly rounded characters, no lettering. Scene: ';
+
+  const STORIES = [
+    {
+      id: 'pat', title: 'Pat is a Cat', accent: '#6C3AD6', tint: '#EEE7FB',
+      cover: 'Book-cover art \u2014 a cheerful young boy with curly dark hair waving one hand, sitting beside a fluffy grey-and-white tabby kitten in a sunny flower garden with a small cottage behind them.',
+      pages: [
+        { text: 'Pat is a cat.', img: 'a fluffy grey-and-white tabby kitten sitting on a mat by a stone doorway while a happy boy waves hello.' },
+        { text: 'Pat can run.', img: 'the grey-and-white kitten running across green grass, chasing a red ball of yarn, tail up.' },
+        { text: 'Pat can sit.', img: 'the grey-and-white kitten sitting neatly and licking one paw beside a blue food bowl.' },
+        { text: 'Pat can tap.', img: 'the grey-and-white kitten tapping the water in a shiny blue bowl with one front paw.' },
+        { text: 'Pat is my cat.', img: 'the boy sitting cross-legged on the grass, gently petting the grey-and-white kitten, both smiling.' },
+        { text: 'I pat Pat.', img: 'the boy hugging the grey-and-white kitten cheek to cheek at golden sunset near a little house.' },
+      ],
+      questions: [
+        { q: 'Who is Pat?', choices: [
+          { img: 'friendly cartoon portrait of a young boy with curly dark hair.', correct: false },
+          { img: 'a grey-and-white tabby kitten looking at the camera.', correct: true },
+          { img: 'a small brown puppy sitting.', correct: false } ] },
+        { q: 'What can Pat do?', choices: [
+          { img: 'a grey-and-white kitten running fast across grass.', correct: true },
+          { img: 'a grey-and-white kitten curled up asleep.', correct: false },
+          { img: 'a grey-and-white kitten eating from a bowl.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'man', title: 'The Man and the Cat', accent: '#3E9A34', tint: '#E6F5DF',
+      cover: 'Book-cover art \u2014 a kind smiling man in a blue shirt and straw hat kneeling on a village path beside a small grey kitten, warm sunny African village in the background.',
+      pages: [
+        { text: 'The man has a bun.', img: 'a man in a straw hat and blue shirt kneeling and holding up a round golden bun, a grey kitten looking up at it.' },
+        { text: 'The man and the cat.', img: 'the man gently offering the bun toward the eager grey kitten, close together on a sunny path.' },
+        { text: 'The man and the cat go.', img: 'the man walking down a dirt village path with the little grey kitten trotting beside him.' },
+        { text: 'They hop on the log.', img: 'the man stepping onto a fallen log while the grey kitten hops up onto it too, forest edge behind.' },
+        { text: 'They run.', img: 'the man and the grey kitten running happily along a sunny dirt path together.' },
+        { text: 'The man reads.', img: 'the man sitting on a mat reading a red picture book with the grey kitten resting beside him.' },
+      ],
+      questions: [
+        { q: 'What does the man have?', choices: [
+          { img: 'a round golden bun on a plate.', correct: true },
+          { img: 'a blue baseball cap.', correct: false },
+          { img: 'a red ball of yarn.', correct: false } ] },
+        { q: 'What do they do?', choices: [
+          { img: 'a man and a grey kitten running together.', correct: true },
+          { img: 'a man and a kitten hopping over a log.', correct: false },
+          { img: 'a man reading a book with a kitten.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'hen', title: 'The Red Hen', accent: '#1F97A6', tint: '#DFF1F3',
+      cover: 'Book-cover art \u2014 a plump friendly red hen standing proudly in a sunny farmyard with a fluffy yellow chick peeking out beside her, wooden barn behind.',
+      pages: [
+        { text: 'The hen is red.', img: 'a plump red hen standing in a sunny farmyard, looking cheerful.' },
+        { text: 'The hen sits.', img: 'the red hen sitting cosily on a round nest of golden straw.' },
+        { text: 'The hen has an egg.', img: 'the red hen beside one smooth white egg nestled in the straw nest.' },
+        { text: 'The egg can rock.', img: 'the single white egg wobbling and rocking in the straw nest, tiny motion lines.' },
+        { text: 'A chick pops up.', img: 'a fluffy yellow chick hatching, popping happily out of a cracked eggshell.' },
+        { text: 'The hen is glad.', img: 'the red hen and the little yellow chick nuzzling together, both happy in the farmyard.' },
+      ],
+      questions: [
+        { q: 'What is red?', choices: [
+          { img: 'a plump red hen.', correct: true },
+          { img: 'a smooth white egg.', correct: false },
+          { img: 'a fluffy yellow chick.', correct: false } ] },
+        { q: 'Who pops up?', choices: [
+          { img: 'a fluffy yellow chick hatching.', correct: true },
+          { img: 'a red hen standing.', correct: false },
+          { img: 'a grey kitten sitting.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'pup', title: 'Sam the Pup', accent: '#C0791F', tint: '#F6EAD5',
+      cover: 'Book-cover art \u2014 a happy little brown puppy with floppy ears sitting in a sunny green garden beside a small blue pond, bright cheerful mood.',
+      pages: [
+        { text: 'Sam is a pup.', img: 'a small brown puppy with floppy ears sitting on green grass in a sunny garden.' },
+        { text: 'Sam sits in the sun.', img: 'the brown puppy lying happily in a warm patch of sunshine on the grass.' },
+        { text: 'Sam is hot.', img: 'the brown puppy panting with tongue out under the shade of a leafy tree, hot sunny day.' },
+        { text: 'Sam runs to the pond.', img: 'the brown puppy running eagerly toward a small blue pond in the garden.' },
+        { text: 'Sam jumps in.', img: 'the brown puppy leaping into the blue pond with a big splash of water.' },
+        { text: 'Sam is wet.', img: 'the soaking-wet brown puppy shaking off water droplets, looking delighted by the pond.' },
+      ],
+      questions: [
+        { q: 'Who is Sam?', choices: [
+          { img: 'a small brown puppy.', correct: true },
+          { img: 'a grey kitten.', correct: false },
+          { img: 'a red hen.', correct: false } ] },
+        { q: 'Where does Sam jump?', choices: [
+          { img: 'into a blue pond with a splash.', correct: true },
+          { img: 'up onto a wooden log.', correct: false },
+          { img: 'into a pile of straw.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'fox', title: 'The Fox and the Box', accent: '#C33A32', tint: '#F9E4E1',
+      cover: 'Book-cover art \u2014 a cheerful orange fox peeking happily out of a big cardboard box in a sunny meadow, bright playful mood.',
+      pages: [
+        { text: 'The fox has a box.', img: 'a friendly orange fox standing beside a big brown cardboard box on green grass.' },
+        { text: 'The box is big.', img: 'the orange fox looking up at a tall big cardboard box, the box much bigger than the fox.' },
+        { text: 'The fox sits in the box.', img: 'the orange fox sitting cosily inside the open cardboard box, peeking over the edge.' },
+        { text: 'A hen hops in.', img: 'a plump red hen hopping into the cardboard box to join the orange fox.' },
+        { text: 'The fox and the hen.', img: 'the orange fox and the red hen sitting together inside the cardboard box, friends.' },
+        { text: 'They nap in the box.', img: 'the orange fox and the red hen napping snugly side by side inside the box, eyes closed.' },
+      ],
+      questions: [
+        { q: 'What has a box?', choices: [
+          { img: 'an orange fox.', correct: true },
+          { img: 'a red hen.', correct: false },
+          { img: 'a grey cat.', correct: false } ] },
+        { q: 'What do they do in the box?', choices: [
+          { img: 'a fox and hen napping together.', correct: true },
+          { img: 'a fox running across grass.', correct: false },
+          { img: 'a hen hopping over a log.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'meg', title: 'Meg and the Bug', accent: '#6C3AD6', tint: '#EEE7FB',
+      cover: 'Book-cover art \u2014 a curious young girl with two braids crouching in a garden to look at a little red ladybug on a leaf, sunny and sweet.',
+      pages: [
+        { text: 'Meg is a girl.', img: 'a happy young girl with two braids standing in a green sunny garden.' },
+        { text: 'Meg sees a bug.', img: 'the girl crouching down, pointing at a tiny red bug on a leaf, curious.' },
+        { text: 'The bug is red.', img: 'a close friendly view of a small round red ladybug with black spots on a green leaf.' },
+        { text: 'The bug can hop.', img: 'the little red bug hopping into the air off a leaf, tiny motion lines.' },
+        { text: 'Meg gets a jar.', img: 'the girl gently holding a clear glass jar, ready to look at the little red bug.' },
+        { text: 'Meg lets it go.', img: 'the girl smiling as she opens her hands and the red bug flies away in the garden.' },
+      ],
+      questions: [
+        { q: 'Who is Meg?', choices: [
+          { img: 'a young girl with braids.', correct: true },
+          { img: 'a red ladybug.', correct: false },
+          { img: 'a grey cat.', correct: false } ] },
+        { q: 'What can the bug do?', choices: [
+          { img: 'a red ladybug hopping up.', correct: true },
+          { img: 'a puppy running.', correct: false },
+          { img: 'a cat napping.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'pig', title: 'The Pig in the Mud', accent: '#3E9A34', tint: '#E6F5DF',
+      cover: 'Book-cover art \u2014 a jolly pink pig with a big smile sitting in a shallow puddle of brown mud on a sunny farm, splashy and fun.',
+      pages: [
+        { text: 'The pig is pink.', img: 'a plump happy pink pig standing in a sunny green farmyard.' },
+        { text: 'The pig digs.', img: 'the pink pig digging in the soft brown earth with its snout, dirt flying.' },
+        { text: 'The pig is in the mud.', img: 'the pink pig sitting happily in a shallow puddle of squishy brown mud.' },
+        { text: 'The mud is wet.', img: 'a close view of the pink pig splashing in the wet brown mud, droplets flying.' },
+        { text: 'The pig is glad.', img: 'the muddy pink pig grinning with delight, covered in happy splatters of mud.' },
+        { text: 'The pig naps.', img: 'the pink pig lying down for a cosy nap in the warm mud, eyes closed, content.' },
+      ],
+      questions: [
+        { q: 'What is pink?', choices: [
+          { img: 'a plump pig.', correct: true },
+          { img: 'brown mud.', correct: false },
+          { img: 'a red hen.', correct: false } ] },
+        { q: 'Where is the pig?', choices: [
+          { img: 'in a puddle of mud.', correct: true },
+          { img: 'inside a cardboard box.', correct: false },
+          { img: 'in a blue pond.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'ben', title: 'Ben and the Net', accent: '#1F97A6', tint: '#DFF1F3',
+      cover: 'Book-cover art \u2014 a happy young boy in shorts holding a small fishing net at the edge of a calm blue pond, reeds and sunshine around him.',
+      pages: [
+        { text: 'Ben is at the pond.', img: 'a cheerful young boy standing at the grassy edge of a calm blue pond on a sunny day.' },
+        { text: 'Ben has a net.', img: 'the boy holding up a small green fishing net, smiling, pond behind him.' },
+        { text: 'Ben sees a fish.', img: 'the boy pointing excitedly at a small orange fish swimming in the clear blue pond.' },
+        { text: 'Ben dips the net.', img: 'the boy carefully dipping his net into the pond water toward the little orange fish.' },
+        { text: 'Ben gets the fish.', img: 'the boy lifting the net out of the water with a small orange fish inside, delighted.' },
+        { text: 'Ben lets it go.', img: 'the boy gently tipping the net so the little orange fish swims back into the pond.' },
+      ],
+      questions: [
+        { q: 'What does Ben have?', choices: [
+          { img: 'a small fishing net.', correct: true },
+          { img: 'a cardboard box.', correct: false },
+          { img: 'a glass jar.', correct: false } ] },
+        { q: 'What does Ben get?', choices: [
+          { img: 'a small orange fish.', correct: true },
+          { img: 'a red ladybug.', correct: false },
+          { img: 'a red hen.', correct: false } ] },
+      ],
+    },
+    {
+      id: 'web', title: 'Deb and the Web', accent: '#6C3AD6', tint: '#EEE7FB', mode: 'single',
+      cover: 'Book-cover art \u2014 a kind young girl looking closely at a dewy spider web on an old wooden shed, a tiny bug caught in it, soft morning light.',
+      pages: [
+        { text: 'Deb sees a web on the shed.' },
+        { text: 'A little bug is stuck in the web.' },
+        { text: 'Deb feels sad for the bug.' },
+        { text: 'She gets the bug out, bit by bit.' },
+        { text: 'Off it hops \u2014 the bug can go!' },
+        { text: 'Deb is so glad she helped.' },
+      ],
+      questions: [
+        { q: 'What did Deb see?', choices: [
+          { label: 'A web on the shed', correct: true },
+          { label: 'A fish in a pond', correct: false },
+          { label: 'A box on the grass', correct: false } ] },
+        { q: 'How did Deb feel at the end?', choices: [
+          { label: 'Glad', correct: true },
+          { label: 'Sad', correct: false },
+          { label: 'Mad', correct: false } ] },
+      ],
+    },
+    {
+      id: 'hill', title: 'The Trip up the Hill', accent: '#3E9A34', tint: '#E6F5DF', mode: 'single',
+      cover: 'Book-cover art \u2014 a mother and her young son walking up a green grassy hill on a sunny day, a bright red kite in the sky above them.',
+      pages: [
+        { text: 'Mum and Tom go up the big hill.' },
+        { text: 'The sun is hot, so they rest.' },
+        { text: 'Tom sees a big red kite.' },
+        { text: 'The kite gets stuck in a tree!' },
+        { text: 'Mum gets a long stick to help.' },
+        { text: 'The kite is free! They run home.' },
+      ],
+      questions: [
+        { q: 'Where do Mum and Tom go?', choices: [
+          { label: 'Up the hill', correct: true },
+          { label: 'To the pond', correct: false },
+          { label: 'To the shop', correct: false } ] },
+        { q: 'What gets stuck in the tree?', choices: [
+          { label: 'A red kite', correct: true },
+          { label: 'A grey cat', correct: false },
+          { label: 'A ball', correct: false } ] },
+      ],
+    },
+    {
+      id: 'cake', title: 'Nan and the Cake', accent: '#C0791F', tint: '#F6EAD5', mode: 'single',
+      cover: 'Book-cover art \u2014 a smiling grandmother in an apron holding a fresh golden cake in a cosy kitchen, a happy child reaching up beside her.',
+      pages: [
+        { text: 'Nan says she will bake a cake.' },
+        { text: 'She gets the eggs and the jam.' },
+        { text: 'The mix goes into the pan.' },
+        { text: 'It bakes in the hot oven.' },
+        { text: 'Soon the cake smells so good!' },
+        { text: 'Nan and Sam eat it all up.' },
+      ],
+      questions: [
+        { q: 'What does Nan bake?', choices: [
+          { label: 'A cake', correct: true },
+          { label: 'A bun', correct: false },
+          { label: 'An egg', correct: false } ] },
+        { q: 'Who eats the cake?', choices: [
+          { label: 'Nan and Sam', correct: true },
+          { label: 'Just a cat', correct: false },
+          { label: 'Nobody', correct: false } ] },
+      ],
+    },
+  ];
+
+  const app = document.getElementById('app');
+  function doCopy(txt) {
+    let ok = false;
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length);
+      ok = document.execCommand('copy');
+      ta.remove();
+    } catch (e) {}
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try { navigator.clipboard.writeText(txt).then(() => {}, () => {}); ok = true; } catch (e) {}
+    }
+    return ok;
+  }
+  // capture-phase so copying never registers a question answer
+  app.addEventListener('click', function (e) {
+    const b = e.target.closest && e.target.closest('.copyp');
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    doCopy(b.dataset.prompt || '');
+    const t = b.querySelector('.copyp-t');
+    if (t) { const o = t.textContent; t.textContent = 'Copied!'; b.style.background = 'rgba(46,125,36,.92)'; setTimeout(() => { t.textContent = o; b.style.background = 'rgba(15,25,35,.7)'; }, 1200); }
+  }, true);
+  const headTitle = document.getElementById('headTitle');
+  const back = document.getElementById('back');
+  const backLabel = document.getElementById('backLabel');
+
+  function slot(id, ph, extraAttr, chipPos) {
+    const pos = chipPos === 'top' ? 'right:7px;top:7px;' : 'right:7px;bottom:7px;';
+    return `<image-slot id="${id}" shape="rect" fit="cover" placeholder="${LU.esc(ph)}" ${extraAttr || ''}></image-slot>`
+      + `<span class="copyp" role="button" tabindex="0" title="Copy image prompt" data-prompt="${LU.esc(ph)}" style="position:absolute;${pos}z-index:20;display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:9px;background:rgba(15,25,35,.7);color:#fff;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:11px;line-height:1;cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 2px 6px rgba(0,0,0,.3)">⧉ <span class="copyp-t">Copy prompt</span></span>`;
+  }
+
+  /* ---------- credit / progress ---------- */
+  function credit() { try { return JSON.parse(LU.storeGet('lu_story_credit') || '{}'); } catch (e) { return {}; } }
+  function saveCredit(c) { try { LU.storeSet('lu_story_credit', JSON.stringify(c)); } catch (e) {} }
+
+  /* ================= LIBRARY ================= */
+  function renderLibrary() {
+    headTitle.textContent = 'Story Library';
+    back.href = 'world.html?subject=english';
+    backLabel.textContent = 'English World';
+
+    const intro = `<div class="flex items-center gap-4 bg-white rounded-[24px] px-6 py-4 mb-6" style="box-shadow:0 10px 26px rgba(60,40,90,.1);border:1px solid rgba(0,0,0,.04)">
+      <img src="universe/dragon/dragon_with_speech_bubble.png" alt="" class="w-[76px] h-[82px] object-contain flex-none">
+      <div><div class="font-baloo font-extrabold text-[20px]" style="color:#25455e">Pick a story to read!</div>
+      <div class="font-bold text-[14.5px]" style="color:#5b7686">Tap a book. Read each page, then answer the picture questions.</div></div>
+    </div>`;
+
+    const cards = STORIES.map((st, i) => {
+      const isSingle = st.mode === 'single';
+      const tag = isSingle ? 'Reading story' : 'Picture book';
+      const meta = isSingle
+        ? `${st.pages.length} parts \u00b7 ${st.questions.length} questions`
+        : `${st.pages.length} pages \u00b7 ${st.questions.length} questions`;
+      return `<a href="story.html?story=${st.id}" class="group block bg-white rounded-[24px] overflow-hidden" style="box-shadow:0 10px 24px rgba(60,40,90,.12);border:1px solid rgba(0,0,0,.05)">
+        <div class="h-[10px]" style="background:${st.accent}"></div>
+        <div class="p-4">
+          <div class="relative rounded-[16px] overflow-hidden" style="aspect-ratio:3/4;box-shadow:0 6px 14px rgba(60,40,90,.14)">
+            ${slot('story-' + st.id + '-cover', ART + st.cover, '', 'top')}
+            <span class="absolute left-2.5 top-2.5 z-10 pointer-events-none font-baloo font-extrabold text-[10px] tracking-wide rounded-full px-2.5 py-1" style="background:rgba(255,255,255,.92);color:${st.accent}">${tag}</span>
+            <div class="absolute left-0 right-0 bottom-0 px-3 py-2 pointer-events-none" style="background:linear-gradient(0deg,rgba(0,0,0,.55),transparent)">
+              <span class="font-baloo font-extrabold text-white text-[11px] tracking-wide">A Learning Universe Story</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between gap-2 mt-3">
+            <div class="min-w-0">
+              <div class="font-baloo font-extrabold text-[19px] leading-tight truncate" style="color:#25455e">${LU.esc(st.title)}</div>
+              <div class="font-bold text-[12.5px]" style="color:#8a9aa6">${meta}</div>
+            </div>
+            <span class="flex-none font-baloo font-extrabold text-white text-[14px] rounded-[14px] px-4 py-2.5 transition-transform group-hover:scale-[1.04]" style="background:${st.accent};box-shadow:0 4px 0 rgba(0,0,0,.18)">Read</span>
+          </div>
+        </div>
+      </a>`;
+    }).join('');
+
+    app.innerHTML = intro + `<div class="grid gap-5" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">${cards}</div>`;
+  }
+  function readCount() { return 0; }
+
+  /* ================= READER ================= */
+  function renderReader(st) {
+    headTitle.textContent = st.title;
+    back.href = 'story.html';
+    backLabel.textContent = 'Story Library';
+
+    // story tab + cover
+    const cover = `<div class="flex-none" style="width:250px">
+      <div class="inline-flex items-center gap-2 font-baloo font-extrabold text-white text-[14px] rounded-t-[14px] px-5 py-2" style="background:${st.accent}">
+        <img src="universe/decorative/icon_book.png" alt="" class="w-[18px] h-[18px] object-contain" style="filter:brightness(0) invert(1)">STORY
+      </div>
+      <div class="bg-white rounded-b-[20px] rounded-tr-[20px] p-3" style="box-shadow:0 12px 28px rgba(60,40,90,.14);border:1px solid rgba(0,0,0,.05)">
+        <div class="relative rounded-[14px] overflow-hidden" style="aspect-ratio:3/4">
+          ${slot('story-' + st.id + '-cover', ART + st.cover, '', 'top')}
+          <div class="absolute left-0 right-0 bottom-0 px-3 py-2 pointer-events-none" style="background:linear-gradient(0deg,rgba(0,0,0,.55),transparent)">
+            <span class="font-baloo font-extrabold text-white text-[11px] tracking-wide">A Learning Universe Story</span>
+          </div>
+        </div>
+        <div class="font-baloo font-extrabold text-[20px] text-center mt-2.5 leading-tight" style="color:#25455e">${LU.esc(st.title)}</div>
+        <button id="copyAll" class="w-full mt-3 font-baloo font-extrabold text-[13px] rounded-[13px] px-3 py-2.5 flex items-center justify-center gap-1.5" style="background:${st.tint};color:${st.accent};border:2px solid ${st.accent}33">\u29c9 <span id="copyAllT">Copy all prompts</span></button>
+      </div>
+    </div>`;
+
+    const isSingle = st.mode === 'single';
+
+    // page tiles (picture books) or text parts (single-cover stories)
+    const pages = isSingle
+      ? st.pages.map((p, i) => `<div class="bg-white rounded-[18px] px-5 py-4 flex items-start gap-3.5" style="box-shadow:0 6px 16px rgba(60,40,90,.09);border:1px solid rgba(0,0,0,.05)">
+          <span class="flex-none font-baloo font-extrabold text-white text-[15px] rounded-full flex items-center justify-center mt-0.5" style="width:32px;height:32px;background:${st.accent}">${i + 1}</span>
+          <span class="font-baloo font-extrabold text-[21px] leading-snug" style="color:#2b3f4c;text-wrap:pretty">${LU.esc(p.text)}</span>
+        </div>`).join('')
+      : st.pages.map((p, i) => `<div class="bg-white rounded-[20px] overflow-hidden flex flex-col" style="box-shadow:0 8px 20px rgba(60,40,90,.1);border:1px solid rgba(0,0,0,.05)">
+          <div class="relative" style="aspect-ratio:4/3">
+            ${slot('story-' + st.id + '-p' + i, ART + p.img)}
+            <span class="absolute left-2.5 top-2.5 z-10 pointer-events-none font-baloo font-extrabold text-white text-[12px] rounded-[10px] px-2.5 py-1" style="background:${st.accent};box-shadow:0 3px 8px rgba(0,0,0,.25)">Page ${i + 1}</span>
+          </div>
+          <div class="px-4 py-3.5 flex-1 flex items-center justify-center">
+            <span class="font-baloo font-extrabold text-[22px] leading-snug text-center" style="color:#2b3f4c;text-wrap:balance">${LU.esc(p.text)}</span>
+          </div>
+        </div>`).join('');
+
+    // question tiles (picture answers) or text-answer buttons
+    const qs = st.questions.map((q, qi) => {
+      const cells = isSingle
+        ? q.choices.map((c, ci) => `<button class="qchoice relative rounded-[14px] transition-transform text-left" data-correct="${c.correct ? 1 : 0}" style="border:3px solid rgba(0,0,0,.08);background:#fff;padding:13px 16px">
+            <span class="font-baloo font-extrabold text-[16px]" style="color:#25455e">${LU.esc(c.label)}</span>
+          </button>`).join('')
+        : q.choices.map((c, ci) => `<button class="qchoice relative rounded-[14px] overflow-hidden transition-transform" data-correct="${c.correct ? 1 : 0}" style="aspect-ratio:1;border:3px solid rgba(0,0,0,.08);background:#fff">
+            ${slot('story-' + st.id + '-q' + qi + '-c' + ci, ART + c.img, 'style="pointer-events:none"')}
+          </button>`).join('');
+      const choicesGrid = isSingle ? 'grid grid-cols-1 gap-2' : 'grid grid-cols-3 gap-2.5';
+      return `<div class="qcard bg-white rounded-[20px] overflow-hidden" data-q="${qi}" style="box-shadow:0 8px 20px rgba(60,40,90,.1);border:1px solid rgba(0,0,0,.05)">
+        <div class="flex items-center gap-2 px-4 py-2.5" style="background:${st.tint}">
+          <span class="font-baloo font-extrabold text-[13px]" style="color:${st.accent}">Question ${qi + 1}</span>
+        </div>
+        <div class="p-4">
+          <div class="font-baloo font-extrabold text-[18px] mb-3" style="color:#25455e">${LU.esc(q.q)}</div>
+          <div class="${choicesGrid}">${cells}</div>
+          <div class="qfb flex items-center gap-1.5 mt-3 font-baloo font-extrabold text-[14px] h-[20px]" style="opacity:0;transition:opacity .2s"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    const pagesWrap = isSingle
+      ? `<div class="grid gap-3.5" style="grid-template-columns:1fr;max-width:640px">${pages}</div>`
+      : `<div class="grid gap-4" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">${pages}</div>`;
+
+    app.innerHTML = `
+      <div class="flex gap-6 flex-wrap items-start">
+        ${cover}
+        <div class="flex-1 min-w-[280px]">${pagesWrap}</div>
+      </div>
+      <div class="flex items-center gap-2 mt-9 mb-3 ml-1">
+        <img src="universe/dragon/dragon_thinking.png" alt="" class="w-[40px] h-[44px] object-contain">
+        <span class="font-baloo font-extrabold text-[20px]" style="color:#25455e">Let\u2019s check what you read!</span>
+      </div>
+      <div class="grid gap-4" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">${qs}</div>`;
+
+    bindQuestions(st);
+
+    const ca = document.getElementById('copyAll');
+    if (ca) ca.addEventListener('click', () => {
+      const lines = ['Story: ' + st.title, '', 'COVER: ' + ART + st.cover, ''];
+      if (st.mode === 'single') {
+        lines.push('STORY TEXT:');
+        st.pages.forEach((p, i) => lines.push('  ' + (i + 1) + '. ' + p.text));
+        lines.push('', 'QUESTIONS:');
+        st.questions.forEach((q, qi) => {
+          lines.push('Q' + (qi + 1) + ' \u2014 ' + q.q);
+          q.choices.forEach((c, ci) => lines.push('  ' + String.fromCharCode(65 + ci) + (c.correct ? ' (correct)' : '') + ': ' + c.label));
+        });
+      } else {
+        st.pages.forEach((p, i) => lines.push('PAGE ' + (i + 1) + ' \u2014 \u201c' + p.text + '\u201d: ' + ART + p.img));
+        lines.push('');
+        st.questions.forEach((q, qi) => {
+          lines.push('QUESTION ' + (qi + 1) + ' \u2014 ' + q.q);
+          q.choices.forEach((c, ci) => lines.push('  ' + String.fromCharCode(65 + ci) + (c.correct ? ' (correct)' : '') + ': ' + ART + c.img));
+        });
+      }
+      const txt = lines.join('\n');
+      doCopy(txt);
+      const t = document.getElementById('copyAllT');
+      t.textContent = 'Copied all!'; setTimeout(() => { t.textContent = 'Copy all prompts'; }, 1400);
+    });
+  }
+
+  function bindQuestions(st) {
+    app.querySelectorAll('.qcard').forEach(card => {
+      const qi = +card.dataset.q;
+      const fb = card.querySelector('.qfb');
+      let done = false;
+      card.querySelectorAll('.qchoice').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (done) return;
+          if (btn.dataset.correct === '1') {
+            done = true;
+            btn.style.borderColor = '#3fae4a';
+            btn.style.boxShadow = '0 0 0 4px #3fae4a55,0 6px 16px rgba(60,40,90,.14)';
+            btn.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], { duration: 320 });
+            card.querySelectorAll('.qchoice').forEach(o => { if (o !== btn) o.style.opacity = '.5'; });
+            fb.innerHTML = '<span style="color:#2E7D24">\u2605 Yes! Well done!</span>';
+            fb.style.opacity = '1';
+            award(st, qi);
+          } else {
+            btn.style.borderColor = '#e46161';
+            btn.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-7px)' }, { transform: 'translateX(7px)' }, { transform: 'translateX(0)' }], { duration: 300 });
+            setTimeout(() => { btn.style.borderColor = 'rgba(0,0,0,.08)'; }, 700);
+            fb.innerHTML = '<span style="color:#C25B12">Not quite \u2014 try again!</span>';
+            fb.style.opacity = '1';
+          }
+        });
+      });
+    });
+  }
+
+  function award(st, qi) {
+    const key = st.id + ':q' + qi;
+    const c = credit();
+    if (c[key]) return;
+    c[key] = 1; saveCredit(c);
+    S.stars += 3; LU.save(S);
+    const el = document.getElementById('starCount');
+    el.textContent = S.stars;
+    el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 420 });
+  }
+
+  /* ---------- route ---------- */
+  const id = LU.qs('story');
+  const st = STORIES.find(s => s.id === id);
+  if (st) renderReader(st); else renderLibrary();
+})();
+</script>
+</body>
+</html>

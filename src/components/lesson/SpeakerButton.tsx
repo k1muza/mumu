@@ -1,0 +1,40 @@
+"use client";
+
+import { useState } from "react";
+import { speak } from "./stage";
+
+export default function SpeakerButton({
+  word,
+  accent,
+  chip,
+  speechEnabled,
+  onPlay,
+}: {
+  word: string;
+  accent: string;
+  chip: string;
+  speechEnabled: boolean;
+  onPlay?: () => void;
+}) {
+  const [played, setPlayed] = useState(false);
+
+  return (
+    <button
+      type="button"
+      className="inline-flex items-center gap-2 rounded-full pl-1.5 pr-4 py-1.5 font-baloo font-extrabold text-[15px] transition-transform active:scale-95"
+      style={{ background: chip, color: accent, border: `2px solid ${accent}33` }}
+      onClick={(e) => {
+        setPlayed(true);
+        speak(word, speechEnabled);
+        onPlay?.();
+        e.currentTarget.animate(
+          [{ transform: "scale(1)" }, { transform: "scale(1.08)" }, { transform: "scale(1)" }],
+          { duration: 300 },
+        );
+      }}
+    >
+      <img src="/universe/ui/sound_button.png" alt="Play" className="w-[34px] h-[34px] object-contain" />
+      <span>{played ? `“${word}”` : "Tap to hear"}</span>
+    </button>
+  );
+}

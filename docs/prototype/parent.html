@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grown-up Dashboard · Learning Universe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="lu.css">
+</head>
+<body style="background:#F4F1FA">
+<div class="min-h-screen">
+  <!-- gate -->
+  <div id="gate" class="fixed inset-0 z-50 flex items-center justify-center px-6" style="background:rgba(58,42,99,.55);backdrop-filter:blur(4px)">
+    <div class="bg-white rounded-[28px] px-8 py-9 max-w-[420px] w-full text-center lu-rise" style="box-shadow:0 24px 60px rgba(30,10,70,.35)">
+      <img src="universe/dragon/dragon_thinking.png" alt="" class="w-[92px] h-[100px] object-contain mx-auto">
+      <div class="font-baloo font-extrabold text-[24px] mt-2" style="color:#3b2a63">Grown-ups only</div>
+      <p class="font-bold text-[14px] mt-1" style="color:#7c6da0">Ask a grown-up to answer to continue.</p>
+      <div class="font-baloo font-extrabold text-[20px] mt-5 mb-3" style="color:#6C3AD6" id="gq">What is 5 + 8?</div>
+      <div id="gopts" class="grid grid-cols-3 gap-3"></div>
+      <div id="gerr" class="font-bold text-[13px] mt-3 h-4" style="color:#e0584f"></div>
+    </div>
+  </div>
+
+  <div id="app" class="max-w-[1040px] mx-auto px-7 pt-6 pb-16" style="opacity:0;transition:opacity .3s">
+    <!-- header -->
+    <div class="flex items-center justify-between gap-4 flex-wrap">
+      <div class="flex items-center gap-3">
+        <img src="universe/ui/profile_avatar.png" alt="" class="w-[58px] h-[58px] object-contain">
+        <div>
+          <div class="font-baloo font-extrabold text-[24px] leading-none" style="color:#3b2a63" id="childName">Zane</div>
+          <div class="font-bold text-[13.5px]" style="color:#8578a6" id="childMeta">Level 4 · Learner profile</div>
+        </div>
+      </div>
+      <a href="index.html" class="font-baloo font-extrabold text-[14px] rounded-full px-5 py-2.5" style="background:#fff;color:#6C3AD6;border:2px solid rgba(108,58,214,.2);box-shadow:0 4px 12px rgba(60,40,90,.08)">← Back to app</a>
+    </div>
+
+    <!-- summary stats -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 mt-6">
+      <div class="bg-white rounded-[18px] px-5 py-4" style="box-shadow:0 5px 16px rgba(60,40,90,.07)"><div class="font-baloo font-extrabold text-[30px] leading-none" style="color:#6C3AD6" id="sBadges">0</div><div class="font-bold text-[12.5px] mt-1" style="color:#8578a6">Badges earned</div></div>
+      <div class="bg-white rounded-[18px] px-5 py-4" style="box-shadow:0 5px 16px rgba(60,40,90,.07)"><div class="font-baloo font-extrabold text-[30px] leading-none" style="color:#F59E0B" id="sStars">0</div><div class="font-bold text-[12.5px] mt-1" style="color:#8578a6">Stars collected</div></div>
+      <div class="bg-white rounded-[18px] px-5 py-4" style="box-shadow:0 5px 16px rgba(60,40,90,.07)"><div class="font-baloo font-extrabold text-[30px] leading-none" style="color:#3E9A34" id="sWorlds">0</div><div class="font-bold text-[12.5px] mt-1" style="color:#8578a6">Worlds explored</div></div>
+      <div class="bg-white rounded-[18px] px-5 py-4" style="box-shadow:0 5px 16px rgba(60,40,90,.07)"><div class="font-baloo font-extrabold text-[30px] leading-none" style="color:#C33A32" id="sPct">0%</div><div class="font-bold text-[12.5px] mt-1" style="color:#8578a6">Overall progress</div></div>
+    </div>
+
+    <!-- per-subject progress -->
+    <h2 class="font-baloo font-extrabold text-[19px] mt-8 mb-3" style="color:#3b2a63">Progress by world</h2>
+    <div id="progress" class="grid gap-3.5" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))"></div>
+
+    <!-- settings -->
+    <h2 class="font-baloo font-extrabold text-[19px] mt-8 mb-3" style="color:#3b2a63">Settings</h2>
+    <div class="bg-white rounded-[22px] px-6 py-3 divide-y" style="box-shadow:0 5px 16px rgba(60,40,90,.07);border:1px solid rgba(0,0,0,.04)" id="settings"></div>
+
+    <p class="font-bold text-[12px] text-center mt-8" style="color:#a99ac8">Progress is saved on this device. Learning Universe · early-learner demo</p>
+  </div>
+</div>
+
+<script src="lu.js"></script>
+<script>
+(function () {
+  const S = LU.load();
+  const $ = (id) => document.getElementById(id);
+
+  /* ---- grown-up gate ---- */
+  const a = 5 + Math.floor(Math.random() * 5), b = 6 + Math.floor(Math.random() * 6);
+  const ans = a + b;
+  $('gq').textContent = 'What is ' + a + ' + ' + b + '?';
+  const opts = LU.shuffle([ans, ans + 2, ans - 3]);
+  $('gopts').innerHTML = opts.map(o => `<button data-v="${o}" class="font-baloo font-extrabold text-[22px] rounded-[16px] py-3.5" style="background:#F4F1FA;color:#3b2a63;border:2px solid rgba(108,58,214,.15)">${o}</button>`).join('');
+  $('gopts').querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+    if (+btn.dataset.v === ans) { $('gate').style.display = 'none'; $('app').style.opacity = '1'; }
+    else { $('gerr').textContent = 'Not quite — try again.'; btn.style.opacity = '.4'; btn.disabled = true; }
+  }));
+
+  /* ---- summary ---- */
+  $('childName').textContent = S.child;
+  $('childMeta').textContent = 'Level ' + S.level + ' · Learner profile';
+  let earned = 0, tot = 0;
+  LU.SUBJECTS.forEach(s => { earned += LU.doneCount(S, s.id); tot += s.badges.length; });
+  const worlds = LU.SUBJECTS.filter(s => LU.doneCount(S, s.id) > 0).length;
+  $('sBadges').textContent = earned;
+  $('sStars').textContent = S.stars;
+  $('sWorlds').textContent = worlds + ' / ' + LU.SUBJECTS.length;
+  $('sPct').textContent = Math.round(earned / tot * 100) + '%';
+
+  /* ---- per-subject ---- */
+  $('progress').innerHTML = LU.SUBJECTS.map(s => {
+    const dc = LU.doneCount(S, s.id); const t = s.badges.length; const pct = Math.round(dc / t * 100);
+    const rows = s.badges.map(bd => {
+      const done = LU.isDone(S, s.id, bd.id);
+      return `<div class="flex items-center gap-2 py-1"><span class="rounded-full flex-none" style="width:16px;height:16px;background:${done ? s.accent : '#EAE3F4'};display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900">${done ? '✓' : ''}</span><span class="font-bold text-[13px]" style="color:${done ? '#3b2a63' : '#a99ac8'}">${LU.esc(bd.name)}</span></div>`;
+    }).join('');
+    const rk = LU.rank(S, s.id);
+    return `<div class="bg-white rounded-[22px] px-5 py-5" style="box-shadow:0 5px 16px rgba(60,40,90,.07);border-left:5px solid ${s.accent}">
+      <div class="flex items-center justify-between mb-1"><span class="font-baloo font-extrabold text-[17px]" style="color:#3b2a63">${LU.esc(s.name)}</span><span class="font-baloo font-extrabold text-[14px]" style="color:${s.accent}">${dc}/${t}</span></div>
+      <div class="font-bold text-[12.5px] mb-2" style="color:${s.accent}">🏅 ${LU.esc(rk.name)} (rank ${rk.tier}/${rk.total})${rk.next ? ` · ${rk.toNext} badge${rk.toNext > 1 ? 's' : ''} to ${LU.esc(rk.next)}` : ' · top rank'}</div>
+      <div class="rounded-full h-2.5 overflow-hidden mb-3" style="background:#EEE7F5"><div class="h-full rounded-full" style="width:${pct}%;background:${s.accent}"></div></div>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  /* ---- settings ---- */
+  const toggles = [
+    { key: 'speech', label: 'Read words aloud (device voice)', hint: 'Use your device speech to say words' },
+    { key: 'sfx', label: 'Sound effects', hint: 'Cheers and taps during lessons' },
+    { key: 'autoplay', label: 'Auto-advance lessons', hint: 'Move to the next question automatically' },
+  ];
+  function renderSettings() {
+    $('settings').innerHTML = toggles.map(t => {
+      const on = !!S.settings[t.key];
+      return `<div class="flex items-center justify-between gap-4 py-4"><div><div class="font-baloo font-extrabold text-[15px]" style="color:#3b2a63">${t.label}</div><div class="font-bold text-[12.5px]" style="color:#8578a6">${t.hint}</div></div>
+        <button data-k="${t.key}" class="lu-toggle rounded-full flex-none transition-all" style="width:56px;height:32px;background:${on ? '#6C3AD6' : '#D8CFE8'};position:relative"><span style="position:absolute;top:3px;left:${on ? 27 : 3}px;width:26px;height:26px;border-radius:999px;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:left .2s"></span></button></div>`;
+    }).join('') +
+    `<div class="flex items-center justify-between gap-4 py-4"><div><div class="font-baloo font-extrabold text-[15px]" style="color:#3b2a63">Preview mode</div><div class="font-bold text-[12.5px]" style="color:#8578a6">Explore the app yourself — nothing you do is saved to ${LU.esc(S.child)}’s progress</div></div>
+      <button id="preview" class="font-baloo font-extrabold text-[13px] rounded-full px-4 py-2.5" style="background:${LU.previewOn() ? '#EEE7FB' : '#6C3AD6'};color:${LU.previewOn() ? '#6C3AD6' : '#fff'};border:2px solid ${LU.previewOn() ? '#D8CFE8' : '#6C3AD6'}">${LU.previewOn() ? 'Exit preview' : 'Start preview'}</button></div>` +
+    `<div class="flex items-center justify-between gap-4 py-4"><div><div class="font-baloo font-extrabold text-[15px]" style="color:#3b2a63">Reset all progress</div><div class="font-bold text-[12.5px]" style="color:#8578a6">Clear badges and stars on this device</div></div>
+      <button id="reset" class="font-baloo font-extrabold text-[13px] rounded-full px-4 py-2.5" style="background:#FDEBEA;color:#C33A32;border:2px solid #F3C9C6">Reset</button></div>`;
+    $('settings').querySelectorAll('.lu-toggle').forEach(btn => btn.addEventListener('click', () => {
+      S.settings[btn.dataset.k] = !S.settings[btn.dataset.k]; LU.save(S); renderSettings();
+    }));
+    $('preview').addEventListener('click', () => {
+      if (LU.previewOn()) { LU.exitPreview(); location.reload(); }
+      else { LU.enterPreview(); location.href = 'index.html'; }
+    });
+    $('reset').addEventListener('click', () => {
+      if (LU.previewOn()) { if (confirm('Reset preview progress? (Real progress is untouched.)')) { LU.storeRemove('lu_state'); LU.storeRemove('lu_story_credit'); location.reload(); } }
+      else if (confirm('Reset all progress on this device?')) { localStorage.removeItem('lu_state'); localStorage.removeItem('lu_story_credit'); location.reload(); }
+    });
+  }
+  renderSettings();
+})();
+</script>
+</body>
+</html>
