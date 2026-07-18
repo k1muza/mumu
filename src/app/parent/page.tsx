@@ -13,8 +13,8 @@ import type { Settings } from "@/lib/types";
 const TOGGLES: { key: keyof Settings; label: string; hint: string }[] = [
   {
     key: "speech",
-    label: "Read words aloud (device voice)",
-    hint: "Use your device speech to say words",
+    label: "Read words aloud",
+    hint: "Say questions, words and stories out loud",
   },
   { key: "sfx", label: "Sound effects", hint: "Cheers and taps during lessons" },
   {
