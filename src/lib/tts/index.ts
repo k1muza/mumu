@@ -31,6 +31,18 @@ function speakable(text: string): string {
   return text.replace(/\/([a-z]{1,3})\//gi, (_, p: string) => PHONEME_SOUNDS[p.toLowerCase()] ?? p);
 }
 
+/**
+ * Kokoro + onnxruntime peaks at several hundred MB of WASM memory, enough to
+ * OOM the tab on low-RAM phones, so those devices stay on the speechSynthesis
+ * fallback permanently. deviceMemory is Chromium-only; where it's missing,
+ * only Android is risky enough to gate blindly.
+ */
+function isLowMemoryDevice(): boolean {
+  const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+  if (deviceMemory !== undefined) return deviceMemory < 4;
+  return /Android/i.test(navigator.userAgent);
+}
+
 type Pending = { resolve: (wav: ArrayBuffer) => void; reject: (err: Error) => void };
 type StreamHandler = { onChunk: (blob: Blob) => void; onDone: () => void };
 type SpeechOptions = { speed?: number; onPreparingChange?: (preparing: boolean) => void };
@@ -213,6 +225,11 @@ class SpeechManager {
   private ensureWorker(): Worker | null {
     if (typeof window === "undefined" || this.failed) return null;
     if (this.worker) return this.worker;
+    if (isLowMemoryDevice()) {
+      this.failed = true;
+      this.setStatus("failed");
+      return null;
+    }
     try {
       this.worker = new Worker(new URL("./tts.worker.ts", import.meta.url), { type: "module" });
     } catch {
