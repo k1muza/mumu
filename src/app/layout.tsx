@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Baloo_2, Nunito } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import FullscreenButton from "@/components/FullscreenButton";
 import OnboardingGate from "@/components/OnboardingGate";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
 import "@fortawesome/fontawesome-free/css/solid.min.css";
 import "./globals.css";
@@ -36,6 +37,15 @@ export const metadata: Metadata = {
     description:
       "A multi-subject learning universe for early learners — explore English, Maths, Science, Shona and Mandarin worlds with Aki the dragon.",
   },
+  appleWebApp: {
+    capable: true,
+    title: "Learning Universe",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#4c39a0",
 };
 
 export default function RootLayout({
@@ -46,6 +56,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${baloo.variable} ${nunito.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <ServiceWorkerRegister />
         <OnboardingGate />
         {children}
         <FullscreenButton />
