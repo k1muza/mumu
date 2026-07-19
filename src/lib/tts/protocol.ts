@@ -3,7 +3,7 @@
 /** Kokoro voice ids we expose (see kokoro-js VOICES for the full list). */
 export type VoiceId = "af_heart" | "af_bella" | "af_nicole" | "bf_emma" | "am_michael";
 
-export const DEFAULT_VOICE: VoiceId = "af_nicole";
+export const DEFAULT_VOICE: VoiceId = "af_heart";
 
 /** Voices offered in the parent settings picker. */
 export const VOICE_OPTIONS: { id: VoiceId; label: string; hint: string }[] = [

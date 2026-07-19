@@ -7,6 +7,7 @@ import BadgeAwardCelebration from "@/components/BadgeAwardCelebration";
 import ConfettiBurst from "@/components/ConfettiBurst";
 import BadgePill from "@/components/BadgePill";
 import StarPill from "@/components/StarPill";
+import SpeechStatusNotice from "@/components/SpeechStatusNotice";
 import { BADGE_AWARD_STARTED_EVENT, type BadgeAwardEventDetail } from "@/lib/badgeAward";
 import { db } from "@/lib/db";
 import { useBadgeStatuses, useProfile } from "@/lib/hooks";
@@ -95,6 +96,7 @@ export default function LessonPlayer({
   // Manually chosen variation per slot index; unset slots follow the rotation.
   const [picked, setPicked] = useState<Record<number, number>>({});
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [promptPreparing, setPromptPreparing] = useState(false);
   const [result, setResult] = useState<CompletionResult | null>(null);
   const wrongTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const completing = useRef(false);
@@ -167,6 +169,8 @@ export default function LessonPlayer({
   const variantIdx = slot?.length ? (picked[idx] ?? completions % slot.length) : 0;
   const activity = slot?.[variantIdx] as Activity | undefined;
   const answered = feedback?.kind === "correct";
+  const promptSpeechAvailable =
+    activity?.kind !== "choice" || !activity.suppressPromptSpeech;
 
   const handleCorrect = (message: string) => {
     if (wrongTimer.current) clearTimeout(wrongTimer.current);
@@ -226,6 +230,7 @@ export default function LessonPlayer({
     ? worldRank(subject, Math.max(0, result.worldBadgesEarned - 1), result.worldBadgesTotal)
     : completionRank;
   const rankedUp = !!completionRank && !!previousRank && completionRank.tier > previousRank.tier;
+  const completedWorldNow = !!result?.badgeEarned && result.subjectComplete;
 
   return (
     <div className="min-h-screen flex-1" style={{ background: subject.bg }}>
@@ -274,6 +279,8 @@ export default function LessonPlayer({
             <BadgePill subjectId={subjectId} accent={subject.accent} />
           </div>
         </div>
+
+        {speechEnabled && <SpeechStatusNotice className="mt-3 ml-auto" />}
 
         {finished ? (
           /* completion celebration */
@@ -338,6 +345,15 @@ export default function LessonPlayer({
               </div>
             )}
             <div className="flex items-center justify-center gap-3 mt-6 flex-wrap">
+              {completedWorldNow && (
+                <Link
+                  href="/"
+                  className="font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5"
+                  style={{ background: subject.accent, boxShadow: "0 6px 0 rgba(0,0,0,.2)" }}
+                >
+                  Choose another world →
+                </Link>
+              )}
               {nextLessonInBadge ? (
                 <button
                   type="button"
@@ -348,7 +364,7 @@ export default function LessonPlayer({
                 >
                   Next lesson →
                 </button>
-              ) : recommendedNext && nextRecLesson ? (
+              ) : !completedWorldNow && recommendedNext && nextRecLesson ? (
                 <Link
                   href={`/lesson/${subjectId}/${recommendedNext.badge.slug}`}
                   className="font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5"
@@ -412,18 +428,44 @@ export default function LessonPlayer({
                   >
                     {activity ? promptFor(activity) : ""}
                   </div>
-                  {speechEnabled && activity && (
+                  {speechEnabled && activity && promptSpeechAvailable && (
                     <button
                       type="button"
-                      aria-label="Read the prompt aloud"
-                      className="flex-none transition-transform active:scale-90"
-                      onClick={() => speech.speak(promptFor(activity))}
+                      aria-label={promptPreparing ? "Preparing speech" : "Read the prompt aloud"}
+                      aria-busy={promptPreparing}
+                      className={`flex-none transition-transform active:scale-90 ${promptPreparing ? "inline-flex items-center gap-2 rounded-full px-3 py-2 font-baloo font-extrabold text-[13px]" : ""}`}
+                      style={
+                        promptPreparing
+                          ? {
+                              background: "#FFF8DC",
+                              border: "2px solid rgba(232,174,37,.28)",
+                              color: "#654B16",
+                            }
+                          : undefined
+                      }
+                      onClick={() =>
+                        speech.speak(promptFor(activity), {
+                          onPreparingChange: setPromptPreparing,
+                        })
+                      }
                     >
-                      <img
-                        src="/universe/ui/sound_button.png"
-                        alt=""
-                        className="w-[38px] h-[38px] object-contain"
-                      />
+                      {promptPreparing ? (
+                        <>
+                          <span
+                            aria-hidden="true"
+                            className="h-5 w-5 animate-spin rounded-full border-[3px] border-current border-t-transparent"
+                          />
+                          <span role="status" aria-live="polite">
+                            Preparing
+                          </span>
+                        </>
+                      ) : (
+                        <img
+                          src="/universe/ui/sound_button.png"
+                          alt=""
+                          className="w-[38px] h-[38px] object-contain"
+                        />
+                      )}
                     </button>
                   )}
                 </div>

@@ -53,6 +53,7 @@ export default function StoryLibraryPage() {
                   <StoryImageSlot
                     slotId={`story-${story.id}-cover`}
                     prompt={storyPrompt(story.cover)}
+                    defaultImage={story.coverImage}
                     alt={story.title}
                     chipPos="top"
                     pickOnClick={false}

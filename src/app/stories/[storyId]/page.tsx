@@ -98,6 +98,7 @@ function QuestionCard({
                 <StoryImageSlot
                   slotId={`story-${story.id}-q${questionIndex}-c${choiceIndex}`}
                   prompt={storyPrompt(choice.img)}
+                  defaultImage={choice.image}
                   pickOnClick={false}
                   compact
                 />
@@ -192,6 +193,7 @@ export default function StoryReaderPage({
               <StoryImageSlot
                 slotId={`story-${story.id}-cover`}
                 prompt={storyPrompt(story.cover)}
+                defaultImage={story.coverImage}
                 alt={story.title}
                 chipPos="top"
               />
@@ -241,6 +243,7 @@ export default function StoryReaderPage({
                   <StoryImageSlot
                     slotId={`story-${story.id}-p${i}`}
                     prompt={storyPrompt(page.img)}
+                    defaultImage={page.image}
                     alt={page.text}
                   />
                   <span

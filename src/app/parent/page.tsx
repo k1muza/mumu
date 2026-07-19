@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import GrownUpGate from "@/components/GrownUpGate";
+import SpeechStatusNotice from "@/components/SpeechStatusNotice";
 import { useProfile, useUniverseOverview } from "@/lib/hooks";
 import { resetEverything, resetProgress, updateChildName, updateSettings } from "@/lib/progress";
 import { universeRank, worldRank } from "@/lib/ranks";
@@ -74,6 +75,8 @@ function NameRow({ current }: { current: string }) {
 }
 
 function VoiceRow({ current }: { current: VoiceId }) {
+  const [preparingVoice, setPreparingVoice] = useState<VoiceId | null>(null);
+
   // Warm up Kokoro so previews use the real voice, not the device fallback.
   useEffect(() => {
     speech.preload();
@@ -87,34 +90,54 @@ function VoiceRow({ current }: { current: VoiceId }) {
       <div className="font-bold text-[12.5px]" style={{ color: "#8578a6" }}>
         Tap a voice to hear it — used for words, questions and stories
       </div>
+      <SpeechStatusNotice className="mt-3" />
       <div className="flex flex-wrap gap-2 mt-3" role="radiogroup" aria-label="Reading voice">
         {VOICE_OPTIONS.map((v) => {
           const active = v.id === current;
+          const preparing = v.id === preparingVoice;
           return (
             <button
               key={v.id}
               type="button"
               role="radio"
               aria-checked={active}
+              aria-busy={preparing}
               onClick={() => {
                 speech.setVoice(v.id);
-                speech.speak(`Hi! I'm ${v.label}. Let's read together!`);
+                speech.speak(`Hi! I'm ${v.label}. Let's read together!`, {
+                  onPreparingChange: (isPreparing) =>
+                    setPreparingVoice((voice) =>
+                      isPreparing ? v.id : voice === v.id ? null : voice,
+                    ),
+                });
                 void updateSettings({ voice: v.id });
               }}
-              className="font-baloo font-extrabold text-[13px] rounded-[14px] px-4 py-2 text-left"
+              className="min-h-[57px] font-baloo font-extrabold text-[13px] rounded-[14px] px-4 py-2 text-left"
               style={{
                 background: active ? "#6C3AD6" : "#F4F1FA",
                 color: active ? "#fff" : "#3b2a63",
                 border: `2px solid ${active ? "#6C3AD6" : "rgba(108,58,214,.2)"}`,
               }}
             >
-              {v.label}
-              <span
-                className="block font-bold text-[11px]"
-                style={{ color: active ? "rgba(255,255,255,.75)" : "#8578a6" }}
-              >
-                {v.hint}
-              </span>
+              {preparing ? (
+                <span className="flex items-center gap-2" role="status" aria-live="polite">
+                  <span
+                    aria-hidden="true"
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                  />
+                  Preparing
+                </span>
+              ) : (
+                <>
+                  {v.label}
+                  <span
+                    className="block font-bold text-[11px]"
+                    style={{ color: active ? "rgba(255,255,255,.75)" : "#8578a6" }}
+                  >
+                    {v.hint}
+                  </span>
+                </>
+              )}
             </button>
           );
         })}

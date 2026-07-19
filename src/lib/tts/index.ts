@@ -33,12 +33,22 @@ function speakable(text: string): string {
 
 type Pending = { resolve: (wav: ArrayBuffer) => void; reject: (err: Error) => void };
 type StreamHandler = { onChunk: (blob: Blob) => void; onDone: () => void };
+type SpeechOptions = { speed?: number; onPreparingChange?: (preparing: boolean) => void };
+type NextRequest = {
+  text: string;
+  speed: number;
+  onPreparingChange?: SpeechOptions["onPreparingChange"];
+};
+export type SpeechStatus = "idle" | "loading" | "ready" | "generating" | "failed";
 
 class SpeechManager {
   private voice: VoiceId = DEFAULT_VOICE;
   private worker: Worker | null = null;
   private ready = false;
   private failed = false;
+  private status: SpeechStatus = "idle";
+  private listeners = new Set<() => void>();
+  private preparingId: number | null = null;
   private nextId = 1;
   private pending = new Map<number, Pending>();
   private streams = new Map<number, StreamHandler>();
@@ -56,12 +66,20 @@ class SpeechManager {
    * of queueing a backlog in the worker.
    */
   private generating = false;
-  private nextRequest: { text: string; speed: number } | null = null;
+  private nextRequest: NextRequest | null = null;
 
   /** Start loading the model in the background (call when speech is enabled). */
   preload() {
     this.ensureWorker();
   }
+
+  /** Observable state used by the UI to explain first-load and synthesis delays. */
+  getStatus = () => this.status;
+
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  };
 
   /** Switch the Kokoro voice; applies to the next speak/readAloud call. */
   setVoice(voice: VoiceId) {
@@ -72,7 +90,7 @@ class SpeechManager {
   private static readonly STREAM_THRESHOLD = 80;
 
   /** Speak a word or sentence as a single clip; long text streams as a story. */
-  speak(text: string, opts: { speed?: number } = {}) {
+  speak(text: string, opts: SpeechOptions = {}) {
     if (typeof window === "undefined" || !text.trim()) return;
     text = speakable(text);
     if (text.length > SpeechManager.STREAM_THRESHOLD) {
@@ -92,12 +110,17 @@ class SpeechManager {
       return;
     }
     if (this.generating) {
-      this.nextRequest = { text, speed };
+      this.nextRequest?.onPreparingChange?.(false);
+      opts.onPreparingChange?.(true);
+      this.nextRequest = { text, speed, onPreparingChange: opts.onPreparingChange };
       return;
     }
     this.generating = true;
+    opts.onPreparingChange?.(true);
     const session = this.session;
     const id = this.nextId++;
+    this.preparingId = id;
+    this.setStatus("generating");
     new Promise<ArrayBuffer>((resolve, reject) => this.pending.set(id, { resolve, reject }))
       .then((wav) => {
         const blob = new Blob([wav], { type: "audio/wav" });
@@ -108,10 +131,16 @@ class SpeechManager {
         if (this.session === session) this.speakFallback(text);
       })
       .finally(() => {
+        opts.onPreparingChange?.(false);
         this.generating = false;
         const next = this.nextRequest;
         this.nextRequest = null;
-        if (next) this.speak(next.text, { speed: next.speed });
+        if (next) {
+          this.speak(next.text, {
+            speed: next.speed,
+            onPreparingChange: next.onPreparingChange,
+          });
+        }
       });
     this.send({ type: "generate", id, text, voice: this.voice, speed });
   }
@@ -120,7 +149,7 @@ class SpeechManager {
    * Read long text (a story) aloud, streaming sentence-by-sentence so playback
    * starts as soon as the first sentence is ready.
    */
-  readAloud(text: string, opts: { speed?: number } = {}) {
+  readAloud(text: string, opts: SpeechOptions = {}) {
     if (typeof window === "undefined" || !text.trim()) return;
     text = speakable(text);
     this.stop();
@@ -131,11 +160,22 @@ class SpeechManager {
     const session = this.session;
     const id = this.nextId++;
     this.activeStream = id;
+    this.preparingId = id;
+    this.setStatus("generating");
+    let preparing = true;
+    const finishPreparing = () => {
+      if (!preparing) return;
+      preparing = false;
+      opts.onPreparingChange?.(false);
+    };
+    opts.onPreparingChange?.(true);
     this.streams.set(id, {
       onChunk: (blob) => {
+        finishPreparing();
         if (this.session === session) this.enqueue(blob);
       },
       onDone: () => {
+        finishPreparing();
         if (this.activeStream === id) this.activeStream = null;
       },
     });
@@ -146,9 +186,15 @@ class SpeechManager {
   stop() {
     if (typeof window === "undefined") return;
     this.session++;
+    this.nextRequest?.onPreparingChange?.(false);
     this.nextRequest = null;
     if (this.activeStream !== null) {
+      if (this.preparingId === this.activeStream) {
+        this.preparingId = null;
+        if (this.ready) this.setStatus("ready");
+      }
       this.send({ type: "cancel", id: this.activeStream });
+      this.streams.get(this.activeStream)?.onDone();
       this.streams.delete(this.activeStream);
       this.activeStream = null;
     }
@@ -171,8 +217,10 @@ class SpeechManager {
       this.worker = new Worker(new URL("./tts.worker.ts", import.meta.url), { type: "module" });
     } catch {
       this.failed = true;
+      this.setStatus("failed");
       return null;
     }
+    this.setStatus("loading");
     this.worker.onmessage = (e: MessageEvent<WorkerResponse>) => this.handleMessage(e.data);
     this.worker.onerror = () => this.fail();
     this.send({ type: "init" });
@@ -187,16 +235,20 @@ class SpeechManager {
     switch (msg.type) {
       case "ready":
         this.ready = true;
+        this.setStatus("ready");
         break;
       case "audio": {
+        this.finishPreparing(msg.id);
         this.pending.get(msg.id)?.resolve(msg.wav);
         this.pending.delete(msg.id);
         break;
       }
       case "chunk":
+        this.finishPreparing(msg.id);
         this.streams.get(msg.id)?.onChunk(new Blob([msg.wav], { type: "audio/wav" }));
         break;
       case "done": {
+        this.finishPreparing(msg.id);
         this.streams.get(msg.id)?.onDone();
         this.streams.delete(msg.id);
         break;
@@ -206,6 +258,7 @@ class SpeechManager {
           // Model failed to load — give up on Kokoro for this session.
           this.fail();
         } else {
+          this.finishPreparing(msg.id);
           this.pending.get(msg.id)?.reject(new Error(msg.message));
           this.pending.delete(msg.id);
           this.streams.get(msg.id)?.onDone();
@@ -219,12 +272,26 @@ class SpeechManager {
   private fail() {
     this.failed = true;
     this.ready = false;
+    this.preparingId = null;
+    this.setStatus("failed");
     for (const p of this.pending.values()) p.reject(new Error("TTS worker failed"));
     this.pending.clear();
     for (const s of this.streams.values()) s.onDone();
     this.streams.clear();
     this.worker?.terminate();
     this.worker = null;
+  }
+
+  private finishPreparing(id: number) {
+    if (this.preparingId !== id) return;
+    this.preparingId = null;
+    if (this.ready) this.setStatus("ready");
+  }
+
+  private setStatus(status: SpeechStatus) {
+    if (this.status === status) return;
+    this.status = status;
+    for (const listener of this.listeners) listener();
   }
 
   /* ---------- playback ---------- */

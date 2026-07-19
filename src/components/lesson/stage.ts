@@ -28,9 +28,13 @@ export function shuffle<T>(items: T[]): T[] {
 }
 
 /** Speak a word or sentence with Kokoro TTS (speechSynthesis until it loads). */
-export function speak(text: string, enabled: boolean) {
+export function speak(
+  text: string,
+  enabled: boolean,
+  onPreparingChange?: (preparing: boolean) => void,
+) {
   if (!enabled) return;
-  speech.speak(text);
+  speech.speak(text, { onPreparingChange });
 }
 
 export const shake = (el: HTMLElement) =>

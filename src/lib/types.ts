@@ -59,6 +59,8 @@ export interface ChoiceActivity {
   kind: "choice";
   style: ChoiceStyle;
   prompt: string;
+  /** Hide prompt read-aloud when TTS would undermine the exercise (for example, blending). */
+  suppressPromptSpeech?: boolean;
   choices: Choice[];
   /** Feedback that explains the concept when answered correctly. */
   correctFeedback: string;
@@ -155,11 +157,15 @@ export interface StoryPage {
   text: string;
   /** Scene description — appended to STORY_ART_STYLE to form the image prompt. */
   img: string;
+  /** Bundled illustration shown until a grown-up uploads a replacement. */
+  image?: string;
 }
 
 export interface StoryChoice {
   /** Scene description for the answer tile's image prompt. */
   img: string;
+  /** Bundled illustration shown until a grown-up uploads a replacement. */
+  image?: string;
   correct: boolean;
 }
 
@@ -176,6 +182,8 @@ export interface Story {
   tint: string;
   /** Scene description for the book cover's image prompt. */
   cover: string;
+  /** Bundled cover shown until a grown-up uploads a replacement. */
+  coverImage?: string;
   pages: StoryPage[];
   questions: StoryQuestion[];
 }

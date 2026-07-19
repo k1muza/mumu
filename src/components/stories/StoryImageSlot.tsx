@@ -27,6 +27,8 @@ interface StoryImageSlotProps {
   slotId: string;
   /** Full image-generation prompt for this slot. */
   prompt: string;
+  /** Bundled artwork used when this slot has no browser-stored replacement. */
+  defaultImage?: string;
   alt?: string;
   /** Where the chip cluster sits. */
   chipPos?: "top" | "bottom";
@@ -49,6 +51,7 @@ interface StoryImageSlotProps {
 export default function StoryImageSlot({
   slotId,
   prompt,
+  defaultImage,
   alt = "",
   chipPos = "bottom",
   pickOnClick = true,
@@ -129,8 +132,12 @@ export default function StoryImageSlot({
         outlineOffset: -3,
       }}
     >
-      {url ? (
-        <img src={url} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
+      {url || defaultImage ? (
+        <img
+          src={url ?? defaultImage}
+          alt={alt}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       ) : (
         <div
           className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center"

@@ -71,12 +71,15 @@ const { badges, lessons } = expandBadges(subjectId, [
         title: "Blend simple words",
         objective: "Blend sounds into simple three-letter words",
         activities: [
-          pic(
-            "Blend the sounds /s/ /u/ /n/ — which word?",
-            "sun",
-            ["bus", "net"],
-            "Blend it: s-u-n makes sun!",
-          ),
+          {
+            ...pic(
+              "Blend the sounds /s/ /u/ /n/ — which word?",
+              "sun",
+              ["bus", "net"],
+              "Blend it: s-u-n makes sun!",
+            ),
+            suppressPromptSpeech: true,
+          },
           buildWord("dog"),
           pic("Which word says “pig”?", "pig", ["pat", "cup"], "Yes — p-i-g, pig!"),
         ],
@@ -86,7 +89,15 @@ const { badges, lessons } = expandBadges(subjectId, [
         objective: "Read and build CVC words by noticing shared endings",
         activities: [
           buildWord("cap"),
-          pic("Read m-a-p. Which picture matches?", "map", ["mat", "man"], "Blend it: m-a-p makes map!"),
+          {
+            ...pic(
+              "Read m-a-p. Which picture matches?",
+              "map",
+              ["mat", "man"],
+              "Blend it: m-a-p makes map!",
+            ),
+            suppressPromptSpeech: true,
+          },
           txt("Which word rhymes with “log”?", "dog", ["sit", "cup"], "Dog and log share the /og/ ending."),
           buildWord("sit"),
         ],
