@@ -33,14 +33,14 @@ function speakable(text: string): string {
 
 /**
  * Kokoro + onnxruntime peaks at several hundred MB of WASM memory, enough to
- * OOM the tab on low-RAM phones, so those devices stay on the speechSynthesis
- * fallback permanently. deviceMemory is Chromium-only; where it's missing,
- * only Android is risky enough to gate blindly.
+ * OOM the tab on phones, and the ~90 MB download stalls lessons on mobile
+ * networks — so Android always stays on the speechSynthesis fallback.
+ * Elsewhere, low-RAM devices (deviceMemory is Chromium-only) are gated too.
  */
-function isLowMemoryDevice(): boolean {
+function shouldUseFallbackVoice(): boolean {
+  if (/Android/i.test(navigator.userAgent)) return true;
   const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
-  if (deviceMemory !== undefined) return deviceMemory < 4;
-  return /Android/i.test(navigator.userAgent);
+  return deviceMemory !== undefined && deviceMemory < 4;
 }
 
 type Pending = { resolve: (wav: ArrayBuffer) => void; reject: (err: Error) => void };
@@ -225,7 +225,7 @@ class SpeechManager {
   private ensureWorker(): Worker | null {
     if (typeof window === "undefined" || this.failed) return null;
     if (this.worker) return this.worker;
-    if (isLowMemoryDevice()) {
+    if (shouldUseFallbackVoice()) {
       this.failed = true;
       this.setStatus("failed");
       return null;
