@@ -1,5 +1,6 @@
 import type { SubjectContent } from "@/lib/types";
 import {
+  addGroups,
   addNum,
   barsOrder,
   clockPick,
@@ -205,53 +206,58 @@ const { badges, lessons } = expandBadges(subjectId, [
     ],
   },
   {
-    slug: "addition-to-50",
-    name: "Addition to 50",
-    skills: ["Add tens", "Add ones", "Word problems", "Sums to 50"],
+    slug: "addition-to-15",
+    name: "Addition to 15",
+    skills: ["Put together", "Count on", "Word problems", "Sums to 15"],
     lessons: [
       {
-        title: "Add the ones",
-        objective: "Add a one-digit number to a two-digit number",
+        title: "Put the groups together",
+        objective: "Combine two groups of objects and count the total",
         activities: [
           vary(
-            addNum(12, 7, [18, 19, 20], "12 + 7 = 19!"),
-            addNum(13, 5, [17, 18, 19], "13 + 5 = 18!"),
-            addNum(11, 8, [18, 19, 20], "11 + 8 = 19!"),
+            addGroups(3, 2, "Put the groups together. How many in all?", [4, 5, 6], "3 and 2 make 5!"),
+            addGroups(4, 2, "Put the groups together. How many in all?", [5, 6, 7], "4 and 2 make 6!"),
+            addGroups(2, 2, "Put the groups together. How many in all?", [3, 4, 5], "2 and 2 make 4!"),
           ),
           vary(
-            addNum(22, 6, [27, 28, 29], "22 + 6 = 28!"),
-            addNum(21, 7, [27, 28, 29], "21 + 7 = 28!"),
-            addNum(23, 4, [26, 27, 28], "23 + 4 = 27!"),
+            addGroups(4, 3, "Join the two groups. How many altogether?", [6, 7, 8], "4 and 3 make 7!"),
+            addGroups(5, 3, "Join the two groups. How many altogether?", [7, 8, 9], "5 and 3 make 8!"),
+            addGroups(5, 4, "Join the two groups. How many altogether?", [8, 9, 10], "5 and 4 make 9!"),
           ),
           vary(
-            numPick("Sam has 18 marbles and gets 9 more. How many now?", 27, [26, 28], "18 + 9 = 27 marbles!"),
-            numPick("Tia has 16 sweets and gets 8 more. How many now?", 24, [23, 25], "16 + 8 = 24 sweets!"),
-            numPick("Ben has 19 stickers and gets 7 more. How many now?", 26, [25, 27], "19 + 7 = 26 stickers!"),
+            numPick("Sam has 5 marbles and gets 3 more. How many now?", 8, [7, 9], "5 + 3 = 8 marbles!"),
+            numPick("Tia has 4 sweets and gets 2 more. How many now?", 6, [5, 7], "4 + 2 = 6 sweets!"),
+            numPick("Ben has 6 stickers and gets 3 more. How many now?", 9, [8, 10], "6 + 3 = 9 stickers!"),
           ),
         ],
       },
       {
-        title: "Add the tens",
-        objective: "Add two two-digit numbers with sums up to 50",
+        title: "Sums to 15",
+        objective: "Add two numbers with sums up to 15",
         activities: [
           vary(
-            addNum(25, 14, [38, 39, 40], "25 + 14 = 39!"),
-            addNum(23, 16, [38, 39, 40], "23 + 16 = 39!"),
-            addNum(24, 13, [36, 37, 38], "24 + 13 = 37!"),
+            addNum(7, 4, [10, 11, 12], "7 + 4 = 11!"),
+            addNum(8, 3, [10, 11, 12], "8 + 3 = 11!"),
+            addNum(6, 5, [10, 11, 12], "6 + 5 = 11!"),
           ),
           vary(
-            addNum(30, 15, [44, 45, 46], "30 + 15 = 45!"),
-            addNum(20, 25, [44, 45, 46], "20 + 25 = 45!"),
-            addNum(30, 12, [41, 42, 43], "30 + 12 = 42!"),
+            addNum(9, 6, [14, 15, 16], "9 + 6 = 15!"),
+            addNum(10, 5, [14, 15, 16], "10 + 5 = 15!"),
+            addNum(8, 6, [13, 14, 15], "8 + 6 = 14!"),
+          ),
+          vary(
+            numPick("Mia has 9 beads and gets 4 more. How many now?", 13, [12, 14], "9 + 4 = 13 beads!"),
+            numPick("Leo has 7 shells and finds 5 more. How many now?", 12, [11, 13], "7 + 5 = 12 shells!"),
+            numPick("Zoe has 8 crayons and gets 7 more. How many now?", 15, [14, 16], "8 + 7 = 15 crayons!"),
           ),
         ],
       },
     ],
   },
   {
-    slug: "subtraction-to-50",
-    name: "Subtraction to 50",
-    skills: ["Take away", "Subtract tens", "Word problems", "Differences"],
+    slug: "subtraction-to-15",
+    name: "Subtraction to 15",
+    skills: ["Take away", "Count back", "Word problems", "Differences"],
     lessons: [
       {
         title: "Take some away",
@@ -329,39 +335,39 @@ const { badges, lessons } = expandBadges(subjectId, [
         ],
       },
       {
-        title: "Subtract bigger numbers",
-        objective: "Subtract tens and ones within 50",
+        title: "Take away within 15",
+        objective: "Subtract two numbers within 15",
         activities: [
           vary(
-            subNum(45, 12, [31, 32, 33], "45 − 12 = 33!"),
-            subNum(43, 13, [29, 30, 31], "43 − 13 = 30!"),
-            subNum(46, 14, [31, 32, 33], "46 − 14 = 32!"),
+            subNum(12, 4, [7, 8, 9], "12 − 4 = 8!"),
+            subNum(11, 3, [7, 8, 9], "11 − 3 = 8!"),
+            subNum(13, 5, [7, 8, 9], "13 − 5 = 8!"),
           ),
           vary(
-            subNum(38, 9, [28, 29, 30], "38 − 9 = 29!"),
-            subNum(36, 8, [27, 28, 29], "36 − 8 = 28!"),
-            subNum(37, 9, [27, 28, 29], "37 − 9 = 28!"),
+            subNum(15, 6, [8, 9, 10], "15 − 6 = 9!"),
+            subNum(14, 5, [8, 9, 10], "14 − 5 = 9!"),
+            subNum(15, 7, [7, 8, 9], "15 − 7 = 8!"),
           ),
           vary(
-            subNum(29, 14, [14, 15, 16], "29 − 14 = 15!"),
-            subNum(28, 13, [14, 15, 16], "28 − 13 = 15!"),
-            subNum(27, 12, [14, 15, 16], "27 − 12 = 15!"),
+            subNum(10, 4, [5, 6, 7], "10 − 4 = 6!"),
+            subNum(10, 3, [6, 7, 8], "10 − 3 = 7!"),
+            subNum(9, 4, [4, 5, 6], "9 − 4 = 5!"),
           ),
         ],
       },
       {
         title: "Subtraction stories",
-        objective: "Solve take-away story problems within 50",
+        objective: "Solve take-away story problems within 15",
         activities: [
           vary(
-            numPick("40 birds are on a tree. 15 fly away. How many are left?", 25, [24, 26], "40 − 15 = 25 birds!"),
-            numPick("35 birds are on a tree. 12 fly away. How many are left?", 23, [22, 24], "35 − 12 = 23 birds!"),
-            numPick("42 birds are on a tree. 20 fly away. How many are left?", 22, [21, 23], "42 − 20 = 22 birds!"),
+            numPick("12 birds are on a tree. 4 fly away. How many are left?", 8, [7, 9], "12 − 4 = 8 birds!"),
+            numPick("11 birds are on a tree. 3 fly away. How many are left?", 8, [7, 9], "11 − 3 = 8 birds!"),
+            numPick("13 birds are on a tree. 5 fly away. How many are left?", 8, [7, 9], "13 − 5 = 8 birds!"),
           ),
           vary(
-            subNum(50, 27, [22, 23, 24], "50 − 27 = 23!"),
-            subNum(50, 24, [25, 26, 27], "50 − 24 = 26!"),
-            subNum(48, 25, [22, 23, 24], "48 − 25 = 23!"),
+            subNum(15, 8, [6, 7, 8], "15 − 8 = 7!"),
+            subNum(14, 7, [6, 7, 8], "14 − 7 = 7!"),
+            subNum(13, 6, [6, 7, 8], "13 − 6 = 7!"),
           ),
         ],
       },

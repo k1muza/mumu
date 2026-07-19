@@ -10,7 +10,7 @@ import mandarin from "./mandarin";
  * edits to existing ones). The database re-seeds content tables when the
  * stored version differs — learner progress is never touched.
  */
-export const CONTENT_VERSION = 9;
+export const CONTENT_VERSION = 11;
 
 /**
  * To add a new subject world: create `src/content/<subject>.ts` exporting a
