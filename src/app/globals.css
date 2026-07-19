@@ -672,6 +672,10 @@ a {
 }
 
 @media (max-width: 640px) {
+  .lu-lesson-player[data-feedback-visible] ~ .lu-fullscreen-control {
+    display: none;
+  }
+
   .lu-fullscreen-button {
     width: 46px;
     padding: 0;

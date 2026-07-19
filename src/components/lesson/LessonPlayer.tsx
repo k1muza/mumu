@@ -233,7 +233,11 @@ export default function LessonPlayer({
   const completedWorldNow = !!result?.badgeEarned && result.subjectComplete;
 
   return (
-    <div className="min-h-screen flex-1" style={{ background: subject.bg }}>
+    <div
+      className="lu-lesson-player min-h-screen flex-1"
+      data-feedback-visible={feedback ? "" : undefined}
+      style={{ background: subject.bg }}
+    >
       <div className="max-w-[860px] mx-auto px-4 pt-4 pb-24 sm:px-6 sm:pb-10">
         {/* header */}
         <div className="flex items-center justify-between gap-3">
