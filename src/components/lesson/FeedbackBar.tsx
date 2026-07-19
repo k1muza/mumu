@@ -60,12 +60,12 @@ export default function FeedbackBar({
   const correct = feedback?.kind === "correct";
   return (
     <div
-      className="fixed inset-x-0 bottom-0 transition-transform duration-300 z-30"
+      className="fixed inset-x-0 bottom-0 flex justify-center px-3 sm:px-4 transition-transform duration-300 z-30"
       style={{ transform: feedback ? "translateY(0)" : "translateY(100%)" }}
       aria-live="polite"
     >
       <div
-        className="max-w-[860px] mx-auto m-3 rounded-[20px] px-4 py-3 flex items-center gap-3 sm:m-4 sm:rounded-[24px] sm:px-6 sm:py-4 sm:gap-4"
+        className="w-full max-w-[860px] my-3 rounded-[20px] px-4 py-3 flex items-center gap-3 sm:my-4 sm:rounded-[24px] sm:px-6 sm:py-4 sm:gap-4"
         style={{
           background: correct ? "#EAF9E4" : "#FFF3E6",
           boxShadow: "0 -6px 30px rgba(60,40,90,.2)",
