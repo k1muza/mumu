@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useLiveQuery } from "dexie-react-hooks";
 import { use, useState } from "react";
 import FaIcon from "@/components/FaIcon";
+import SpeakerButton from "@/components/lesson/SpeakerButton";
 import StoryImageSlot, { copyText } from "@/components/stories/StoryImageSlot";
 import StoryShell from "@/components/stories/StoryShell";
 import { STORIES, storyPrompt } from "@/content/stories";
 import { db, PROFILE_ID } from "@/lib/db";
+import { useProfile } from "@/lib/hooks";
 import { levelForStars } from "@/lib/progress";
 import { useStoryEditMode } from "@/lib/storyEditMode";
-import type { Story, StoryQuestion } from "@/lib/types";
+import type { Story, StoryPage, StoryQuestion } from "@/lib/types";
 
 const STARS_PER_QUESTION = 3;
 
@@ -132,6 +135,66 @@ function QuestionCard({
   );
 }
 
+function StoryPageCard({
+  story,
+  page,
+  pageIndex,
+  speechEnabled,
+}: {
+  story: Story;
+  page: StoryPage;
+  pageIndex: number;
+  speechEnabled: boolean;
+}) {
+  const editing = useStoryEditMode();
+  const slotId = `story-${story.id}-p${pageIndex}`;
+  const hasUploadedImage =
+    useLiveQuery(() => db.storyImages.where("id").equals(slotId).count(), [slotId], 0) > 0;
+  const showPicture = editing || Boolean(page.image) || hasUploadedImage;
+
+  return (
+    <div
+      className="relative bg-white rounded-[20px] overflow-hidden flex flex-col"
+      style={{ boxShadow: "0 8px 20px rgba(60,40,90,.1)", border: "1px solid rgba(0,0,0,.05)" }}
+    >
+      {showPicture && (
+        <div className="relative" style={{ aspectRatio: "4/3" }}>
+          <StoryImageSlot
+            slotId={slotId}
+            prompt={storyPrompt(page.img)}
+            defaultImage={page.image}
+            alt={page.text}
+          />
+        </div>
+      )}
+      <span
+        className="absolute left-2.5 top-2.5 z-10 pointer-events-none font-baloo font-extrabold text-white text-[12px] rounded-[10px] px-2.5 py-1"
+        style={{ background: story.accent, boxShadow: "0 3px 8px rgba(0,0,0,.25)" }}
+      >
+        Page {pageIndex + 1}
+      </span>
+      <div
+        className={`px-4 py-5 flex-1 flex flex-col items-center justify-center gap-4 ${
+          showPicture ? "" : "min-h-[260px] pt-14"
+        }`}
+      >
+        <span
+          className="font-baloo font-extrabold text-[22px] leading-snug text-center"
+          style={{ color: "#2b3f4c", textWrap: "balance" }}
+        >
+          {page.text}
+        </span>
+        <SpeakerButton
+          word={page.text}
+          accent={story.accent}
+          chip={story.tint}
+          speechEnabled={speechEnabled}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function StoryReaderPage({
   params,
 }: {
@@ -140,6 +203,7 @@ export default function StoryReaderPage({
   const { storyId } = use(params);
   const story = STORIES.find((s) => s.id === storyId);
   const editing = useStoryEditMode();
+  const profile = useProfile();
   const [copiedAll, setCopiedAll] = useState(false);
 
   if (!story) {
@@ -234,34 +298,13 @@ export default function StoryReaderPage({
         <div className="flex-1 min-w-[280px]">
           <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(230px,1fr))" }}>
             {story.pages.map((page, i) => (
-              <div
+              <StoryPageCard
                 key={i}
-                className="bg-white rounded-[20px] overflow-hidden flex flex-col"
-                style={{ boxShadow: "0 8px 20px rgba(60,40,90,.1)", border: "1px solid rgba(0,0,0,.05)" }}
-              >
-                <div className="relative" style={{ aspectRatio: "4/3" }}>
-                  <StoryImageSlot
-                    slotId={`story-${story.id}-p${i}`}
-                    prompt={storyPrompt(page.img)}
-                    defaultImage={page.image}
-                    alt={page.text}
-                  />
-                  <span
-                    className="absolute left-2.5 top-2.5 z-10 pointer-events-none font-baloo font-extrabold text-white text-[12px] rounded-[10px] px-2.5 py-1"
-                    style={{ background: story.accent, boxShadow: "0 3px 8px rgba(0,0,0,.25)" }}
-                  >
-                    Page {i + 1}
-                  </span>
-                </div>
-                <div className="px-4 py-3.5 flex-1 flex items-center justify-center">
-                  <span
-                    className="font-baloo font-extrabold text-[22px] leading-snug text-center"
-                    style={{ color: "#2b3f4c", textWrap: "balance" }}
-                  >
-                    {page.text}
-                  </span>
-                </div>
-              </div>
+                story={story}
+                page={page}
+                pageIndex={i}
+                speechEnabled={profile?.settings.speech ?? true}
+              />
             ))}
           </div>
         </div>
