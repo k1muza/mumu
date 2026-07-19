@@ -12,7 +12,7 @@ import { db, PROFILE_ID } from "@/lib/db";
 import { useProfile } from "@/lib/hooks";
 import { levelForStars } from "@/lib/progress";
 import { useStoryEditMode } from "@/lib/storyEditMode";
-import type { Story, StoryPage, StoryQuestion } from "@/lib/types";
+import type { Story, StoryChoice, StoryPage, StoryQuestion } from "@/lib/types";
 
 const STARS_PER_QUESTION = 3;
 
@@ -32,6 +32,46 @@ async function award(storyId: string, questionIndex: number) {
     });
     return level > previousLevel ? level : null;
   });
+}
+
+function StoryChoiceTile({
+  story,
+  choice,
+  questionIndex,
+  choiceIndex,
+}: {
+  story: Story;
+  choice: StoryChoice;
+  questionIndex: number;
+  choiceIndex: number;
+}) {
+  const editing = useStoryEditMode();
+  const slotId = `story-${story.id}-q${questionIndex}-c${choiceIndex}`;
+  const hasUploadedImage =
+    useLiveQuery(() => db.storyImages.where("id").equals(slotId).count(), [slotId], 0) > 0;
+  const showPicture = editing || Boolean(choice.image) || hasUploadedImage;
+
+  if (showPicture) {
+    return (
+      <StoryImageSlot
+        slotId={slotId}
+        prompt={storyPrompt(choice.img)}
+        defaultImage={choice.image}
+        alt={choice.text}
+        pickOnClick={false}
+        compact
+      />
+    );
+  }
+
+  return (
+    <span
+      className="absolute inset-0 flex items-center justify-center px-3 text-center font-baloo font-extrabold text-[17px] leading-tight"
+      style={{ color: story.accent, background: story.tint }}
+    >
+      {choice.text}
+    </span>
+  );
 }
 
 function QuestionCard({
@@ -83,7 +123,7 @@ function QuestionCard({
               <button
                 key={choiceIndex}
                 type="button"
-                aria-label={choice.img}
+                aria-label={choice.text}
                 className="relative rounded-[14px] overflow-hidden transition-transform"
                 onClick={() => pick(choiceIndex, choice.correct)}
                 style={{
@@ -98,12 +138,11 @@ function QuestionCard({
                   opacity: solved && !choice.correct ? 0.5 : 1,
                 }}
               >
-                <StoryImageSlot
-                  slotId={`story-${story.id}-q${questionIndex}-c${choiceIndex}`}
-                  prompt={storyPrompt(choice.img)}
-                  defaultImage={choice.image}
-                  pickOnClick={false}
-                  compact
+                <StoryChoiceTile
+                  story={story}
+                  choice={choice}
+                  questionIndex={questionIndex}
+                  choiceIndex={choiceIndex}
                 />
               </button>
             );

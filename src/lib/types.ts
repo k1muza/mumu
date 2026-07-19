@@ -162,6 +162,8 @@ export interface StoryPage {
 }
 
 export interface StoryChoice {
+  /** Short answer text used when no illustration is available. */
+  text: string;
   /** Scene description for the answer tile's image prompt. */
   img: string;
   /** Bundled illustration shown until a grown-up uploads a replacement. */

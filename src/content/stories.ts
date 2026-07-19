@@ -41,17 +41,17 @@ export const STORIES: Story[] = [
       {
         q: "Who is Pat?",
         choices: [
-          { img: "friendly cartoon portrait of a young boy with curly dark hair.", image: "/universe/stories/story-pat-q0-c0.png", correct: false },
-          { img: "a grey-and-white tabby kitten looking at the camera.", image: "/universe/stories/story-pat-q0-c1.png", correct: true },
-          { img: "a small brown puppy sitting.", image: "/universe/stories/story-pat-q0-c2.png", correct: false },
+          { text: "A boy", img: "friendly cartoon portrait of a young boy with curly dark hair.", image: "/universe/stories/story-pat-q0-c0.png", correct: false },
+          { text: "A cat", img: "a grey-and-white tabby kitten looking at the camera.", image: "/universe/stories/story-pat-q0-c1.png", correct: true },
+          { text: "A puppy", img: "a small brown puppy sitting.", image: "/universe/stories/story-pat-q0-c2.png", correct: false },
         ],
       },
       {
         q: "What can Pat do?",
         choices: [
-          { img: "a grey-and-white kitten running fast across grass.", image: "/universe/stories/story-pat-q1-c0.png", correct: true },
-          { img: "a grey-and-white kitten curled up asleep.", image: "/universe/stories/story-pat-q1-c1.png", correct: false },
-          { img: "a grey-and-white kitten eating from a bowl.", image: "/universe/stories/story-pat-q1-c2.png", correct: false },
+          { text: "Run", img: "a grey-and-white kitten running fast across grass.", image: "/universe/stories/story-pat-q1-c0.png", correct: true },
+          { text: "Sleep", img: "a grey-and-white kitten curled up asleep.", image: "/universe/stories/story-pat-q1-c1.png", correct: false },
+          { text: "Eat", img: "a grey-and-white kitten eating from a bowl.", image: "/universe/stories/story-pat-q1-c2.png", correct: false },
         ],
       },
     ],
@@ -76,17 +76,17 @@ export const STORIES: Story[] = [
       {
         q: "What does the man have?",
         choices: [
-          { img: "a round golden bun on a plate.", image: "/universe/stories/story-man-q0-c0.png", correct: true },
-          { img: "a blue baseball cap.", correct: false },
-          { img: "a red ball of yarn.", image: "/universe/stories/story-man-q0-c2.png", correct: false },
+          { text: "A bun", img: "a round golden bun on a plate.", image: "/universe/stories/story-man-q0-c0.png", correct: true },
+          { text: "A cap", img: "a blue baseball cap.", correct: false },
+          { text: "A ball of yarn", img: "a red ball of yarn.", image: "/universe/stories/story-man-q0-c2.png", correct: false },
         ],
       },
       {
         q: "What do they do?",
         choices: [
-          { img: "a man and a grey kitten running together.", correct: true },
-          { img: "a man and a kitten hopping over a log.", correct: false },
-          { img: "a man reading a book with a kitten.", correct: false },
+          { text: "They run", img: "a man and a grey kitten running together.", correct: true },
+          { text: "They hop", img: "a man and a kitten hopping over a log.", correct: false },
+          { text: "They read", img: "a man reading a book with a kitten.", correct: false },
         ],
       },
     ],
@@ -111,17 +111,17 @@ export const STORIES: Story[] = [
       {
         q: "What is red?",
         choices: [
-          { img: "a plump red hen.", correct: true },
-          { img: "a smooth white egg.", correct: false },
-          { img: "a fluffy yellow chick.", correct: false },
+          { text: "The hen", img: "a plump red hen.", correct: true },
+          { text: "The egg", img: "a smooth white egg.", correct: false },
+          { text: "The chick", img: "a fluffy yellow chick.", correct: false },
         ],
       },
       {
         q: "Who pops up?",
         choices: [
-          { img: "a fluffy yellow chick hatching.", correct: true },
-          { img: "a red hen standing.", correct: false },
-          { img: "a grey kitten sitting.", correct: false },
+          { text: "The chick", img: "a fluffy yellow chick hatching.", correct: true },
+          { text: "The hen", img: "a red hen standing.", correct: false },
+          { text: "A kitten", img: "a grey kitten sitting.", correct: false },
         ],
       },
     ],
@@ -146,17 +146,17 @@ export const STORIES: Story[] = [
       {
         q: "Who is Sam?",
         choices: [
-          { img: "a small brown puppy.", correct: true },
-          { img: "a grey kitten.", correct: false },
-          { img: "a red hen.", correct: false },
+          { text: "A puppy", img: "a small brown puppy.", correct: true },
+          { text: "A kitten", img: "a grey kitten.", correct: false },
+          { text: "A hen", img: "a red hen.", correct: false },
         ],
       },
       {
         q: "Where does Sam jump?",
         choices: [
-          { img: "into a blue pond with a splash.", correct: true },
-          { img: "up onto a wooden log.", correct: false },
-          { img: "into a pile of straw.", correct: false },
+          { text: "Into the pond", img: "into a blue pond with a splash.", correct: true },
+          { text: "Onto a log", img: "up onto a wooden log.", correct: false },
+          { text: "Into the straw", img: "into a pile of straw.", correct: false },
         ],
       },
     ],
@@ -181,17 +181,17 @@ export const STORIES: Story[] = [
       {
         q: "What has a box?",
         choices: [
-          { img: "an orange fox.", correct: true },
-          { img: "a red hen.", correct: false },
-          { img: "a grey cat.", correct: false },
+          { text: "The fox", img: "an orange fox.", correct: true },
+          { text: "The hen", img: "a red hen.", correct: false },
+          { text: "The cat", img: "a grey cat.", correct: false },
         ],
       },
       {
         q: "What do they do in the box?",
         choices: [
-          { img: "a fox and hen napping together.", correct: true },
-          { img: "a fox running across grass.", correct: false },
-          { img: "a hen hopping over a log.", correct: false },
+          { text: "They nap", img: "a fox and hen napping together.", correct: true },
+          { text: "They run", img: "a fox running across grass.", correct: false },
+          { text: "They hop", img: "a hen hopping over a log.", correct: false },
         ],
       },
     ],
@@ -216,17 +216,17 @@ export const STORIES: Story[] = [
       {
         q: "Who is Meg?",
         choices: [
-          { img: "a young girl with braids.", correct: true },
-          { img: "a red ladybug.", correct: false },
-          { img: "a grey cat.", correct: false },
+          { text: "A girl", img: "a young girl with braids.", correct: true },
+          { text: "A ladybug", img: "a red ladybug.", correct: false },
+          { text: "A cat", img: "a grey cat.", correct: false },
         ],
       },
       {
         q: "What can the bug do?",
         choices: [
-          { img: "a red ladybug hopping up.", correct: true },
-          { img: "a puppy running.", correct: false },
-          { img: "a cat napping.", correct: false },
+          { text: "Hop", img: "a red ladybug hopping up.", correct: true },
+          { text: "Run", img: "a puppy running.", correct: false },
+          { text: "Nap", img: "a cat napping.", correct: false },
         ],
       },
     ],
@@ -251,17 +251,17 @@ export const STORIES: Story[] = [
       {
         q: "What is pink?",
         choices: [
-          { img: "a plump pig.", correct: true },
-          { img: "brown mud.", correct: false },
-          { img: "a red hen.", correct: false },
+          { text: "The pig", img: "a plump pig.", correct: true },
+          { text: "The mud", img: "brown mud.", correct: false },
+          { text: "The hen", img: "a red hen.", correct: false },
         ],
       },
       {
         q: "Where is the pig?",
         choices: [
-          { img: "in a puddle of mud.", correct: true },
-          { img: "inside a cardboard box.", correct: false },
-          { img: "in a blue pond.", correct: false },
+          { text: "In the mud", img: "in a puddle of mud.", correct: true },
+          { text: "In a box", img: "inside a cardboard box.", correct: false },
+          { text: "In a pond", img: "in a blue pond.", correct: false },
         ],
       },
     ],
@@ -286,17 +286,17 @@ export const STORIES: Story[] = [
       {
         q: "What does Ben have?",
         choices: [
-          { img: "a small fishing net.", correct: true },
-          { img: "a cardboard box.", correct: false },
-          { img: "a glass jar.", correct: false },
+          { text: "A net", img: "a small fishing net.", correct: true },
+          { text: "A box", img: "a cardboard box.", correct: false },
+          { text: "A jar", img: "a glass jar.", correct: false },
         ],
       },
       {
         q: "What does Ben get?",
         choices: [
-          { img: "a small orange fish.", correct: true },
-          { img: "a red ladybug.", correct: false },
-          { img: "a red hen.", correct: false },
+          { text: "A fish", img: "a small orange fish.", correct: true },
+          { text: "A ladybug", img: "a red ladybug.", correct: false },
+          { text: "A hen", img: "a red hen.", correct: false },
         ],
       },
     ],

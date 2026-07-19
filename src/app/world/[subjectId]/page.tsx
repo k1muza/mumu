@@ -220,8 +220,6 @@ export default function WorldPage({ params }: { params: Promise<{ subjectId: str
           </div>
         </div>
 
-        {subjectId === "english" && <StoriesCourseCard accent={subject.accent} />}
-
         <div className="font-baloo font-extrabold text-[19px] mt-6 mb-3 ml-1" style={{ color: "#3b2a63" }}>
           {totalLessons} lesson adventures — choose a card
         </div>
@@ -237,6 +235,8 @@ export default function WorldPage({ params }: { params: Promise<{ subjectId: str
             ),
           )}
         </div>
+
+        {subjectId === "english" && <StoriesCourseCard accent={subject.accent} />}
       </div>
     </div>
   );
