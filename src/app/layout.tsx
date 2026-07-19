@@ -23,6 +23,19 @@ export const metadata: Metadata = {
   title: "Learning Universe",
   description:
     "A multi-subject learning universe for early learners — explore English, Maths, Science, Shona and Mandarin worlds with Aki the dragon.",
+  openGraph: {
+    type: "website",
+    title: "Learning Universe",
+    description:
+      "A multi-subject learning universe for early learners — explore English, Maths, Science, Shona and Mandarin worlds with Aki the dragon.",
+    siteName: "Learning Universe",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Learning Universe",
+    description:
+      "A multi-subject learning universe for early learners — explore English, Maths, Science, Shona and Mandarin worlds with Aki the dragon.",
+  },
 };
 
 export default function RootLayout({
