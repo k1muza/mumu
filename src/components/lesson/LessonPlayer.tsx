@@ -234,19 +234,19 @@ export default function LessonPlayer({
 
   return (
     <div className="min-h-screen flex-1" style={{ background: subject.bg }}>
-      <div className="max-w-[860px] mx-auto px-6 pt-4 pb-10">
+      <div className="max-w-[860px] mx-auto px-4 pt-4 pb-24 sm:px-6 sm:pb-10">
         {/* header */}
         <div className="flex items-center justify-between gap-3">
           <Link href={`/world/${subjectId}`} aria-label="Back to world" className="flex items-center">
             <img
               src="/universe/ui/back_button_small.png"
               alt=""
-              className="w-[50px] h-[54px] object-contain"
+              className="w-[42px] h-[46px] object-contain sm:w-[50px] sm:h-[54px]"
             />
           </Link>
-          <div className="flex-1 mx-2">
+          <div className="flex-1 mx-1 min-w-0 sm:mx-2">
             <div
-              className="font-baloo font-extrabold text-[15px] leading-none mb-1.5"
+              className="font-baloo font-extrabold text-[13px] leading-none mb-1.5 truncate sm:text-[15px]"
               style={{ color: "#3b2a63" }}
             >
               {badge.name} · {lesson.title}
@@ -280,7 +280,7 @@ export default function LessonPlayer({
           </div>
         </div>
 
-        {speechEnabled && <SpeechStatusNotice className="mt-3 ml-auto" />}
+        {speechEnabled && <SpeechStatusNotice />}
 
         {finished ? (
           /* completion celebration */
@@ -289,13 +289,13 @@ export default function LessonPlayer({
             <img
               src="/universe/dragon/dragon_confetti.png"
               alt=""
-              className="w-[188px] h-[200px] object-contain mx-auto lu-bob"
+              className="w-[150px] h-[160px] object-contain mx-auto lu-bob sm:w-[188px] sm:h-[200px]"
             />
-            <div className="font-baloo font-extrabold text-[34px] mt-1" style={{ color: "#3b2a63" }}>
+            <div className="font-baloo font-extrabold text-[28px] mt-1 sm:text-[34px]" style={{ color: "#3b2a63" }}>
               {result?.badgeEarned ? "Badge earned!" : "Lesson complete!"}
             </div>
             <div
-              className="inline-flex items-center gap-3 bg-white rounded-[22px] px-6 py-4 mt-3"
+              className="inline-flex items-center gap-3 bg-white rounded-[22px] px-4 py-3.5 mt-3 sm:px-6 sm:py-4"
               style={{ boxShadow: "0 10px 26px rgba(60,40,90,.14)" }}
             >
               <img
@@ -348,7 +348,7 @@ export default function LessonPlayer({
               {completedWorldNow && (
                 <Link
                   href="/"
-                  className="font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5"
+                  className="w-full text-center font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5 sm:w-auto"
                   style={{ background: subject.accent, boxShadow: "0 6px 0 rgba(0,0,0,.2)" }}
                 >
                   Choose another world →
@@ -359,7 +359,7 @@ export default function LessonPlayer({
                   type="button"
                   disabled={!result}
                   onClick={continueBadge}
-                  className="font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5 disabled:opacity-60"
+                  className="w-full text-center font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5 disabled:opacity-60 sm:w-auto"
                   style={{ background: subject.accent, boxShadow: "0 6px 0 rgba(0,0,0,.2)" }}
                 >
                   Next lesson →
@@ -367,7 +367,7 @@ export default function LessonPlayer({
               ) : !completedWorldNow && recommendedNext && nextRecLesson ? (
                 <Link
                   href={`/lesson/${subjectId}/${recommendedNext.badge.slug}`}
-                  className="font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5"
+                  className="w-full text-center font-baloo font-extrabold text-white text-[17px] rounded-[18px] px-7 py-3.5 sm:w-auto"
                   style={{ background: subject.accent, boxShadow: "0 6px 0 rgba(0,0,0,.2)" }}
                 >
                   Next lesson →
@@ -375,7 +375,7 @@ export default function LessonPlayer({
               ) : null}
               <Link
                 href={`/world/${subjectId}`}
-                className="font-baloo font-extrabold text-[17px] rounded-[18px] px-7 py-3.5"
+                className="w-full text-center font-baloo font-extrabold text-[17px] rounded-[18px] px-7 py-3.5 sm:w-auto"
                 style={{
                   background: "#fff",
                   color: subject.accent,
@@ -387,7 +387,7 @@ export default function LessonPlayer({
               </Link>
               <Link
                 href="/rewards"
-                className="font-baloo font-extrabold text-[17px] rounded-[18px] px-7 py-3.5"
+                className="w-full text-center font-baloo font-extrabold text-[17px] rounded-[18px] px-7 py-3.5 sm:w-auto"
                 style={{
                   background: "#fff",
                   color: "#6C3AD6",
@@ -410,20 +410,20 @@ export default function LessonPlayer({
         ) : (
           <>
             {/* dragon + prompt */}
-            <div className="flex items-end gap-3 mt-5">
+            <div className="flex items-end gap-2 mt-5 sm:gap-3">
               <img
                 src={dragonSrc}
                 alt={profile?.mascot ?? "Aki"}
-                className="w-[92px] h-[100px] object-contain flex-none lu-bob"
+                className="w-[64px] h-[70px] object-contain flex-none lu-bob sm:w-[92px] sm:h-[100px]"
                 style={{ transform: "scaleX(-1)" }}
               />
               <div
-                className="relative bg-white rounded-[22px] rounded-bl-[6px] px-5 py-4 flex-1"
+                className="relative bg-white rounded-[22px] rounded-bl-[6px] px-4 py-3 flex-1 sm:px-5 sm:py-4"
                 style={{ boxShadow: "0 10px 24px rgba(60,40,90,.14)", border: "2px solid rgba(0,0,0,.04)" }}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className="font-baloo font-extrabold text-[21px] leading-tight flex-1"
+                    className="font-baloo font-extrabold text-[17px] leading-tight flex-1 sm:text-[21px]"
                     style={{ color: "#3b2a63" }}
                   >
                     {activity ? promptFor(activity) : ""}

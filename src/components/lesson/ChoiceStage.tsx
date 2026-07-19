@@ -19,7 +19,7 @@ function SetTile({ n, img }: { n: number; img?: string }) {
   return (
     <div className="grid grid-cols-2 gap-1.5">
       {Array.from({ length: n }, (_, i) => (
-        <img key={i} src={img} alt="" className="h-[42px] w-[42px] object-contain" />
+        <img key={i} src={img} alt="" className="h-[32px] w-[32px] object-contain sm:h-[42px] sm:w-[42px]" />
       ))}
     </div>
   );
@@ -35,42 +35,57 @@ function tileContent(
   const delay = { animationDelay: `${index * 0.06}s` };
   if (activity.style === "img") {
     return (
-      <img src={choice.img} alt="" className="w-[112px] h-[112px] object-contain m-4 lu-pop" style={delay} />
+      <img
+        src={choice.img}
+        alt=""
+        className="w-[76px] h-[76px] m-2.5 object-contain lu-pop sm:w-[112px] sm:h-[112px] sm:m-4"
+        style={delay}
+      />
     );
   }
   if (activity.style === "color") {
     return (
       <span
-        className="block m-5 rounded-[16px] lu-pop"
-        style={{ width: 96, height: 96, background: choice.color, ...delay }}
+        className="block m-4 rounded-[16px] lu-pop w-[64px] h-[64px] sm:m-5 sm:w-[96px] sm:h-[96px]"
+        style={{ background: choice.color, ...delay }}
       />
     );
   }
   if (activity.style === "shape") {
     return (
-      <span className="m-5 lu-pop inline-flex" style={delay}>
+      <span className="m-4 lu-pop inline-flex w-[64px] sm:m-5 sm:w-[96px]" style={delay}>
         <FlatShape kind={choice.shape ?? "circle"} size={96} color={choice.color} />
       </span>
     );
   }
   if (activity.style === "clock") {
     return (
-      <div className="m-4 lu-pop" style={delay}>
-        <ClockFace h={choice.time?.[0] ?? 0} m={choice.time?.[1] ?? 0} size={138} accent={accent} />
+      <div className="m-3 lu-pop sm:m-4" style={delay}>
+        <div className="sm:hidden">
+          <ClockFace h={choice.time?.[0] ?? 0} m={choice.time?.[1] ?? 0} size={110} accent={accent} />
+        </div>
+        <div className="hidden sm:block">
+          <ClockFace h={choice.time?.[0] ?? 0} m={choice.time?.[1] ?? 0} size={138} accent={accent} />
+        </div>
       </div>
     );
   }
   if (activity.style === "coin") {
     return (
-      <span className="m-4 lu-pop" style={delay}>
-        <CoinFace cents={choice.cents ?? 0} size={96} />
+      <span className="m-3 lu-pop sm:m-4" style={delay}>
+        <span className="sm:hidden">
+          <CoinFace cents={choice.cents ?? 0} size={64} />
+        </span>
+        <span className="hidden sm:inline-flex">
+          <CoinFace cents={choice.cents ?? 0} size={96} />
+        </span>
       </span>
     );
   }
   if (activity.style === "set") {
     return (
       <div
-        className="m-4 lu-pop flex min-h-[104px] min-w-[118px] items-center justify-center"
+        className="m-2 lu-pop flex min-h-[80px] min-w-[76px] items-center justify-center sm:m-4 sm:min-h-[104px] sm:min-w-[118px]"
         style={delay}
       >
         <SetTile n={choice.n ?? 0} img={activity.setImg} />
@@ -79,10 +94,10 @@ function tileContent(
   }
   if (activity.style === "ordinal") {
     return (
-      <div className="m-3 lu-pop flex flex-col items-center gap-2" style={delay}>
-        <img src={choice.img} alt="" className="h-[64px] w-[64px] object-contain sm:h-[84px] sm:w-[84px]" />
+      <div className="m-1.5 lu-pop flex flex-col items-center gap-1.5 sm:m-3 sm:gap-2" style={delay}>
+        <img src={choice.img} alt="" className="h-[48px] w-[48px] object-contain sm:h-[84px] sm:w-[84px]" />
         <span
-          className="rounded-full px-2.5 py-0.5 font-baloo text-[13px] font-extrabold"
+          className="rounded-full px-2 py-0.5 font-baloo text-[11px] font-extrabold sm:px-2.5 sm:text-[13px]"
           style={{ background: chip, color: accent }}
         >
           {choice.pos}
@@ -92,20 +107,20 @@ function tileContent(
   }
   const size =
     activity.style === "char"
-      ? "text-[64px]"
+      ? "text-[44px] sm:text-[64px]"
       : activity.style === "glyph"
-        ? "text-[52px]"
+        ? "text-[38px] sm:text-[52px]"
         : activity.style === "number"
-          ? "text-[46px]"
-          : "text-[30px]";
+          ? "text-[34px] sm:text-[46px]"
+          : "text-[22px] sm:text-[30px]";
+  const pad =
+    activity.style === "text"
+      ? "px-4 py-3.5 sm:px-[22px] sm:py-[18px]"
+      : "px-4 py-3.5 sm:px-[30px] sm:py-[26px]";
   return (
     <span
-      className={`${size} font-baloo font-extrabold leading-none lu-pop`}
-      style={{
-        color: "#3b2a63",
-        ...delay,
-        padding: activity.style === "text" ? "18px 22px" : "26px 30px",
-      }}
+      className={`${size} ${pad} font-baloo font-extrabold leading-none lu-pop`}
+      style={{ color: "#3b2a63", ...delay }}
     >
       {choice.label}
     </span>
@@ -153,11 +168,15 @@ export default function ChoiceStage({
       ? choices.length === 3
         ? "grid-cols-3"
         : "grid-cols-4"
-      : choices.length >= 4
-        ? "grid-cols-2 sm:grid-cols-4"
-        : choices.length === 3
-          ? "grid-cols-3"
-          : "grid-cols-2";
+      : activity.style === "clock"
+        ? choices.length >= 4
+          ? "grid-cols-2 sm:grid-cols-4"
+          : "grid-cols-2 sm:grid-cols-3"
+        : choices.length >= 4
+          ? "grid-cols-2 sm:grid-cols-4"
+          : choices.length === 3
+            ? "grid-cols-3"
+            : "grid-cols-2";
 
   const tileState = (i: number) => ({
     border:
@@ -192,12 +211,12 @@ export default function ChoiceStage({
               key={i}
               type="button"
               onClick={(e) => pick(e, choice, i)}
-              className="flex w-full items-center gap-4 rounded-[20px] bg-white px-5 py-4 transition-transform hover:scale-[1.02]"
+              className="flex w-full items-center gap-3 rounded-[20px] bg-white px-4 py-3.5 transition-transform hover:scale-[1.02] sm:gap-4 sm:px-5 sm:py-4"
               style={tileState(i)}
             >
               {choice.label && (
                 <span
-                  className="w-[82px] flex-none text-left font-baloo text-[15px] font-extrabold"
+                  className="w-[58px] flex-none text-left font-baloo text-[13px] font-extrabold sm:w-[82px] sm:text-[15px]"
                   style={{ color: accent }}
                 >
                   {choice.label}
@@ -214,7 +233,7 @@ export default function ChoiceStage({
           ))}
         </div>
       ) : (
-        <div className={`grid ${cols} gap-4 justify-items-center`}>
+        <div className={`grid ${cols} gap-3 sm:gap-4 justify-items-center`}>
           {choices.map((choice, i) => (
             <button
               key={i}

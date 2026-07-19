@@ -280,7 +280,7 @@ export default function StoryReaderPage({
     <StoryShell backHref="/stories" backLabel="Story Library" title={story.title}>
       <div className="flex gap-6 flex-wrap items-start">
         {/* cover panel */}
-        <div className="flex-none" style={{ width: 250 }}>
+        <div className="flex-none w-full max-w-[280px] mx-auto sm:mx-0 sm:w-[250px]">
           <div
             className="inline-flex items-center gap-2 font-baloo font-extrabold text-white text-[14px] rounded-t-[14px] px-5 py-2"
             style={{ background: story.accent }}
@@ -360,7 +360,7 @@ export default function StoryReaderPage({
           Let’s check what you read!
         </span>
       </div>
-      <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))" }}>
+      <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,320px),1fr))" }}>
         {story.questions.map((question, qi) => (
           <QuestionCard key={qi} story={story} question={question} questionIndex={qi} />
         ))}

@@ -30,26 +30,29 @@ export default function StoryShell({
       className="min-h-screen flex-1"
       style={{ background: "linear-gradient(180deg,#E7F6F8 0%,#F6FCFC 60%)" }}
     >
-      <div className="max-w-[1200px] mx-auto px-7 pt-5 pb-14">
-        <div className="flex items-center justify-between gap-4">
+      <div className="max-w-[1200px] mx-auto px-4 pt-5 pb-14 sm:px-7">
+        <div className="flex items-center justify-between gap-3 flex-wrap sm:gap-4">
           <Link href={backHref} className="flex items-center gap-2.5">
             <img
               src="/universe/ui/back_button_small.png"
               alt=""
-              className="w-[52px] h-[56px] object-contain"
+              className="w-[44px] h-[48px] object-contain sm:w-[52px] sm:h-[56px]"
             />
-            <span className="font-baloo font-extrabold text-[16px]" style={{ color: "#1F97A6" }}>
+            <span
+              className="hidden font-baloo font-extrabold text-[16px] sm:inline"
+              style={{ color: "#1F97A6" }}
+            >
               {backLabel}
             </span>
           </Link>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
             <img
               src="/universe/dragon/dragon_reading_book.png"
               alt={profile?.mascot ?? "Aki"}
-              className="w-[62px] h-[68px] object-contain lu-bob"
+              className="w-[52px] h-[57px] object-contain lu-bob sm:w-[62px] sm:h-[68px]"
               style={{ filter: "drop-shadow(0 6px 10px rgba(60,40,90,.18))" }}
             />
-            <div>
+            <div className="min-w-0">
               <div
                 className="font-baloo font-extrabold text-[11px] tracking-[.16em] uppercase"
                 style={{ color: "#1F97A6" }}
@@ -57,14 +60,14 @@ export default function StoryShell({
                 Story Reader
               </div>
               <div
-                className="font-baloo font-extrabold text-[22px] leading-none"
+                className="font-baloo font-extrabold text-[18px] leading-none truncate sm:text-[22px]"
                 style={{ color: "#25455e" }}
               >
                 {title}
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap">
             <button
               type="button"
               onClick={() => (editing ? setStoryEditMode(false) : setGateOpen(true))}

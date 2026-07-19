@@ -26,7 +26,7 @@ function AutoAdvanceButton({ accent, onNext }: { accent: string; onNext: () => v
     <button
       type="button"
       onClick={onNext}
-      className="font-baloo font-extrabold text-white text-[16px] rounded-[16px] px-6 py-3 flex-none"
+      className="font-baloo font-extrabold text-white text-[15px] rounded-[16px] px-4 py-3 flex-none sm:text-[16px] sm:px-6"
       style={{ background: accent, boxShadow: "0 5px 0 rgba(0,0,0,.2)" }}
     >
       <span>Next</span>
@@ -65,7 +65,7 @@ export default function FeedbackBar({
       aria-live="polite"
     >
       <div
-        className="max-w-[860px] mx-auto m-4 rounded-[24px] px-6 py-4 flex items-center gap-4"
+        className="max-w-[860px] mx-auto m-3 rounded-[20px] px-4 py-3 flex items-center gap-3 sm:m-4 sm:rounded-[24px] sm:px-6 sm:py-4 sm:gap-4"
         style={{
           background: correct ? "#EAF9E4" : "#FFF3E6",
           boxShadow: "0 -6px 30px rgba(60,40,90,.2)",
@@ -78,16 +78,16 @@ export default function FeedbackBar({
               : `/universe/dragon/${correct ? "dragon_cheer" : "dragon_thinking"}.png`
           }
           alt=""
-          className={`w-[56px] h-[62px] object-contain flex-none ${feedback?.celebration === "level-up" ? "lu-pop lu-shimmer" : ""}`}
+          className={`w-[44px] h-[48px] object-contain flex-none sm:w-[56px] sm:h-[62px] ${feedback?.celebration === "level-up" ? "lu-pop lu-shimmer" : ""}`}
         />
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div
-            className="font-baloo font-extrabold text-[19px] leading-tight"
+            className="font-baloo font-extrabold text-[17px] leading-tight sm:text-[19px]"
             style={{ color: correct ? "#2E7D24" : "#C25B12" }}
           >
             {feedback?.title}
           </div>
-          <div className="font-bold text-[14px] leading-snug" style={{ color: "#5c4d7d" }}>
+          <div className="font-bold text-[13px] leading-snug sm:text-[14px]" style={{ color: "#5c4d7d" }}>
             {feedback?.message}
           </div>
         </div>

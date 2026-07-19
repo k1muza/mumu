@@ -17,6 +17,7 @@ export function FlatShape({ kind, size, color }: { kind: Shape2D; size: number; 
       height={size}
       viewBox="0 0 100 100"
       aria-hidden="true"
+      className="h-auto max-w-full"
       style={{ filter: "drop-shadow(0 3px 6px rgba(60,40,90,.18))" }}
     >
       {kind === "triangle" ? (

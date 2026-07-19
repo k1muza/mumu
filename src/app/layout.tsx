@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Baloo_2, Nunito } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import FullscreenButton from "@/components/FullscreenButton";
 import OnboardingGate from "@/components/OnboardingGate";
 import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
@@ -35,6 +36,7 @@ export default function RootLayout({
         <OnboardingGate />
         {children}
         <FullscreenButton />
+        <Analytics />
       </body>
     </html>
   );

@@ -63,7 +63,7 @@ export default function RewardsPage() {
     >
       <TwinkleField />
 
-      <div className="relative z-10 max-w-[1060px] mx-auto px-7 pt-5 pb-14">
+      <div className="relative z-10 max-w-[1060px] mx-auto px-4 pt-5 pb-14 sm:px-7">
         {/* header */}
         <div className="flex items-center justify-between gap-3">
           <Link href="/" aria-label="Back" className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export default function RewardsPage() {
 
         <div className="text-center mt-1">
           <h1
-            className="font-baloo font-extrabold text-white text-[36px] leading-none"
+            className="font-baloo font-extrabold text-white text-[30px] leading-none sm:text-[36px]"
             style={{ textShadow: "0 4px 10px rgba(0,0,0,.25)" }}
           >
             My Treasure
@@ -180,7 +180,7 @@ export default function RewardsPage() {
             {overview?.totalEarned ?? 0} / {overview?.totalBadges ?? 0} earned
           </span>
         </div>
-        <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))" }}>
+        <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,300px),1fr))" }}>
           {overview?.subjects.map(({ subject, earned, total, statuses }) => {
             const rank = worldRank(subject, earned, total);
             return (
@@ -235,7 +235,7 @@ export default function RewardsPage() {
         <h2 className="font-baloo font-extrabold text-white text-[22px] mt-9 mb-3">
           World Ranks
         </h2>
-        <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))" }}>
+        <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,300px),1fr))" }}>
           {overview?.subjects.map(({ subject, earned, total }) => {
             const rank = worldRank(subject, earned, total);
             return (

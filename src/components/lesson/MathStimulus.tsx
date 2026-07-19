@@ -72,16 +72,18 @@ const RULER_UNIT = 48;
 
 function RulerScene({ n, accent }: { n: number; accent: string }) {
   // The clip row must span exactly the same width as the line — one clip per unit —
-  // so the child can see how many clips fill the line.
+  // so the child can see how many clips fill the line. Both share the same min()
+  // width so they stay aligned when the line shrinks on narrow screens.
+  const width = `min(${n * RULER_UNIT}px, 100%)`;
   return (
     <div className="flex w-full flex-col items-center gap-3">
-      <span className="inline-block h-[20px] rounded-[12px] bg-[#3b2a63]" style={{ width: n * RULER_UNIT }} />
-      <div className="flex items-center">
+      <span className="inline-block h-[20px] rounded-[12px] bg-[#3b2a63]" style={{ width }} />
+      <div className="flex items-center" style={{ width }}>
         {Array.from({ length: n }, (_, i) => (
           <span
             key={i}
-            className="lu-pop flex justify-center text-[40px]"
-            style={{ width: RULER_UNIT, color: accent, animationDelay: `${i * 0.08}s` }}
+            className="lu-pop flex flex-1 justify-center text-[28px] sm:text-[40px]"
+            style={{ color: accent, animationDelay: `${i * 0.08}s` }}
           >
             {/* FA draws the paperclip at a slant; counter-rotate so it lies flat along the line. */}
             <FaIcon name="paperclip" className="rotate-45" />
@@ -100,13 +102,13 @@ function scene(stimulus: Stimulus, chip: string, accent: string) {
     case "add":
       return (
         <>
-          <div className="rounded-[18px] px-4 py-3" style={{ background: chip }}>
+          <div className="rounded-[18px] px-3 py-2.5 sm:px-4 sm:py-3" style={{ background: chip }}>
             <StarGroup count={stimulus.a} />
           </div>
-          <span className="font-baloo text-[40px] font-extrabold" style={{ color: accent }}>
+          <span className="font-baloo text-[30px] font-extrabold sm:text-[40px]" style={{ color: accent }}>
             +
           </span>
-          <div className="rounded-[18px] px-4 py-3" style={{ background: chip }}>
+          <div className="rounded-[18px] px-3 py-2.5 sm:px-4 sm:py-3" style={{ background: chip }}>
             <StarGroup count={stimulus.b} />
           </div>
         </>
@@ -126,7 +128,16 @@ function scene(stimulus: Stimulus, chip: string, accent: string) {
         </div>
       );
     case "clock":
-      return <ClockFace h={stimulus.h} m={stimulus.m} size={196} accent={accent} />;
+      return (
+        <>
+          <div className="sm:hidden">
+            <ClockFace h={stimulus.h} m={stimulus.m} size={160} accent={accent} />
+          </div>
+          <div className="hidden sm:block">
+            <ClockFace h={stimulus.h} m={stimulus.m} size={196} accent={accent} />
+          </div>
+        </>
+      );
     case "coins":
       return (
         <div className="flex flex-wrap items-center justify-center gap-3.5">
@@ -166,7 +177,7 @@ export default function MathStimulus({
 }) {
   return (
     <div
-      className="mt-5 flex flex-wrap items-center justify-center gap-4 rounded-[24px] bg-white px-5 py-6"
+      className="mt-5 flex flex-wrap items-center justify-center gap-3 rounded-[24px] bg-white px-3 py-5 sm:gap-4 sm:px-5 sm:py-6"
       style={{ boxShadow: "0 8px 22px rgba(60,40,90,.1)", border: "1px solid rgba(0,0,0,.04)" }}
     >
       {scene(stimulus, chip, accent)}

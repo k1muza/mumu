@@ -16,10 +16,10 @@ export default function ListenStage({
 
   return (
     <div
-      className="bg-white rounded-[26px] px-6 py-7 flex flex-col items-center gap-4"
+      className="bg-white rounded-[26px] px-4 py-6 flex flex-col items-center gap-4 sm:px-6 sm:py-7"
       style={{ boxShadow: "0 8px 22px rgba(60,40,90,.1)", border: "1px solid rgba(0,0,0,.04)" }}
     >
-      <img src={activity.img} alt="" className="w-[150px] h-[150px] object-contain lu-pop" />
+      <img src={activity.img} alt="" className="w-[120px] h-[120px] object-contain lu-pop sm:w-[150px] sm:h-[150px]" />
       <SpeakerButton
         word={activity.word}
         accent={accent}
@@ -28,7 +28,7 @@ export default function ListenStage({
         onPlay={() => setRevealed(true)}
       />
       <div
-        className="font-baloo font-extrabold text-[40px] tracking-wide transition-opacity duration-300"
+        className="font-baloo font-extrabold text-[32px] tracking-wide transition-opacity duration-300 sm:text-[40px]"
         style={{ color: accent, opacity: revealed ? 1 : 0 }}
       >
         {activity.word}

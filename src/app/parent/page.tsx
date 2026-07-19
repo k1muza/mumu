@@ -90,7 +90,7 @@ function VoiceRow({ current }: { current: VoiceId }) {
       <div className="font-bold text-[12.5px]" style={{ color: "#8578a6" }}>
         Tap a voice to hear it — used for words, questions and stories
       </div>
-      <SpeechStatusNotice className="mt-3" />
+      <SpeechStatusNotice />
       <div className="flex flex-wrap gap-2 mt-3" role="radiogroup" aria-label="Reading voice">
         {VOICE_OPTIONS.map((v) => {
           const active = v.id === current;
@@ -236,7 +236,7 @@ export default function ParentPage() {
       {!unlocked && <GrownUpGate onPass={() => setUnlocked(true)} />}
 
       <div
-        className="max-w-[1040px] mx-auto px-7 pt-6 pb-16 transition-opacity duration-300"
+        className="max-w-[1040px] mx-auto px-4 pt-6 pb-16 transition-opacity duration-300 sm:px-7"
         style={{ opacity: unlocked ? 1 : 0 }}
       >
         {/* header */}
@@ -292,7 +292,7 @@ export default function ParentPage() {
         <h2 className="font-baloo font-extrabold text-[19px] mt-8 mb-3" style={{ color: "#3b2a63" }}>
           Progress by world
         </h2>
-        <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))" }}>
+        <div className="grid gap-3.5" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,320px),1fr))" }}>
           {overview?.subjects.map(({ subject, earned, total, statuses }) => {
             const subjectRank = worldRank(subject, earned, total);
             return (

@@ -15,13 +15,13 @@ export default function StoryLibraryPage() {
   return (
     <StoryShell backHref="/world/english" backLabel="English World" title="Story Library">
       <div
-        className="flex items-center gap-4 bg-white rounded-[24px] px-6 py-4 mb-6"
+        className="flex items-center gap-3 bg-white rounded-[24px] px-4 py-4 mb-6 sm:gap-4 sm:px-6"
         style={{ boxShadow: "0 10px 26px rgba(60,40,90,.1)", border: "1px solid rgba(0,0,0,.04)" }}
       >
         <img
           src="/universe/dragon/dragon_with_speech_bubble.png"
           alt=""
-          className="w-[76px] h-[82px] object-contain flex-none"
+          className="w-[60px] h-[65px] object-contain flex-none sm:w-[76px] sm:h-[82px]"
         />
         <div>
           <div className="font-baloo font-extrabold text-[20px]" style={{ color: "#25455e" }}>

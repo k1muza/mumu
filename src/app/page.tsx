@@ -59,12 +59,12 @@ export default function UniversePage() {
       />
 
       {/* top bar */}
-      <div className="relative z-10 flex items-start justify-between gap-4 px-7 pt-5 pb-1.5 flex-wrap">
+      <div className="relative z-10 flex items-start justify-between gap-3 px-4 pt-4 pb-1.5 flex-wrap sm:gap-4 sm:px-7 sm:pt-5">
         <div className="flex shrink-0 items-center gap-2">
           <img
             src="/universe/dragon/dragon_wave.png"
             alt={`${profile?.mascot ?? "Aki"} the dragon`}
-            className="w-[92px] h-[92px] object-contain lu-bob"
+            className="w-[68px] h-[68px] object-contain lu-bob sm:w-[92px] sm:h-[92px]"
             style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,.25))" }}
           />
           <div
@@ -85,7 +85,7 @@ export default function UniversePage() {
         <img
           src="/universe/ui/logo_learning_universe.png"
           alt="Learning Universe"
-          className="w-[250px] object-contain mt-1 h-[100px]"
+          className="hidden w-[250px] object-contain mt-1 h-[100px] md:block"
           style={{ filter: "drop-shadow(0 6px 12px rgba(20,0,60,.3))" }}
         />
         <div className="flex shrink-0 items-center gap-2.5">
@@ -105,7 +105,7 @@ export default function UniversePage() {
             }}
           >
             <FaIcon name="circle-user" className="lu-control-icon w-[38px] h-[38px] text-[38px] text-[#d8d0ff]" />
-            <span className="text-left">
+            <span className="hidden text-left sm:block">
               <span className="block font-baloo font-extrabold text-white text-[15px]">
                 {profile?.child ?? ""}
               </span>
@@ -118,7 +118,7 @@ export default function UniversePage() {
       </div>
 
       {/* worlds */}
-      <div className="relative z-[2] mx-auto flex max-w-[1240px] flex-wrap items-end justify-center gap-x-3 gap-y-1 px-6 pb-8 pt-1">
+      <div className="relative z-[2] mx-auto flex max-w-[1240px] flex-wrap items-end justify-center gap-x-3 gap-y-1 px-4 pb-8 pt-1 sm:px-6">
         {overview?.subjects.map(({ subject, earned, total, continueBadge }, i) => {
           const [w, artHeight, mt] = GEO[subject.id] ?? GEO_FALLBACK;
           const progressLabel = `${subject.name}: ${earned} of ${total} badges earned`;
