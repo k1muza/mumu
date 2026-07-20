@@ -318,7 +318,7 @@ export const STORIES: Story[] = [
     coverImage: "/universe/stories/story-shoe-cover.webp",
     pages: [
       { text: "It is time for school. Zoe has one shoe.", img: "a young girl with two hair puffs sitting on the floor by the front door, one blue shoe on her foot and her other foot bare." },
-      { text: "She looks under the bed. No shoe.", img: "the girl on her tummy peering under a bed with a torch, only dust and a sock there." },
+      { text: "She looks under the bed. There is no shoe.", img: "the girl on her tummy peering under a bed with a torch, only dust and a sock there." },
       { text: "She looks in the toy box. No shoe.", img: "the girl digging through a wooden toy box full of toys, holding a teddy up, no shoe in sight." },
       { text: "Mum helps her look, but the shoe is gone.", img: "the girl and her mum searching the tidy little bedroom together, both looking puzzled." },
       { text: "Then Zoe hears a soft sound outside.", img: "the girl stopping still and turning her head toward an open window, one hand at her ear." },
