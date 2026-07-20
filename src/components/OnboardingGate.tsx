@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CssCloud from "@/components/CssCloud";
 import TwinkleField from "@/components/TwinkleField";
 import { useProfile } from "@/lib/hooks";
 import { completeOnboarding } from "@/lib/progress";
+import { useDocumentScrollLock } from "@/lib/useDocumentScrollLock";
 
 const MAX_NAME_LENGTH = 20;
 
@@ -18,19 +19,7 @@ export default function OnboardingGate() {
   const [submitting, setSubmitting] = useState(false);
   const onboardingOpen = !!profile && !profile.onboarded;
 
-  useEffect(() => {
-    if (!onboardingOpen) return;
-
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    const previousBodyOverflow = document.body.style.overflow;
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.documentElement.style.overflow = previousHtmlOverflow;
-      document.body.style.overflow = previousBodyOverflow;
-    };
-  }, [onboardingOpen]);
+  useDocumentScrollLock(onboardingOpen);
 
   // Nothing to show while the profile is still loading or already onboarded.
   if (!onboardingOpen) return null;

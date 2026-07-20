@@ -9,6 +9,7 @@ import {
 } from "react";
 import CssCloud from "@/components/CssCloud";
 import TwinkleField from "@/components/TwinkleField";
+import { useDocumentScrollLock } from "@/lib/useDocumentScrollLock";
 
 type ConnectionNavigator = Navigator & {
   connection?: { saveData?: boolean };
@@ -67,6 +68,7 @@ export default function OfflineReadyGate() {
   const [displayPct, setDisplayPct] = useState(0);
   const [phase, setPhase] = useState<"shell" | "art">("shell");
   const visible = shouldOffer && !dismissed;
+  useDocumentScrollLock(visible);
 
   // Live targets read by the animation loop without forcing re-renders.
   const targetRef = useRef(0);
@@ -173,19 +175,6 @@ export default function OfflineReadyGate() {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [visible, dismiss]);
-
-  // Lock scrolling while the splash covers the app, mirroring OnboardingGate.
-  useEffect(() => {
-    if (!visible) return;
-    const html = document.documentElement.style.overflow;
-    const body = document.body.style.overflow;
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.documentElement.style.overflow = html;
-      document.body.style.overflow = body;
-    };
-  }, [visible]);
 
   if (!visible) return null;
 
