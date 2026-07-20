@@ -113,8 +113,10 @@ export interface Subject {
   /** Five badge-driven rank names, from starting rank to world mastery. */
   ranks: [string, string, string, string, string];
   art: {
-    plaque: string;
-    badge: string;
+    /** Optional dedicated header plaque; falls back to a themed text plaque. */
+    plaque?: string;
+    /** Optional world medallion; falls back to the world card art. */
+    badge?: string;
     card: string;
   };
 }

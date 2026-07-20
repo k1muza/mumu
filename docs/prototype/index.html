@@ -59,7 +59,7 @@
     `<div style="position:absolute;top:${p[0]}%;left:${p[1]}%;width:${p[2]}px;height:${p[2]}px;background:url(${starSrcs[i % starSrcs.length]}) center/contain no-repeat;animation:luTwinkle ${2.4 + (i % 4) * 0.6}s ease-in-out ${i * 0.3}s infinite"></div>`).join('');
 
   // worlds
-  const geo = { english: [258, 250, 56], maths: [186, 232, 2], science: [210, 250, 14], shona: [222, 232, 66], mandarin: [200, 250, 30] };
+  const geo = { english: [258, 250, 56], maths: [186, 232, 2], science: [210, 250, 14], shona: [222, 232, 66], mandarin: [200, 250, 30], social: [232, 216, 22] };
   document.getElementById('worlds').innerHTML = LU.SUBJECTS.map((s, i) => {
     const g = geo[s.id]; const rec = s.id === 'english';
     const rk = LU.rank(S, s.id);

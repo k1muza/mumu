@@ -16,6 +16,7 @@ const GEO: Record<string, [number, number, number]> = {
   science: [205, 244, 14],
   shona: [222, 222, 66],
   mandarin: [205, 240, 30],
+  social: [232, 216, 22],
 };
 const GEO_FALLBACK: [number, number, number] = [210, 232, 24];
 

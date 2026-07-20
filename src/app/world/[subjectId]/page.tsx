@@ -135,12 +135,25 @@ export default function WorldPage({ params }: { params: Promise<{ subjectId: str
               Universe
             </span>
           </Link>
-          <img
-            src={subject.art.plaque}
-            alt={subject.name}
-            className="h-[52px] min-w-0 object-contain sm:h-[76px]"
-            style={{ filter: "drop-shadow(0 6px 10px rgba(60,40,90,.18))" }}
-          />
+          {subject.art.plaque ? (
+            <img
+              src={subject.art.plaque}
+              alt={subject.name}
+              className="h-[52px] min-w-0 object-contain sm:h-[76px]"
+              style={{ filter: "drop-shadow(0 6px 10px rgba(60,40,90,.18))" }}
+            />
+          ) : (
+            <div
+              className="min-w-0 rounded-full border-[3px] bg-white px-4 py-2 text-center font-baloo text-[15px] font-extrabold leading-tight sm:px-7 sm:py-3 sm:text-[20px]"
+              style={{
+                color: subject.accent,
+                borderColor: `${subject.accent}66`,
+                boxShadow: "0 6px 10px rgba(60,40,90,.18)",
+              }}
+            >
+              {subject.name}
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <StarPill />
             <BadgePill subjectId={subjectId} accent={subject.accent} />
@@ -153,7 +166,7 @@ export default function WorldPage({ params }: { params: Promise<{ subjectId: str
           style={{ boxShadow: "0 12px 30px rgba(60,40,90,.12)", border: "1px solid rgba(0,0,0,.04)" }}
         >
           <img
-            src={subject.art.badge}
+            src={subject.art.badge ?? subject.art.card}
             alt=""
             className="w-[76px] h-[76px] object-contain flex-none lu-bob sm:w-[104px] sm:h-[104px]"
           />

@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Learning Universe",
     short_name: "Learning",
     description:
-      "A multi-subject learning universe for early learners — explore English, Maths, Science, Shona and Mandarin worlds with Aki the dragon.",
+      "A multi-subject learning universe for early learners — explore English, Maths, Science, Shona, Mandarin and Social Sciences worlds with Aki the dragon.",
     start_url: "/",
     display: "standalone",
     orientation: "portrait",

@@ -1,6 +1,6 @@
 # Learning Universe
 
-A multi-subject learning universe for early learners, built with **Next.js (App Router)**, **Tailwind CSS**, and **Dexie.js** (IndexedDB). Aki the dragon accompanies the child through English, Maths, Science, Shona, and Mandarin worlds.
+A multi-subject learning universe for early learners, built with **Next.js (App Router)**, **Tailwind CSS**, and **Dexie.js** (IndexedDB). Aki the dragon accompanies the child through English, Maths, Science, Shona, Mandarin, and Social Sciences worlds.
 
 ## Run it
 

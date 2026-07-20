@@ -558,7 +558,7 @@ export default function LessonPlayer({
           subjectId={subjectId}
           subjectName={subject.name}
           badgeName={badge.name}
-          badgeImage={subject.art.badge}
+          badgeImage={subject.art.badge ?? subject.art.card}
           accent={subject.accent}
         />
       )}
