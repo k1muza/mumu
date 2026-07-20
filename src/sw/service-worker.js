@@ -1,3 +1,9 @@
+// Replaced with the current build's stamp by scripts/build-sw.mjs, which emits
+// public/sw.js. Two jobs: it makes this file's bytes differ on every deploy, so
+// the browser's update check actually finds a new worker to install, and it
+// keys the shell cache to the build whose HTML/chunks it holds.
+const BUILD = "__LU_BUILD__";
+
 const SHELL_PREFIX = "lu-shell-";
 const ART_CACHE = "lu-art";
 const RUNTIME_CACHE = "lu-runtime";
@@ -52,7 +58,9 @@ async function broadcast(message) {
 const SENTINEL = "/__lu-shell-complete";
 
 async function syncShell(manifest, onRouteCached) {
-  const cacheName = SHELL_PREFIX + manifest.version;
+  // Keyed by build, not by the manifest's content hash: route HTML embeds this
+  // build's chunk URLs, so a code-only deploy must re-fetch it too.
+  const cacheName = SHELL_PREFIX + BUILD;
   {
     const existing = await caches.open(cacheName);
     if (await existing.match(SENTINEL)) return;
@@ -89,12 +97,15 @@ async function syncShell(manifest, onRouteCached) {
   }
 
   await cache.put(SENTINEL, new Response("ok"));
+}
 
-  // Shell is complete — drop caches from previous builds.
+// Previous builds' shells, dropped only once this worker takes over. Deleting
+// them at install time would pull the rug from under the old worker, which is
+// still serving pages while this one waits for the user to accept the update.
+async function dropStaleShells() {
+  const keep = SHELL_PREFIX + BUILD;
   for (const key of await caches.keys()) {
-    if (key.startsWith(SHELL_PREFIX) && key !== cacheName) {
-      await caches.delete(key);
-    }
+    if (key.startsWith(SHELL_PREFIX) && key !== keep) await caches.delete(key);
   }
 }
 
@@ -168,17 +179,21 @@ async function syncAll() {
   broadcast({ type: "lu-progress", cached: total, total, phase: "done", done: true });
 }
 
+// No skipWaiting here: on an update we precache the new build's shell and then
+// sit in "waiting" so the page can offer a refresh instead of swapping the app
+// out from under a child mid-lesson. On a first install there is no controller,
+// so the browser activates us immediately anyway.
 self.addEventListener("install", (event) => {
   event.waitUntil(fetchManifest().then(syncShell));
-  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(dropStaleShells().then(() => self.clients.claim()));
 });
 
 self.addEventListener("message", (event) => {
-  if (event.data === "lu-sync") {
+  const data = event.data;
+  if (data === "lu-sync") {
     event.waitUntil(
       // On any failure still signal "done" so the loading splash dismisses; the
       // fetch handler falls back to the network for anything that didn't cache.
@@ -186,7 +201,11 @@ self.addEventListener("message", (event) => {
         broadcast({ type: "lu-progress", phase: "done", done: true })
       )
     );
+    return;
   }
+  // The page's update prompt was accepted — take over now; it reloads once
+  // "controllerchange" fires.
+  if (data === "lu-skip-waiting") self.skipWaiting();
 });
 
 // ---------------------------------------------------------------------------

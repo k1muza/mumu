@@ -43,6 +43,9 @@ pnpm-debug.log*
 /.next/
 /out/
 
+# Generated from src/sw/service-worker.js by scripts/build-sw.mjs
+/public/sw.js
+
 # Production
 /build
 

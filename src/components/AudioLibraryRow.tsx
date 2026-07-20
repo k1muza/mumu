@@ -1,75 +1,27 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { speech } from "@/lib/tts";
-import {
-  countSpeechLibraryClips,
-  getSpeechClip,
-  putSpeechClip,
-  removeObsoleteSpeechClips,
-  speechLibraryTexts,
-} from "@/lib/tts/library";
+import { countSpeechLibraryClips, speechLibraryTexts } from "@/lib/tts/library";
+import { useAudioGenerationStore } from "@/lib/tts/generationStore";
 import type { VoiceId } from "@/lib/tts/protocol";
-
-type Phase = "idle" | "generating" | "stopping";
 
 export default function AudioLibraryRow({ voice }: { voice: VoiceId }) {
   const texts = useMemo(() => speechLibraryTexts(voice), [voice]);
   const storedCount = useLiveQuery(() => countSpeechLibraryClips(voice), [voice], 0);
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [completed, setCompleted] = useState(0);
-  const [error, setError] = useState<string | null>(null);
-  const controllerRef = useRef<AbortController | null>(null);
+  const phase = useAudioGenerationStore((state) => state.phase);
+  const jobVoice = useAudioGenerationStore((state) => state.voice);
+  const completed = useAudioGenerationStore((state) => state.completed);
+  const jobTotal = useAudioGenerationStore((state) => state.total);
+  const error = useAudioGenerationStore((state) => state.error);
+  const start = useAudioGenerationStore((state) => state.start);
+  const stop = useAudioGenerationStore((state) => state.stop);
   const running = phase !== "idle";
   const ready = storedCount === texts.length;
-  const shownCompleted = running ? completed : storedCount;
-  const percent = texts.length ? Math.round((shownCompleted / texts.length) * 100) : 100;
-
-  useEffect(() => {
-    return () => controllerRef.current?.abort();
-  }, [voice]);
-
-  const generate = async () => {
-    const controller = new AbortController();
-    controllerRef.current = controller;
-    setPhase("generating");
-    setCompleted(0);
-    setError(null);
-    speech.stop();
-
-    try {
-      void navigator.storage?.persist?.();
-      await removeObsoleteSpeechClips(voice);
-
-      let done = 0;
-      for (const text of texts) {
-        if (controller.signal.aborted) break;
-
-        const existing = await getSpeechClip(text, voice);
-        if (!existing) {
-          const blob = await speech.generateClip(text, { voice });
-          if (controller.signal.aborted) break;
-          await putSpeechClip(text, voice, 1, blob);
-        }
-
-        done += 1;
-        setCompleted(done);
-      }
-    } catch (cause) {
-      if (!controller.signal.aborted) {
-        setError(cause instanceof Error ? cause.message : "Audio generation failed.");
-      }
-    } finally {
-      if (controllerRef.current === controller) controllerRef.current = null;
-      setPhase("idle");
-    }
-  };
-
-  const stop = () => {
-    controllerRef.current?.abort();
-    setPhase("stopping");
-  };
+  const showingThisVoice = running && jobVoice === voice;
+  const shownCompleted = showingThisVoice ? completed : storedCount;
+  const shownTotal = showingThisVoice ? jobTotal || texts.length : texts.length;
+  const percent = shownTotal ? Math.round((shownCompleted / shownTotal) * 100) : 100;
 
   return (
     <div className="py-4">
@@ -101,7 +53,7 @@ export default function AudioLibraryRow({ voice }: { voice: VoiceId }) {
           <button
             type="button"
             disabled={ready}
-            onClick={() => void generate()}
+            onClick={() => start(voice)}
             className="font-baloo font-extrabold text-[13px] rounded-full px-4 py-2.5 text-white"
             style={{ background: ready ? "#3E9A34" : "#6C3AD6", opacity: ready ? 0.8 : 1 }}
           >
@@ -118,19 +70,21 @@ export default function AudioLibraryRow({ voice }: { voice: VoiceId }) {
       </div>
       <div className="mt-1.5 flex justify-between gap-3 font-bold text-[11.5px]" style={{ color: "#8578a6" }}>
         <span>
-          {running
-            ? `${phase === "stopping" ? "Finishing the current clip" : "Generating"} · ${shownCompleted}/${texts.length}`
-            : `${storedCount}/${texts.length} clips stored`}
+          {showingThisVoice
+            ? `${phase === "stopping" ? "Finishing the current clip" : "Generating"} · ${shownCompleted}/${shownTotal}`
+            : running
+              ? `Another voice is generating · ${storedCount}/${texts.length} clips stored`
+              : `${storedCount}/${texts.length} clips stored`}
         </span>
         <span>{percent}%</span>
       </div>
-      {error && (
+      {error && jobVoice === voice && (
         <p role="alert" className="mt-2 font-bold text-[12px]" style={{ color: "#C33A32" }}>
           {error}
         </p>
       )}
       <p className="mt-2 font-bold text-[11.5px]" style={{ color: "#a99ac8" }}>
-        Keep this page open while generating. Completed clips are saved as it goes.
+        Generation continues while you visit other pages. Completed clips are saved as it goes.
       </p>
     </div>
   );

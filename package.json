@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/build-sw.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/build-sw.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -17,7 +19,8 @@
     "kokoro-js": "^1.2.1",
     "next": "16.2.10",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

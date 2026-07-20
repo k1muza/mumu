@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Baloo_2, Nunito } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import AppUpdatePrompt from "@/components/AppUpdatePrompt";
+import AudioGenerationManager from "@/components/AudioGenerationManager";
 import FullscreenButton from "@/components/FullscreenButton";
 import OnboardingGate from "@/components/OnboardingGate";
 import OfflineReadyGate from "@/components/OfflineReadyGate";
@@ -56,7 +58,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${baloo.variable} ${nunito.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <AudioGenerationManager />
         <OfflineReadyGate />
+        <AppUpdatePrompt />
         <OnboardingGate />
         {children}
         <FullscreenButton />
