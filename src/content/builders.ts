@@ -14,8 +14,8 @@ import type {
 
 /** Asset path helpers. */
 export const uni = (p: string) => `/universe/${p}`;
-export const obj = (id: string) => `/assets/learning-objects/${id}.png`;
-export const shape = (id: string) => `/universe/decorative/shape_${id}.png`;
+export const obj = (id: string) => `/assets/learning-objects/${id}.webp`;
+export const shape = (id: string) => `/universe/decorative/shape_${id}.webp`;
 
 const DEFAULT_HINT = "Not quite — have another try!";
 

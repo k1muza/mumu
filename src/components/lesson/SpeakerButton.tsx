@@ -47,7 +47,7 @@ export default function SpeakerButton({
         </>
       ) : (
         <>
-          <img src="/universe/ui/sound_button.png" alt="" className="w-[34px] h-[34px] object-contain" />
+          <img src="/universe/ui/sound_button.webp" alt="" className="w-[34px] h-[34px] object-contain" />
           <span>{played ? `“${word}”` : "Tap to hear"}</span>
         </>
       )}

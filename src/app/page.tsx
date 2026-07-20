@@ -62,7 +62,7 @@ export default function UniversePage() {
       <div className="relative z-10 flex items-start justify-between gap-3 px-4 pt-4 pb-1.5 flex-wrap sm:gap-4 sm:px-7 sm:pt-5">
         <div className="flex shrink-0 items-center gap-2">
           <img
-            src="/universe/dragon/dragon_wave.png"
+            src="/universe/dragon/dragon_wave.webp"
             alt={`${profile?.mascot ?? "Aki"} the dragon`}
             className="w-[68px] h-[68px] object-contain lu-bob sm:w-[92px] sm:h-[92px]"
             style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,.25))" }}
@@ -83,7 +83,7 @@ export default function UniversePage() {
           </div>
         </div>
         <img
-          src="/universe/ui/logo_learning_universe.png"
+          src="/universe/ui/logo_learning_universe.webp"
           alt="Learning Universe"
           className="hidden w-[250px] object-contain mt-1 h-[100px] md:block"
           style={{ filter: "drop-shadow(0 6px 12px rgba(20,0,60,.3))" }}

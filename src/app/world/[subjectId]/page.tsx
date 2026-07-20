@@ -57,7 +57,7 @@ function lessonCard(
           )}
         </div>
         <img
-          src={`/universe/rewards/${icon}.png`}
+          src={`/universe/rewards/${icon}.webp`}
           alt=""
           className={`w-[48px] h-[48px] object-contain flex-none ${complete ? "lu-shimmer" : ""}`}
         />
@@ -124,7 +124,7 @@ export default function WorldPage({ params }: { params: Promise<{ subjectId: str
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           <Link href="/" aria-label="Back to Universe" className="flex items-center gap-2.5">
             <img
-              src="/universe/ui/back_button_small.png"
+              src="/universe/ui/back_button_small.webp"
               alt=""
               className="w-[44px] h-[48px] object-contain sm:w-[52px] sm:h-[56px]"
             />
@@ -175,7 +175,7 @@ export default function WorldPage({ params }: { params: Promise<{ subjectId: str
                 style={{ color: subject.accent, background: subject.chip }}
               >
                 <img
-                  src={`/universe/rewards/${rankArt(rank.tier)}.png`}
+                  src={`/universe/rewards/${rankArt(rank.tier)}.webp`}
                   alt=""
                   className="w-[25px] h-[28px] object-contain"
                 />
@@ -209,7 +209,7 @@ export default function WorldPage({ params }: { params: Promise<{ subjectId: str
             style={{ background: subject.chip }}
           >
             <img
-              src="/universe/dragon/dragon_point.png"
+              src="/universe/dragon/dragon_point.webp"
               alt={profile?.mascot ?? "Aki"}
               className="w-[58px] h-[64px] object-contain"
               style={{ transform: "scaleX(-1)" }}

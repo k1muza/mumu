@@ -47,7 +47,7 @@ export default function GrownUpGate({
         style={{ boxShadow: "0 24px 60px rgba(30,10,70,.35)" }}
       >
         <img
-          src="/universe/dragon/dragon_thinking.png"
+          src="/universe/dragon/dragon_thinking.webp"
           alt=""
           className="w-[92px] h-[100px] object-contain mx-auto"
         />

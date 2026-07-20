@@ -29,25 +29,25 @@ export default function RewardsPage() {
 
   const achievements = [
     {
-      img: "treasure_chest.png",
+      img: "treasure_chest",
       name: "First Badge",
       unlocked: (overview?.totalEarned ?? 0) >= 1,
       hint: "Earn your first badge",
     },
     {
-      img: "crystal_cluster.png",
+      img: "crystal_cluster",
       name: "Explorer",
       unlocked: worldsStarted >= 3,
       hint: "Play in 3 worlds",
     },
     {
-      img: "star_radiant.png",
+      img: "star_radiant",
       name: "Star Collector",
       unlocked: (profile?.stars ?? 0) >= 30,
       hint: "Collect 30 stars",
     },
     {
-      img: "shield_winged_crystal.png",
+      img: "shield_winged_crystal",
       name: "World Master",
       unlocked: worldsMastered >= 1,
       hint: "Finish a whole world",
@@ -68,21 +68,21 @@ export default function RewardsPage() {
         <div className="flex items-center justify-between gap-3">
           <Link href="/" aria-label="Back" className="flex items-center gap-2">
             <img
-              src="/universe/ui/back_button_small.png"
+              src="/universe/ui/back_button_small.webp"
               alt=""
               className="w-[50px] h-[54px] object-contain"
             />
             <span className="font-baloo font-extrabold text-[15px] text-white">Universe</span>
           </Link>
           <img
-            src="/universe/dragon/dragon_holding_star.png"
+            src="/universe/dragon/dragon_holding_star.webp"
             alt={profile?.mascot ?? "Aki"}
             className="w-[80px] h-[86px] object-contain lu-bob"
             style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,.3))" }}
           />
           <Link href="/parent" aria-label="Profile">
             <img
-              src="/universe/ui/profile_avatar.png"
+              src="/universe/ui/profile_avatar.webp"
               alt=""
               className="w-[46px] h-[46px] object-contain"
             />
@@ -107,7 +107,7 @@ export default function RewardsPage() {
             }}
           >
             <img
-              src={`/universe/rewards/${rankArt(overallRank.tier)}.png`}
+              src={`/universe/rewards/${rankArt(overallRank.tier)}.webp`}
               alt=""
               className="w-[28px] h-[32px] object-contain"
             />
@@ -134,7 +134,7 @@ export default function RewardsPage() {
               style={{ boxShadow: "0 10px 24px rgba(20,0,60,.25)" }}
             >
               <img
-                src={`/universe/rewards/${c.img}.png`}
+                src={`/universe/rewards/${c.img}.webp`}
                 alt=""
                 className="w-[46px] h-[46px] object-contain"
               />
@@ -194,7 +194,7 @@ export default function RewardsPage() {
                 }}
               >
                 <img
-                  src={`/universe/rewards/${rankArt(rank.tier)}.png`}
+                  src={`/universe/rewards/${rankArt(rank.tier)}.webp`}
                   alt=""
                   className={`w-[62px] h-[70px] object-contain flex-none ${earned >= total && total > 0 ? "lu-shimmer" : ""}`}
                   style={earned === 0 ? { filter: "grayscale(.5) opacity(.7)" } : undefined}
@@ -252,7 +252,7 @@ export default function RewardsPage() {
                     {subject.name}
                   </div>
                   <img
-                    src={`/universe/rewards/${rankArt(rank.tier)}.png`}
+                    src={`/universe/rewards/${rankArt(rank.tier)}.webp`}
                     alt=""
                     className="w-[32px] h-[36px] object-contain"
                   />

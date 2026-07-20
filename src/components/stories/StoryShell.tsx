@@ -34,7 +34,7 @@ export default function StoryShell({
         <div className="flex items-center justify-between gap-3 flex-wrap sm:gap-4">
           <Link href={backHref} className="flex items-center gap-2.5">
             <img
-              src="/universe/ui/back_button_small.png"
+              src="/universe/ui/back_button_small.webp"
               alt=""
               className="w-[44px] h-[48px] object-contain sm:w-[52px] sm:h-[56px]"
             />
@@ -47,7 +47,7 @@ export default function StoryShell({
           </Link>
           <div className="flex items-center gap-2.5 min-w-0">
             <img
-              src="/universe/dragon/dragon_reading_book.png"
+              src="/universe/dragon/dragon_reading_book.webp"
               alt={profile?.mascot ?? "Aki"}
               className="w-[52px] h-[57px] object-contain lu-bob sm:w-[62px] sm:h-[68px]"
               style={{ filter: "drop-shadow(0 6px 10px rgba(60,40,90,.18))" }}

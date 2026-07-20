@@ -192,9 +192,9 @@ const science: SubjectContent = {
     dragonLine: "What do you predict will happen?",
     ranks: ["Curious Cub", "Nature Scout", "Lab Explorer", "Science Wizard", "Science Prodigy"],
     art: {
-      plaque: uni("ui/world_plaque_science.png"),
-      badge: uni("rewards/subject_badge_science.png"),
-      card: uni("worlds/science_world_card.png"),
+      plaque: uni("ui/world_plaque_science.webp"),
+      badge: uni("rewards/subject_badge_science.webp"),
+      card: uni("worlds/science_world_card.webp"),
     },
   },
   badges,

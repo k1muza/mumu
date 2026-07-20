@@ -19,7 +19,7 @@ export default function StoryLibraryPage() {
         style={{ boxShadow: "0 10px 26px rgba(60,40,90,.1)", border: "1px solid rgba(0,0,0,.04)" }}
       >
         <img
-          src="/universe/dragon/dragon_with_speech_bubble.png"
+          src="/universe/dragon/dragon_with_speech_bubble.webp"
           alt=""
           className="w-[60px] h-[65px] object-contain flex-none sm:w-[76px] sm:h-[82px]"
         />

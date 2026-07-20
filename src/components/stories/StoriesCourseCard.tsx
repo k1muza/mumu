@@ -17,7 +17,7 @@ export default function StoriesCourseCard({ accent }: { accent: string }) {
       style={{ border: `2px solid ${accent}`, boxShadow: "0 12px 28px rgba(60,40,90,.14)" }}
     >
       <img
-        src="/universe/dragon/dragon_reading_book.png"
+        src="/universe/dragon/dragon_reading_book.webp"
         alt=""
         className="w-[72px] h-[78px] object-contain flex-none lu-bob"
       />

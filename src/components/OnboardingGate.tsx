@@ -63,7 +63,7 @@ export default function OnboardingGate() {
 
       <div className="relative z-10 min-h-full flex flex-col items-center justify-center px-6 py-10">
         <img
-          src="/universe/ui/logo_learning_universe.png"
+          src="/universe/ui/logo_learning_universe.webp"
           alt="Learning Universe"
           className="w-[280px] object-contain mb-6"
           style={{ filter: "drop-shadow(0 6px 12px rgba(20,0,60,.3))" }}
@@ -74,7 +74,7 @@ export default function OnboardingGate() {
           style={{ boxShadow: "0 24px 60px rgba(30,10,70,.35)" }}
         >
           <img
-            src="/universe/dragon/dragon_wave.png"
+            src="/universe/dragon/dragon_wave.webp"
             alt="Aki the dragon waving"
             className="w-[130px] h-[130px] object-contain mx-auto lu-bob"
             style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,.2))" }}

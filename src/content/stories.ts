@@ -28,30 +28,30 @@ export const STORIES: Story[] = [
     tint: "#EEE7FB",
     cover:
       "Book-cover art — a cheerful young boy with curly dark hair waving one hand, sitting beside a fluffy grey-and-white tabby kitten in a sunny flower garden with a small cottage behind them.",
-    coverImage: "/universe/stories/story-pat-cover.png",
+    coverImage: "/universe/stories/story-pat-cover.webp",
     pages: [
-      { text: "Pat is a cat.", img: "a fluffy grey-and-white tabby kitten sitting on a mat by a stone doorway while a happy boy waves hello.", image: "/universe/stories/story-pat-p0.png" },
-      { text: "Pat can run.", img: "the grey-and-white kitten running across green grass, chasing a red ball of yarn, tail up.", image: "/universe/stories/story-pat-p1.png" },
-      { text: "Pat can sit.", img: "the grey-and-white kitten sitting neatly and licking one paw beside a blue food bowl.", image: "/universe/stories/story-pat-p2.png" },
-      { text: "Pat can tap.", img: "the grey-and-white kitten tapping the water in a shiny blue bowl with one front paw.", image: "/universe/stories/story-pat-p3.png" },
-      { text: "Pat is my cat.", img: "the boy sitting cross-legged on the grass, gently petting the grey-and-white kitten, both smiling.", image: "/universe/stories/story-pat-p4.png" },
-      { text: "I pat Pat.", img: "the boy hugging the grey-and-white kitten cheek to cheek at golden sunset near a little house.", image: "/universe/stories/story-pat-p5.png" },
+      { text: "Pat is a cat.", img: "a fluffy grey-and-white tabby kitten sitting on a mat by a stone doorway while a happy boy waves hello.", image: "/universe/stories/story-pat-p0.webp" },
+      { text: "Pat can run.", img: "the grey-and-white kitten running across green grass, chasing a red ball of yarn, tail up.", image: "/universe/stories/story-pat-p1.webp" },
+      { text: "Pat can sit.", img: "the grey-and-white kitten sitting neatly and licking one paw beside a blue food bowl.", image: "/universe/stories/story-pat-p2.webp" },
+      { text: "Pat can tap.", img: "the grey-and-white kitten tapping the water in a shiny blue bowl with one front paw.", image: "/universe/stories/story-pat-p3.webp" },
+      { text: "Pat is my cat.", img: "the boy sitting cross-legged on the grass, gently petting the grey-and-white kitten, both smiling.", image: "/universe/stories/story-pat-p4.webp" },
+      { text: "I pat Pat.", img: "the boy hugging the grey-and-white kitten cheek to cheek at golden sunset near a little house.", image: "/universe/stories/story-pat-p5.webp" },
     ],
     questions: [
       {
         q: "Who is Pat?",
         choices: [
-          { text: "A boy", img: "friendly cartoon portrait of a young boy with curly dark hair.", image: "/universe/stories/story-pat-q0-c0.png", correct: false },
-          { text: "A cat", img: "a grey-and-white tabby kitten looking at the camera.", image: "/universe/stories/story-pat-q0-c1.png", correct: true },
-          { text: "A puppy", img: "a small brown puppy sitting.", image: "/universe/stories/story-pat-q0-c2.png", correct: false },
+          { text: "A boy", img: "friendly cartoon portrait of a young boy with curly dark hair.", image: "/universe/stories/story-pat-q0-c0.webp", correct: false },
+          { text: "A cat", img: "a grey-and-white tabby kitten looking at the camera.", image: "/universe/stories/story-pat-q0-c1.webp", correct: true },
+          { text: "A puppy", img: "a small brown puppy sitting.", image: "/universe/stories/story-pat-q0-c2.webp", correct: false },
         ],
       },
       {
         q: "What can Pat do?",
         choices: [
-          { text: "Run", img: "a grey-and-white kitten running fast across grass.", image: "/universe/stories/story-pat-q1-c0.png", correct: true },
-          { text: "Sleep", img: "a grey-and-white kitten curled up asleep.", image: "/universe/stories/story-pat-q1-c1.png", correct: false },
-          { text: "Eat", img: "a grey-and-white kitten eating from a bowl.", image: "/universe/stories/story-pat-q1-c2.png", correct: false },
+          { text: "Run", img: "a grey-and-white kitten running fast across grass.", image: "/universe/stories/story-pat-q1-c0.webp", correct: true },
+          { text: "Sleep", img: "a grey-and-white kitten curled up asleep.", image: "/universe/stories/story-pat-q1-c1.webp", correct: false },
+          { text: "Eat", img: "a grey-and-white kitten eating from a bowl.", image: "/universe/stories/story-pat-q1-c2.webp", correct: false },
         ],
       },
     ],
@@ -63,22 +63,22 @@ export const STORIES: Story[] = [
     tint: "#E6F5DF",
     cover:
       "Book-cover art — a kind smiling man in a blue shirt and straw hat kneeling on a village path beside a small grey kitten, warm sunny African village in the background.",
-    coverImage: "/universe/stories/story-man-cover.png",
+    coverImage: "/universe/stories/story-man-cover.webp",
     pages: [
-      { text: "The man has a bun.", img: "a man in a straw hat and blue shirt kneeling and holding up a round golden bun, a grey kitten looking up at it.", image: "/universe/stories/story-man-p0.png" },
-      { text: "The man and the cat.", img: "the man gently offering the bun toward the eager grey kitten, close together on a sunny path.", image: "/universe/stories/story-man-p1.png" },
-      { text: "The man and the cat go.", img: "the man walking down a dirt village path with the little grey kitten trotting beside him.", image: "/universe/stories/story-man-p2.png" },
-      { text: "They hop on the log.", img: "the man stepping onto a fallen log while the grey kitten hops up onto it too, forest edge behind.", image: "/universe/stories/story-man-p3.png" },
-      { text: "They run.", img: "the man and the grey kitten running happily along a sunny dirt path together.", image: "/universe/stories/story-man-p4.png" },
-      { text: "The man reads.", img: "the man sitting on a mat reading a red picture book with the grey kitten resting beside him.", image: "/universe/stories/story-man-p5.png" },
+      { text: "The man has a bun.", img: "a man in a straw hat and blue shirt kneeling and holding up a round golden bun, a grey kitten looking up at it.", image: "/universe/stories/story-man-p0.webp" },
+      { text: "The man and the cat.", img: "the man gently offering the bun toward the eager grey kitten, close together on a sunny path.", image: "/universe/stories/story-man-p1.webp" },
+      { text: "The man and the cat go.", img: "the man walking down a dirt village path with the little grey kitten trotting beside him.", image: "/universe/stories/story-man-p2.webp" },
+      { text: "They hop on the log.", img: "the man stepping onto a fallen log while the grey kitten hops up onto it too, forest edge behind.", image: "/universe/stories/story-man-p3.webp" },
+      { text: "They run.", img: "the man and the grey kitten running happily along a sunny dirt path together.", image: "/universe/stories/story-man-p4.webp" },
+      { text: "The man reads.", img: "the man sitting on a mat reading a red picture book with the grey kitten resting beside him.", image: "/universe/stories/story-man-p5.webp" },
     ],
     questions: [
       {
         q: "What does the man have?",
         choices: [
-          { text: "A bun", img: "a round golden bun on a plate.", image: "/universe/stories/story-man-q0-c0.png", correct: true },
+          { text: "A bun", img: "a round golden bun on a plate.", image: "/universe/stories/story-man-q0-c0.webp", correct: true },
           { text: "A cap", img: "a blue baseball cap.", correct: false },
-          { text: "A ball of yarn", img: "a red ball of yarn.", image: "/universe/stories/story-man-q0-c2.png", correct: false },
+          { text: "A ball of yarn", img: "a red ball of yarn.", image: "/universe/stories/story-man-q0-c2.webp", correct: false },
         ],
       },
       {
@@ -98,7 +98,7 @@ export const STORIES: Story[] = [
     tint: "#DFF1F3",
     cover:
       "Book-cover art — a plump friendly red hen standing proudly in a sunny farmyard with a fluffy yellow chick peeking out beside her, wooden barn behind.",
-    coverImage: "/universe/stories/story-hen-cover.png",
+    coverImage: "/universe/stories/story-hen-cover.webp",
     pages: [
       { text: "The hen is red.", img: "a plump red hen standing in a sunny farmyard, looking cheerful." },
       { text: "The hen sits.", img: "the red hen sitting cosily on a round nest of golden straw." },
@@ -133,7 +133,7 @@ export const STORIES: Story[] = [
     tint: "#F6EAD5",
     cover:
       "Book-cover art — a happy little brown puppy with floppy ears sitting in a sunny green garden beside a small blue pond, bright cheerful mood.",
-    coverImage: "/universe/stories/story-pup-cover.png",
+    coverImage: "/universe/stories/story-pup-cover.webp",
     pages: [
       { text: "Sam is a pup.", img: "a small brown puppy with floppy ears sitting on green grass in a sunny garden." },
       { text: "Sam sits in the sun.", img: "the brown puppy lying happily in a warm patch of sunshine on the grass." },
@@ -168,7 +168,7 @@ export const STORIES: Story[] = [
     tint: "#F9E4E1",
     cover:
       "Book-cover art — a cheerful orange fox peeking happily out of a big cardboard box in a sunny meadow, bright playful mood.",
-    coverImage: "/universe/stories/story-fox-cover.png",
+    coverImage: "/universe/stories/story-fox-cover.webp",
     pages: [
       { text: "The fox has a box.", img: "a friendly orange fox standing beside a big brown cardboard box on green grass." },
       { text: "The box is big.", img: "the orange fox looking up at a tall big cardboard box, the box much bigger than the fox." },
@@ -203,7 +203,7 @@ export const STORIES: Story[] = [
     tint: "#EEE7FB",
     cover:
       "Book-cover art — a curious young girl with two braids crouching in a garden to look at a little red ladybug on a leaf, sunny and sweet.",
-    coverImage: "/universe/stories/story-meg-cover.png",
+    coverImage: "/universe/stories/story-meg-cover.webp",
     pages: [
       { text: "Meg is a girl.", img: "a happy young girl with two braids standing in a green sunny garden." },
       { text: "Meg sees a bug.", img: "the girl crouching down, pointing at a tiny red bug on a leaf, curious." },
@@ -238,7 +238,7 @@ export const STORIES: Story[] = [
     tint: "#E6F5DF",
     cover:
       "Book-cover art — a jolly pink pig with a big smile sitting in a shallow puddle of brown mud on a sunny farm, splashy and fun.",
-    coverImage: "/universe/stories/story-pig-cover.png",
+    coverImage: "/universe/stories/story-pig-cover.webp",
     pages: [
       { text: "The pig is pink.", img: "a plump happy pink pig standing in a sunny green farmyard." },
       { text: "The pig digs.", img: "the pink pig digging in the soft brown earth with its snout, dirt flying." },
@@ -273,7 +273,7 @@ export const STORIES: Story[] = [
     tint: "#DFF1F3",
     cover:
       "Book-cover art — a happy young boy in shorts holding a small fishing net at the edge of a calm blue pond, reeds and sunshine around him.",
-    coverImage: "/universe/stories/story-ben-cover.png",
+    coverImage: "/universe/stories/story-ben-cover.webp",
     pages: [
       { text: "Ben is at the pond.", img: "a cheerful young boy standing at the grassy edge of a calm blue pond on a sunny day." },
       { text: "Ben has a net.", img: "the boy holding up a small green fishing net, smiling, pond behind him." },

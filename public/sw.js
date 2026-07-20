@@ -37,11 +37,21 @@ async function inBatches(items, worker, batchSize = 6) {
   }
 }
 
+// Progress is pushed to every open tab (not just the controlled one) so the
+// first-run loading splash can show how far offline caching has got.
+async function broadcast(message) {
+  const clients = await self.clients.matchAll({
+    includeUncontrolled: true,
+    type: "window",
+  });
+  for (const client of clients) client.postMessage(message);
+}
+
 // Marks a shell cache as fully populated — its mere existence isn't proof,
 // since an interrupted sync leaves a partial cache behind.
 const SENTINEL = "/__lu-shell-complete";
 
-async function syncShell(manifest) {
+async function syncShell(manifest, onRouteCached) {
   const cacheName = SHELL_PREFIX + manifest.version;
   {
     const existing = await caches.open(cacheName);
@@ -71,6 +81,9 @@ async function syncShell(manifest) {
         }
       }
       await cache.put(url, res);
+      // Only routes count toward the loading bar; discovered chunks download in
+      // the same pass but keeping them out of the tally keeps the total fixed.
+      if (isRoute && onRouteCached) onRouteCached();
     });
     queue = [...discovered];
   }
@@ -86,20 +99,29 @@ async function syncShell(manifest) {
 }
 
 // ---------------------------------------------------------------------------
-// Art fill: ~270 MB of world art, downloaded in the background after the
+// Art fill: optimized world art, downloaded in the background after the
 // shell is ready. Never blocks install, tolerates individual failures, and
 // resumes from wherever it stopped on the next page load.
 // ---------------------------------------------------------------------------
 
 let artFillRunning = false;
 
-async function fillArtCache(manifest) {
+async function fillArtCache(manifest, onAssetCached) {
   if (artFillRunning) return;
   artFillRunning = true;
   try {
     const cache = await caches.open(ART_CACHE);
+    const cachedRequests = await cache.keys();
+    const wanted = new Set(manifest.assets);
+    await Promise.all(
+      cachedRequests
+        .filter((req) => !wanted.has(new URL(req.url).pathname))
+        .map((req) => cache.delete(req))
+    );
     const cached = new Set(
-      (await cache.keys()).map((req) => new URL(req.url).pathname)
+      cachedRequests
+        .map((req) => new URL(req.url).pathname)
+        .filter((url) => wanted.has(url))
     );
     const missing = manifest.assets.filter((url) => !cached.has(url));
     await inBatches(missing, async (url) => {
@@ -108,6 +130,10 @@ async function fillArtCache(manifest) {
         if (res.ok) await cache.put(url, res);
       } catch {
         // Offline or quota pressure — the next warm-up run retries.
+      } finally {
+        // Count the attempt either way: a file that 404s or fails would
+        // otherwise stall the bar short of 100% forever.
+        if (onAssetCached) onAssetCached();
       }
     }, 4);
   } finally {
@@ -115,10 +141,30 @@ async function fillArtCache(manifest) {
   }
 }
 
+// Drives the offline-caching run and streams progress to open tabs. The bar's
+// denominator is fixed (routes + art assets) so it only ever moves forward;
+// discovered JS/CSS chunks download during the shell phase but aren't counted.
 async function syncAll() {
   const manifest = await fetchManifest();
-  await syncShell(manifest);
-  await fillArtCache(manifest);
+  const total = manifest.routes.length + manifest.assets.length;
+  let cached = 0;
+  const report = (phase) => broadcast({ type: "lu-progress", cached, total, phase });
+
+  report("shell");
+  await syncShell(manifest, () => {
+    cached += 1;
+    report("shell");
+  });
+  // A shell cached on a previous run fires no per-route callbacks; credit it in
+  // full so the bar reflects reality before the art phase begins.
+  if (cached < manifest.routes.length) cached = manifest.routes.length;
+
+  await fillArtCache(manifest, () => {
+    cached += 1;
+    report("art");
+  });
+
+  broadcast({ type: "lu-progress", cached: total, total, phase: "done", done: true });
 }
 
 self.addEventListener("install", (event) => {
@@ -132,7 +178,13 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("message", (event) => {
   if (event.data === "lu-sync") {
-    event.waitUntil(syncAll().catch(() => {}));
+    event.waitUntil(
+      // On any failure still signal "done" so the loading splash dismisses; the
+      // fetch handler falls back to the network for anything that didn't cache.
+      syncAll().catch(() =>
+        broadcast({ type: "lu-progress", phase: "done", done: true })
+      )
+    );
   }
 });
 

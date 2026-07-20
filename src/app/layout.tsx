@@ -3,7 +3,7 @@ import { Baloo_2, Nunito } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import FullscreenButton from "@/components/FullscreenButton";
 import OnboardingGate from "@/components/OnboardingGate";
-import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import OfflineReadyGate from "@/components/OfflineReadyGate";
 import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
 import "@fortawesome/fontawesome-free/css/solid.min.css";
 import "./globals.css";
@@ -56,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${baloo.variable} ${nunito.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <ServiceWorkerRegister />
+        <OfflineReadyGate />
         <OnboardingGate />
         {children}
         <FullscreenButton />

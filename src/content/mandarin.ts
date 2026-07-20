@@ -156,9 +156,9 @@ const mandarin: SubjectContent = {
     dragonLine: "Let’s listen carefully to the tone!",
     ranks: ["Xiǎo Student", "Tone Tamer", "Character Champ", "Mandarin Wizard", "Mandarin Prodigy"],
     art: {
-      plaque: uni("ui/world_plaque_mandarin.png"),
-      badge: uni("rewards/subject_badge_mandarin.png"),
-      card: uni("worlds/mandarin_world_card.png"),
+      plaque: uni("ui/world_plaque_mandarin.webp"),
+      badge: uni("rewards/subject_badge_mandarin.webp"),
+      card: uni("worlds/mandarin_world_card.webp"),
     },
   },
   badges,

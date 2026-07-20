@@ -27,7 +27,7 @@ import {
 } from "./builders";
 
 const subjectId = "maths";
-const star = uni("rewards/star_gold.png");
+const star = uni("rewards/star_gold.webp");
 
 const { badges, lessons } = expandBadges(subjectId, [
   {
@@ -704,9 +704,9 @@ const maths: SubjectContent = {
     dragonLine: "Can you help me count these stars?",
     ranks: ["Number Rookie", "Counting Star", "Number Ninja", "Maths Wizard", "Maths Prodigy"],
     art: {
-      plaque: uni("ui/world_plaque_maths.png"),
-      badge: uni("rewards/subject_badge_maths.png"),
-      card: uni("worlds/maths_world_card.png"),
+      plaque: uni("ui/world_plaque_maths.webp"),
+      badge: uni("rewards/subject_badge_maths.webp"),
+      card: uni("worlds/maths_world_card.webp"),
     },
   },
   badges,

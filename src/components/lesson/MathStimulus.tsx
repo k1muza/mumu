@@ -9,7 +9,7 @@ interface StarGroupProps {
 }
 
 /** A reusable, touch-friendly group of countable objects. */
-export function StarGroup({ count, crossedOut = 0, img = "/universe/rewards/star_gold.png" }: StarGroupProps) {
+export function StarGroup({ count, crossedOut = 0, img = "/universe/rewards/star_gold.webp" }: StarGroupProps) {
   const firstCrossedOut = count - crossedOut;
 
   return (

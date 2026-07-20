@@ -243,7 +243,7 @@ export default function ParentPage() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
             <img
-              src="/universe/ui/profile_avatar.png"
+              src="/universe/ui/profile_avatar.webp"
               alt=""
               className="w-[58px] h-[58px] object-contain"
             />

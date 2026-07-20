@@ -74,8 +74,8 @@ export default function FeedbackBar({
         <img
           src={
             feedback?.celebration === "level-up"
-              ? "/universe/rewards/level_badge.png"
-              : `/universe/dragon/${correct ? "dragon_cheer" : "dragon_thinking"}.png`
+              ? "/universe/rewards/level_badge.webp"
+              : `/universe/dragon/${correct ? "dragon_cheer" : "dragon_thinking"}.webp`
           }
           alt=""
           className={`w-[44px] h-[48px] object-contain flex-none sm:w-[56px] sm:h-[62px] ${feedback?.celebration === "level-up" ? "lu-pop lu-shimmer" : ""}`}

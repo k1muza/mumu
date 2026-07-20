@@ -179,9 +179,9 @@ const english: SubjectContent = {
     dragonLine: "Let’s stretch the sounds out together!",
     ranks: ["Letter Sprout", "Word Explorer", "Story Weaver", "Reading Wizard", "Word Prodigy"],
     art: {
-      plaque: uni("ui/world_plaque_english.png"),
-      badge: uni("rewards/subject_badge_english.png"),
-      card: uni("worlds/english_world_card.png"),
+      plaque: uni("ui/world_plaque_english.webp"),
+      badge: uni("rewards/subject_badge_english.webp"),
+      card: uni("worlds/english_world_card.webp"),
     },
   },
   badges,

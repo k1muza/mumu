@@ -164,9 +164,9 @@ const shona: SubjectContent = {
     dragonLine: "Teach me which greeting we should use!",
     ranks: ["Mutambi", "Mutauri", "Shamwari yeShona", "Gamba", "Shasha yeShona"],
     art: {
-      plaque: uni("ui/world_plaque_shona.png"),
-      badge: uni("rewards/subject_badge_shona.png"),
-      card: uni("worlds/shona_world_card.png"),
+      plaque: uni("ui/world_plaque_shona.webp"),
+      badge: uni("rewards/subject_badge_shona.webp"),
+      card: uni("worlds/shona_world_card.webp"),
     },
   },
   badges,

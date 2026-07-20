@@ -156,7 +156,7 @@ function QuestionCard({
             levelUp ? (
               <span className="inline-flex items-center gap-1.5" style={{ color: "#6C3AD6" }}>
                 <img
-                  src="/universe/rewards/level_badge.png"
+                  src="/universe/rewards/level_badge.webp"
                   alt=""
                   className="w-[24px] h-[26px] object-contain lu-pop lu-shimmer"
                 />
@@ -352,7 +352,7 @@ export default function StoryReaderPage({
       {/* questions */}
       <div className="flex items-center gap-2 mt-9 mb-3 ml-1">
         <img
-          src="/universe/dragon/dragon_thinking.png"
+          src="/universe/dragon/dragon_thinking.webp"
           alt=""
           className="w-[40px] h-[44px] object-contain"
         />

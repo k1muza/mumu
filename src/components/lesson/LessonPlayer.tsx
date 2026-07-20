@@ -218,8 +218,8 @@ export default function LessonPlayer({
   const Stage = activity ? STAGES[activity.kind] : null;
   const stimulus = activity?.kind === "choice" ? (activity as ChoiceActivity).stimulus : undefined;
   const dragonSrc = answered
-    ? "/universe/dragon/dragon_thumbs_up.png"
-    : "/universe/dragon/dragon_point.png";
+    ? "/universe/dragon/dragon_thumbs_up.webp"
+    : "/universe/dragon/dragon_point.webp";
 
   const recommendedNext = statuses?.find((s) => s.recommended && s.badge.slug !== badgeSlug);
   const nextRecLesson = recommendedNext ? nextLesson(recommendedNext) : undefined;
@@ -243,7 +243,7 @@ export default function LessonPlayer({
         <div className="flex items-center justify-between gap-3">
           <Link href={`/world/${subjectId}`} aria-label="Back to world" className="flex items-center">
             <img
-              src="/universe/ui/back_button_small.png"
+              src="/universe/ui/back_button_small.webp"
               alt=""
               className="w-[42px] h-[46px] object-contain sm:w-[50px] sm:h-[54px]"
             />
@@ -291,7 +291,7 @@ export default function LessonPlayer({
           <div className="text-center lu-rise mt-8">
             <ConfettiBurst accent={subject.accent} />
             <img
-              src="/universe/dragon/dragon_confetti.png"
+              src="/universe/dragon/dragon_confetti.webp"
               alt=""
               className="w-[150px] h-[160px] object-contain mx-auto lu-bob sm:w-[188px] sm:h-[200px]"
             />
@@ -303,7 +303,7 @@ export default function LessonPlayer({
               style={{ boxShadow: "0 10px 26px rgba(60,40,90,.14)" }}
             >
               <img
-                src="/universe/rewards/shield_gold.png"
+                src="/universe/rewards/shield_gold.webp"
                 alt=""
                 className="w-[64px] h-[74px] object-contain lu-shimmer"
               />
@@ -325,7 +325,7 @@ export default function LessonPlayer({
                 }}
               >
                 <img
-                  src={`/universe/rewards/${rankArt(completionRank.tier)}.png`}
+                  src={`/universe/rewards/${rankArt(completionRank.tier)}.webp`}
                   alt=""
                   className="w-[58px] h-[66px] object-contain lu-shimmer"
                 />
@@ -465,7 +465,7 @@ export default function LessonPlayer({
                         </>
                       ) : (
                         <img
-                          src="/universe/ui/sound_button.png"
+                          src="/universe/ui/sound_button.webp"
                           alt=""
                           className="w-[38px] h-[38px] object-contain"
                         />
@@ -513,7 +513,7 @@ export default function LessonPlayer({
                       {letter}
                       {done && (
                         <img
-                          src="/universe/rewards/star_gold.png"
+                          src="/universe/rewards/star_gold.webp"
                           alt=""
                           className="absolute -top-1.5 -right-1.5 w-[16px] h-[16px] object-contain"
                         />
