@@ -156,8 +156,9 @@ async function syncAll() {
     report("shell");
   });
   // A shell cached on a previous run fires no per-route callbacks; credit it in
-  // full so the bar reflects reality before the art phase begins.
+  // full (and emit a report, since none fired) so the bar advances before art.
   if (cached < manifest.routes.length) cached = manifest.routes.length;
+  report("shell");
 
   await fillArtCache(manifest, () => {
     cached += 1;

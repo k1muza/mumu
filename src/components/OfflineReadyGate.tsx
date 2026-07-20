@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import CssCloud from "@/components/CssCloud";
 import TwinkleField from "@/components/TwinkleField";
 
 type ConnectionNavigator = Navigator & {
   connection?: { saveData?: boolean };
 };
-
-type Progress = { cached: number; total: number; phase: string };
 
 // Set once the first offline-caching run reports "done"; on later visits its
 // presence lets us skip the splash entirely instead of flashing it.
@@ -18,6 +22,14 @@ const READY_KEY = "lu-offline-ready";
 // background and the fetch handler falls back to the network meanwhile.
 const STALL_MS = 30000;
 const FADE_MS = 450;
+// The bar must always look alive, even when caching is near-instant (a few MB,
+// much of it pre-cached at SW install) or the worker is slow to send its first
+// message. So the fill eases toward a target that is the greater of real
+// progress and a synthetic curve that keeps creeping up on its own; it holds
+// below CREEP_CEIL until the worker says "done", then finishes to 100.
+const MAX_RATE = 85; // percent per second the fill is allowed to move
+const CREEP_TAU = 900; // ms — how quickly the synthetic creep approaches its ceiling
+const CREEP_CEIL = 90; // percent the synthetic creep asymptotes to
 
 // Whether this visit should offer the blocking splash: a first visit that hasn't
 // finished caching, on a connection that didn't ask to save data. Read through
@@ -43,8 +55,21 @@ export default function OfflineReadyGate() {
   );
   const [dismissed, setDismissed] = useState(false);
   const [closing, setClosing] = useState(false);
-  const [progress, setProgress] = useState<Progress | null>(null);
+  const [displayPct, setDisplayPct] = useState(0);
+  const [phase, setPhase] = useState<"shell" | "art">("shell");
   const visible = shouldOffer && !dismissed;
+
+  // Live targets read by the animation loop without forcing re-renders.
+  const targetRef = useRef(0);
+  const finishingRef = useRef(false);
+  const dismissedRef = useRef(false);
+
+  const dismiss = useCallback(() => {
+    if (dismissedRef.current) return;
+    dismissedRef.current = true;
+    setClosing(true);
+    setTimeout(() => setDismissed(true), FADE_MS);
+  }, []);
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -57,15 +82,6 @@ export default function OfflineReadyGate() {
     let cancelled = false;
     let stallTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const dismiss = () => {
-      if (cancelled) return;
-      clearTimeout(stallTimer);
-      setClosing(true);
-      setTimeout(() => {
-        if (!cancelled) setDismissed(true);
-      }, FADE_MS);
-    };
-
     const armStall = () => {
       clearTimeout(stallTimer);
       stallTimer = setTimeout(dismiss, STALL_MS);
@@ -75,16 +91,21 @@ export default function OfflineReadyGate() {
       if (cancelled || !event.data || event.data.type !== "lu-progress") return;
       if (event.data.done) {
         localStorage.setItem(READY_KEY, "1");
-        if (offering) dismiss();
+        if (offering) {
+          // Let the bar sweep to the end before the splash leaves.
+          targetRef.current = 100;
+          finishingRef.current = true;
+        }
         return;
       }
       if (!offering) return;
       armStall();
-      setProgress({
-        cached: event.data.cached,
-        total: event.data.total,
-        phase: event.data.phase,
-      });
+      if (event.data.phase === "art") setPhase("art");
+      const pct =
+        event.data.total > 0
+          ? Math.min(100, (event.data.cached / event.data.total) * 100)
+          : 0;
+      targetRef.current = Math.max(targetRef.current, pct);
     };
 
     if (offering) armStall();
@@ -109,7 +130,40 @@ export default function OfflineReadyGate() {
       clearTimeout(stallTimer);
       navigator.serviceWorker.removeEventListener("message", onMessage);
     };
-  }, []);
+  }, [dismiss]);
+
+  // Animation loop: ease the shown fill toward its target at a capped rate so it
+  // always glides rather than snaps, and dismiss once it reaches the end.
+  useEffect(() => {
+    if (!visible) return;
+    let raf = 0;
+    const start = performance.now();
+    let prev = start;
+    let shown = 0;
+    const tick = (now: number) => {
+      // A synthetic creep that keeps the bar moving even before the worker
+      // reports anything; real progress overrides it whenever it's further along.
+      const creep = CREEP_CEIL * (1 - Math.exp(-(now - start) / CREEP_TAU));
+      let target = Math.max(targetRef.current, creep);
+      // Hold short of the end until caching is actually done, then finish.
+      target = finishingRef.current ? 100 : Math.min(target, CREEP_CEIL);
+      // Clamp dt so a slow frame can't produce a step big enough to leap ahead.
+      const dt = Math.min(now - prev, 50);
+      prev = now;
+      if (target > shown) {
+        shown = Math.min(target, shown + (MAX_RATE * dt) / 1000);
+        setDisplayPct(shown);
+      }
+      if (finishingRef.current && shown >= 99.5) {
+        setDisplayPct(100);
+        dismiss();
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [visible, dismiss]);
 
   // Lock scrolling while the splash covers the app, mirroring OnboardingGate.
   useEffect(() => {
@@ -126,14 +180,11 @@ export default function OfflineReadyGate() {
 
   if (!visible) return null;
 
-  const pct =
-    progress && progress.total > 0
-      ? Math.min(100, Math.round((progress.cached / progress.total) * 100))
-      : 0;
+  const pct = Math.round(displayPct);
   const caption =
     pct >= 92
       ? "Almost ready!"
-      : progress?.phase === "art"
+      : phase === "art"
         ? "Painting the pictures…"
         : "Packing up the adventure…";
 
@@ -199,9 +250,10 @@ export default function OfflineReadyGate() {
             <span
               className="lu-world-progress-fill"
               style={{
-                width: `${pct}%`,
+                width: `${displayPct}%`,
                 background: "linear-gradient(90deg,#7c5cff,#FFD64D,#7c5cff)",
                 boxShadow: "0 0 10px rgba(124,92,255,.6)",
+                transition: "none",
               }}
             />
           </div>
