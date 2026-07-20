@@ -135,17 +135,13 @@ export default function LessonPlayer({
     speech.stop();
   }, []);
 
-  // Warm up the Kokoro model so the first tap-to-hear doesn't need the fallback voice.
+  // Keep speech on the selected voice and warm Kokoro only if its saved library is incomplete.
   const speechEnabled = !!profile?.settings.speech;
-  useEffect(() => {
-    if (speechEnabled) speech.preload();
-  }, [speechEnabled]);
-
-  // Keep the speech singleton on the parent-chosen voice.
   const voice = profile?.settings.voice ?? DEFAULT_VOICE;
   useEffect(() => {
     speech.setVoice(voice);
-  }, [voice]);
+    if (speechEnabled) speech.preload();
+  }, [speechEnabled, voice]);
 
   const advance = useCallback(() => {
     speech.stop();

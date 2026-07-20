@@ -9,6 +9,7 @@ import type {
   Profile,
   StoryCreditEntry,
   StoryImage,
+  SpeechClip,
   Subject,
   VariantCreditEntry,
 } from "./types";
@@ -37,6 +38,7 @@ class LearningUniverseDB extends Dexie {
   storyImages!: EntityTable<StoryImage, "id">;
   storyCredit!: EntityTable<StoryCreditEntry, "key">;
   variantCredit!: EntityTable<VariantCreditEntry, "key">;
+  speechClips!: EntityTable<SpeechClip, "key">;
 }
 
 export const db = new LearningUniverseDB("learning-universe");
@@ -73,6 +75,11 @@ db.version(3).stores({
 // v4: remember which question variations have been answered correctly.
 db.version(4).stores({
   variantCredit: "key",
+});
+
+// v5: generated speech clips are kept locally for delay-free playback.
+db.version(5).stores({
+  speechClips: "key, voice",
 });
 
 /**

@@ -36,7 +36,16 @@ const CREEP_CEIL = 90; // percent the synthetic creep asymptotes to
 // useSyncExternalStore so the client value never trips a hydration mismatch.
 const subscribeOffer = () => () => {};
 function offerSnapshot() {
-  if (typeof navigator === "undefined") return false;
+  // The worker is intentionally disabled during `next dev` so it cannot serve
+  // stale chunks while the app is being edited. Do not offer a splash that has
+  // no worker (and therefore no way to receive its completion message).
+  if (
+    process.env.NODE_ENV !== "production" ||
+    typeof navigator === "undefined" ||
+    !("serviceWorker" in navigator)
+  ) {
+    return false;
+  }
   const saveData = (navigator as ConnectionNavigator).connection?.saveData;
   return localStorage.getItem(READY_KEY) !== "1" && !saveData;
 }

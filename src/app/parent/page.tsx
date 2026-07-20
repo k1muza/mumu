@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import GrownUpGate from "@/components/GrownUpGate";
+import AudioLibraryRow from "@/components/AudioLibraryRow";
 import SpeechStatusNotice from "@/components/SpeechStatusNotice";
 import { useProfile, useUniverseOverview } from "@/lib/hooks";
 import { resetEverything, resetProgress, updateChildName, updateSettings } from "@/lib/progress";
@@ -79,8 +80,9 @@ function VoiceRow({ current }: { current: VoiceId }) {
 
   // Warm up Kokoro so previews use the real voice, not the device fallback.
   useEffect(() => {
+    speech.setVoice(current);
     speech.preload();
-  }, []);
+  }, [current]);
 
   return (
     <div className="py-4">
@@ -399,6 +401,10 @@ export default function ParentPage() {
             );
           })}
           <VoiceRow current={profile?.settings.voice ?? DEFAULT_VOICE} />
+          <AudioLibraryRow
+            key={profile?.settings.voice ?? DEFAULT_VOICE}
+            voice={profile?.settings.voice ?? DEFAULT_VOICE}
+          />
           <DangerRow
             label="Reset all progress"
             hint="Clear badges and stars on this device — keeps name and settings"

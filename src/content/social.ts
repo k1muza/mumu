@@ -277,7 +277,7 @@ const social: SubjectContent = {
     dragonLine: "Let’s find out about the people around us!",
     ranks: ["Community Scout", "Helpful Neighbour", "Map Explorer", "Citizen Champion", "Social Sciences Star"],
     art: {
-      card: uni("worlds/social_sciences_world.png"),
+      card: uni("worlds/social_sciences_world_card.webp"),
     },
   },
   badges,

@@ -9,6 +9,20 @@ import { db } from "@/lib/db";
 
 export default function StoryLibraryPage() {
   const credit = useLiveQuery(() => db.storyCredit.toArray(), []);
+  const featuredStoryId = useLiveQuery(
+    async () => {
+      const answeredQuestions = await db.storyCredit.toArray();
+      const startedStoryIds = new Set(answeredQuestions.map(({ key }) => key.split(":")[0]));
+      const unvisitedStories = STORIES.filter(({ id }) => !startedStoryIds.has(id));
+      const storyPool = unvisitedStories.length > 0 ? unvisitedStories : STORIES;
+
+      return storyPool[Math.floor(Math.random() * storyPool.length)]?.id ?? STORIES[0].id;
+    },
+    [],
+    STORIES[0].id,
+  );
+
+  const featuredStory = STORIES.find(({ id }) => id === featuredStoryId) ?? STORIES[0];
   const answered = (storyId: string) =>
     credit?.filter((c) => c.key.startsWith(`${storyId}:`)).length ?? 0;
 
@@ -18,19 +32,44 @@ export default function StoryLibraryPage() {
         className="flex items-center gap-3 bg-white rounded-[24px] px-4 py-4 mb-6 sm:gap-4 sm:px-6"
         style={{ boxShadow: "0 10px 26px rgba(60,40,90,.1)", border: "1px solid rgba(0,0,0,.04)" }}
       >
-        <img
-          src="/universe/dragon/dragon_with_speech_bubble.webp"
-          alt=""
-          className="w-[60px] h-[65px] object-contain flex-none sm:w-[76px] sm:h-[82px]"
-        />
-        <div>
-          <div className="font-baloo font-extrabold text-[20px]" style={{ color: "#25455e" }}>
+        <div className="w-0 min-w-0 flex-1">
+          <div
+            className="font-baloo text-[18px] font-extrabold leading-tight sm:text-[20px]"
+            style={{ color: "#25455e" }}
+          >
             Pick a story to read!
           </div>
-          <div className="font-bold text-[14.5px]" style={{ color: "#5b7686" }}>
+          <div className="text-[13px] font-bold sm:text-[14.5px]" style={{ color: "#5b7686" }}>
             Tap a book. Read each page, then answer the picture questions.
           </div>
         </div>
+        <Link
+          href={`/stories/${featuredStory.id}`}
+          aria-label={`Read ${featuredStory.title}`}
+          data-testid="story-suggestion"
+          className="relative ml-auto block w-[160px] flex-none transition-transform hover:scale-[1.02] sm:w-[220px]"
+        >
+          <img
+            src="/universe/dragon/dragon_with_speech_bubble.webp"
+            alt=""
+            className="block h-auto w-full object-contain"
+            style={{ transform: "scaleX(-1)" }}
+          />
+          <span className="absolute left-[3%] right-[42%] top-[6%] flex h-[40%] flex-col items-center justify-center px-1.5 text-center leading-none">
+            <span
+              className="font-baloo text-[7px] font-extrabold uppercase tracking-[.08em] sm:text-[8px]"
+              style={{ color: "#9362bd" }}
+            >
+              Try this story
+            </span>
+            <span
+              className="mt-0.5 font-baloo text-[9.5px] font-extrabold leading-[1.05] sm:text-[11px]"
+              style={{ color: "#25455e" }}
+            >
+              {featuredStory.title}
+            </span>
+          </span>
+        </Link>
       </div>
 
       <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(250px,1fr))" }}>

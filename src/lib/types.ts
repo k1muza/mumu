@@ -211,6 +211,16 @@ export interface VariantCreditEntry {
   key: string;
 }
 
+/** A locally generated TTS clip, persisted in IndexedDB on this device. */
+export interface SpeechClip {
+  key: string;
+  voice: import("./tts/protocol").VoiceId;
+  speed: number;
+  text: string;
+  blob: Blob;
+  createdAt: number;
+}
+
 /* ---------- Learner state ---------- */
 
 export interface Settings {

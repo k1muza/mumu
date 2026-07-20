@@ -9,15 +9,52 @@ export default function SpeakerButton({
   chip,
   speechEnabled,
   onPlay,
+  iconOnly = false,
 }: {
   word: string;
   accent: string;
   chip: string;
   speechEnabled: boolean;
   onPlay?: () => void;
+  iconOnly?: boolean;
 }) {
   const [played, setPlayed] = useState(false);
   const [preparing, setPreparing] = useState(false);
+
+  if (iconOnly) {
+    return (
+      <button
+        type="button"
+        aria-busy={preparing}
+        aria-label={`Hear “${word}”`}
+        className="inline-flex items-center justify-center align-middle w-[44px] h-[44px] -my-2 rounded-full transition-transform active:scale-95"
+        style={{ color: accent }}
+        onClick={(e) => {
+          setPlayed(true);
+          speak(word, speechEnabled, setPreparing);
+          onPlay?.();
+          e.currentTarget.animate(
+            [{ transform: "scale(1)" }, { transform: "scale(1.08)" }, { transform: "scale(1)" }],
+            { duration: 300 },
+          );
+        }}
+      >
+        {preparing ? (
+          <span
+            role="status"
+            aria-live="polite"
+            className="h-[26px] w-[26px] animate-spin rounded-full border-[3px] border-current border-t-transparent"
+          />
+        ) : (
+          <img
+            src="/universe/ui/sound_button.webp"
+            alt=""
+            className="w-[32px] h-[32px] object-contain"
+          />
+        )}
+      </button>
+    );
+  }
 
   return (
     <button

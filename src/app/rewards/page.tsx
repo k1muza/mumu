@@ -307,7 +307,7 @@ export default function RewardsPage() {
               style={{ boxShadow: "0 10px 24px rgba(20,0,60,.2)" }}
             >
               <img
-                src={`/universe/rewards/${a.img}`}
+                src={`/universe/rewards/${a.img}.webp`}
                 alt=""
                 className={`w-[68px] h-[68px] object-contain mx-auto ${a.unlocked ? "lu-bob" : ""}`}
                 style={a.unlocked ? undefined : { filter: "grayscale(1) opacity(.4)" }}

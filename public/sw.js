@@ -213,6 +213,13 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // Turbopack passes a worker's bootstrap configuration in the URL fragment.
+  // Fetch requests never contain fragments, and responding from Cache Storage
+  // makes the worker see the fragment-less response URL, so its bootstrap dies
+  // with "Missing worker bootstrap config". Let the browser load top-level
+  // workers directly; their hashed dependency chunks are still cached below.
+  if (request.destination === "worker") return;
+
   if (isImmutable(url)) {
     event.respondWith(
       caches.match(request).then(

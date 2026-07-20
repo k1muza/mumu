@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLiveQuery } from "dexie-react-hooks";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import FaIcon from "@/components/FaIcon";
 import SpeakerButton from "@/components/lesson/SpeakerButton";
 import StoryImageSlot, { copyText } from "@/components/stories/StoryImageSlot";
@@ -12,6 +12,8 @@ import { db, PROFILE_ID } from "@/lib/db";
 import { useProfile } from "@/lib/hooks";
 import { levelForStars } from "@/lib/progress";
 import { useStoryEditMode } from "@/lib/storyEditMode";
+import { speech } from "@/lib/tts";
+import { DEFAULT_VOICE } from "@/lib/tts/protocol";
 import type { Story, StoryChoice, StoryPage, StoryQuestion } from "@/lib/types";
 
 const STARS_PER_QUESTION = 3;
@@ -206,29 +208,24 @@ function StoryPageCard({
           />
         </div>
       )}
-      <span
-        className="absolute left-2.5 top-2.5 z-10 pointer-events-none font-baloo font-extrabold text-white text-[12px] rounded-[10px] px-2.5 py-1"
-        style={{ background: story.accent, boxShadow: "0 3px 8px rgba(0,0,0,.25)" }}
-      >
-        Page {pageIndex + 1}
-      </span>
       <div
-        className={`px-4 py-5 flex-1 flex flex-col items-center justify-center gap-4 ${
-          showPicture ? "" : "min-h-[260px] pt-14"
+        className={`px-4 py-5 flex-1 flex flex-col items-center justify-center ${
+          showPicture ? "" : "min-h-[260px]"
         }`}
       >
         <span
           className="font-baloo font-extrabold text-[22px] leading-snug text-center"
           style={{ color: "#2b3f4c", textWrap: "balance" }}
         >
-          {page.text}
+          {page.text}{" "}
+          <SpeakerButton
+            word={page.text}
+            accent={story.accent}
+            chip={story.tint}
+            speechEnabled={speechEnabled}
+            iconOnly
+          />
         </span>
-        <SpeakerButton
-          word={page.text}
-          accent={story.accent}
-          chip={story.tint}
-          speechEnabled={speechEnabled}
-        />
       </div>
     </div>
   );
@@ -244,6 +241,12 @@ export default function StoryReaderPage({
   const editing = useStoryEditMode();
   const profile = useProfile();
   const [copiedAll, setCopiedAll] = useState(false);
+  const voice = profile?.settings.voice ?? DEFAULT_VOICE;
+
+  useEffect(() => {
+    speech.setVoice(voice);
+    return () => speech.stop();
+  }, [voice]);
 
   if (!story) {
     return (
